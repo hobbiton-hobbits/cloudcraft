@@ -44,11 +44,11 @@ Includes user list, group list, current chat, and task list */
 
 #task-list {
     width: 30%;
-    height: 700px;
 }
 
 .task-list-task, .user-list-user, .group-list-group, .current-chat-message-other, .current-chat-message-self {
-    padding: 20px;
+    padding: 15px;
+    font-size: 15px;
 }
 
 .task-list-task:hover, .user-list-user:hover, .group-list-group:hover, .current-chat-message-other:hover, .current-chat-message-self:hover {
