@@ -3,12 +3,12 @@ import React from "react";
 const GroupList = (props) => {
     return (
       <div id='group-list' className='widget'>
-        <h1>Groups</h1>
-        <p>Group 1</p>
-        <p>Group 2</p>
-        <p>Group 3</p>
-        <p>Group 4</p>
-        <p>Group 5</p>
+        <div className='widget-title'>Groups</div>
+        <div className='group-list-group'>Group 1</div>
+        <div className='group-list-group'>Group 2</div>
+        <div className='group-list-group'>Group 3</div>
+        <div className='group-list-group'>Group 4</div>
+        <div className='group-list-group'>Group 5</div>
       </div>
     )
   }
