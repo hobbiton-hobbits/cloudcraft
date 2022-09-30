@@ -2,6 +2,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #e7ecef;
 }
 
 /* The main content of the page, consisting of the three main panes (users/groups list, current chat, and task list) */
@@ -22,13 +23,15 @@ body {
 /* Each top-level widget (denoted by a white background)
 Includes user list, group list, current chat, and task list */
 .widget {
-    padding: 20px;
-    background-color: #e7ecef;
+    background-color: white;
 }
 
 /* The title at the top of each widget */
 .widget-title {
     font-size: 20px;
+    padding: 20px;
+    background-color: #a3cef1;
+    color: white;
 }
 
 #user-list {
@@ -44,6 +47,46 @@ Includes user list, group list, current chat, and task list */
     height: 700px;
 }
 
-.task-list-task, .user-list-user, .group-list-group {
-    padding: 10px;
+.task-list-task, .user-list-user, .group-list-group, .current-chat-message-other, .current-chat-message-self {
+    padding: 20px;
+}
+
+.task-list-task:hover, .user-list-user:hover, .group-list-group:hover, .current-chat-message-other:hover, .current-chat-message-self:hover {
+    background-color: #274c77;
+    color: white;
+}
+
+#selected {
+    background-color: #274c77;
+    color: white;
+}
+
+.button {
+    background-color: #6096ba;
+    padding: 20px;
+    color: white;
+}
+
+#current-chat-draft {
+    height: 200px;
+    width: 100%;
+    border: none;
+    font-size: 20px;
+    display: block;
+}
+
+.current-chat-message-other {
+    text-align: left;
+    background-color: #274c77;
+    color: white;
+}
+
+.current-chat-message-other:hover {
+    text-align: left;
+    background-color: white;
+    color: #274c77;
+}
+
+.current-chat-message-self {
+    text-align: right;
 }
