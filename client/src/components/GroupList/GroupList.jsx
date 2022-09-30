@@ -8,7 +8,7 @@ const GroupList = (props) => {
         <div className='group-list-group'>Group 2</div>
         <div className='group-list-group'>Group 3</div>
         <div className='group-list-group'>Group 4</div>
-        <div className='button'>create a group</div>
+        <div className='button' id='group-list-create-button'>create a group</div>
       </div>
     )
   }

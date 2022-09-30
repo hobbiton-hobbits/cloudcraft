@@ -13,7 +13,8 @@ const CurrentChat = (props) => {
           <div className='current-chat-message-other'>Chat 7</div>
           <div className='current-chat-message-other'>Chat 8</div>
           <input type='text' id='current-chat-draft' placeholder='type your message'></input>
-          <div className="button">send</div>
+          <div className="button" id='current-chat-send-button'>send</div>
+
       </div>
     )
   }
