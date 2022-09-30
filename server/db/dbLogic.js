@@ -15,6 +15,7 @@ pool.connect().then(() => {
 
 //pass id of sender and recipient into params when invoking
 const getMessages = async (sender_id, recipient_id) => {
+  //may need to add in second query to get all messages that are from recipient to sender, right now it just goes from sender to recipient
   return await pool.query(`SELECT message_text, created FROM messages WHERE sender_id = $1 AND recipient_id = $2 AND deleted = false ORDER BY message_id DESC;`, [sender_id, recipient_id])
 }
 
