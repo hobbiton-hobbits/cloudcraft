@@ -1,0 +1,45 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* The main content of the page, consisting of the three main panes (users/groups list, current chat, and task list) */
+#main-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/* The left pane, containing both the user list and the group list */
+#user-and-group-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 20%;
+}
+
+/* Each top-level widget (denoted by a white background)
+Includes user list, group list, current chat, and task list */
+.widget {
+    padding: 20px;
+    background-color: #e7ecef;
+}
+
+/* The title at the top of each widget */
+.widget-title {
+    font-size: 20px;
+}
+
+#user-list {
+    margin-bottom: 50px;
+}
+
+#current-chat {
+    width: 40%;
+}
+
+#task-list {
+    width: 30%;
+    height: 700px;
+}
