@@ -43,3 +43,7 @@ Includes user list, group list, current chat, and task list */
     width: 30%;
     height: 700px;
 }
+
+.task-list-task, .user-list-user, .group-list-group {
+    padding: 10px;
+}

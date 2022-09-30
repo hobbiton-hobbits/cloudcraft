@@ -3,12 +3,12 @@ import React from "react";
 const CurrentChat = (props) => {
     return (
       <div id='current-chat' className='widget'>
-        <h1>Chat with Current User</h1>
-        <p>Chat 1</p>
-        <p>Chat 2</p>
-        <p>Chat 3</p>
-        <p>Chat 4</p>
-        <p>Chat 5</p>
+        <div className='widget-title'>Chat with Current User</div>
+          <div className='current-chat-message-other'>Chat 1</div>
+          <div className='current-chat-message-self'>Chat 2</div>
+          <div className='current-chat-message-other'>Chat 3</div>
+          <div className='current-chat-message-self'>Chat 4</div>
+          <div className='current-chat-message-other'>Chat 5</div>
       </div>
     )
   }
