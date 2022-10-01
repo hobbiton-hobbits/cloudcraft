@@ -6,7 +6,7 @@ import GroupList from "./GroupList/GroupList.jsx";
 import CurrentChat from "./CurrentChat/CurrentChat.jsx";
 import TaskList from "./TaskList/TaskList.jsx";
 
-const socket = io.connect('http://localhost:8085');
+const socket = io();
 
 const App = () => {
  // Change if using Recoil state manager

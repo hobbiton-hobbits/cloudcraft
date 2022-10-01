@@ -19,7 +19,7 @@ app.use(express.json());
 
 const io = new Server(server, {
 cors: {
-  origin: `${process.env.SV_URL}:${port}`,
+  origin: `${process.env.SV_URL}`,
   methods: ['GET', 'POST'],
 },
 });
