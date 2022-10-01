@@ -1,8 +1,7 @@
 # CloudCraft
-Created by Alex Lee, Brian Vose, Casey Penk, Christopher Garcia, Daniel Shin, James Anderson, and Yong Tang
-September–October 2022
-
 CloudCraft is a real-time chat and task manager application designed for organizations.
+
+Created by Alex Lee, Brian Vose, Casey Penk, Christopher Garcia, Daniel Shin, James Anderson, and Yong Tang in September and October 2022.
 
 ## User list
 The user list contains a list of users the logged-in user can chat with. The user currently being chatted with, if any, is highlighted.
