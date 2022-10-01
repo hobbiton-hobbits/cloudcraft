@@ -6,7 +6,13 @@ const path = require('path');
 const app = express();
 const compression = require('compression');
 const db = require('./db');
-const { getMessages, editMessage, deleteMessage, addMessage } = require('./db/dbLogic.js')
+const {
+  getMessages,
+  editMessage,
+  deleteMessage,
+  addMessage,
+  addUser,
+} = require('./db/dbLogic.js');
 const { Server } = require('socket.io');
 const port = process.env.SERVERPORT;
 
@@ -31,11 +37,17 @@ io.on('connection', (socket) => {
 
   // Socket listener for entering a group room
   socket.on('join-room', async (data) => {
+    console.log(`${socket.id} has emitted join event`);
+    console.log('data', data);
     const { username, userId, group, groupId } = data;
     const joinTime = new Date().toLocaleString();
 
+    // Change once authentication finalized
+    await addUser(username, 'Yong', 'Tang', 'Fake_Token');
+
     // general room message history
-    const messages = await getMessages(userId, groupId)
+    // const messages = await getMessages(userId, groupId);
+    const messages = await getMessages(username, null, group).rows;
 
     // Placeholder messages
     const tempMessages = [{
@@ -74,11 +86,17 @@ io.on('connection', (socket) => {
   });
 
   // socket for sending messages to other users or groups
-  socket.on('send-message', (data) => {
-    console.log('message sent:', data);
-    const { userId, group, groupId, text } = data;
-    socket.to(group).emit('receive-msg', data);
-    addMessage(userId, null, groupId, text);
+  socket.on('send-message', (message) => {
+    console.log('message sent:', message);
+    const { username, group, senderMsg } = message;
+    const emittedMessage = {
+      message_text: senderMsg,
+      created: '1-2-1221',
+      sender_id: username.toString(),
+      deleted: false,
+    }
+    socket.emit('receive-msg', [emittedMessage]);
+    addMessage(username, null, group, senderMsg);
   });
 
   // socket for disconnecting

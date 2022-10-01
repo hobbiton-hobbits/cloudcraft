@@ -13,20 +13,18 @@ const CurrentChat = (props) => {
   const [senderMsg, setSenderMsg] = useRecoilState(sendMsgState);
 
   const handleMessage = (e) => {
-    // Update
-    // const msg = {
-    //   userId: username,
-    //   group: group,
-    //   groupId: ,
-    //   text: ,
-    // }
     setSenderMsg(ref.current.value);
   }
 
   const sendMessage = (e) => {
     e.preventDefault();
-    console.log(ref.current.value);
-    socket.emit('send-message', senderMsg, (response) => 'Message sent!');
+    // console.log(ref.current.value);
+    const msg = {
+      username,
+      group,
+      senderMsg,
+    }
+    socket.emit('send-message', msg);
   }
 
   const searchChat = (e) => {
