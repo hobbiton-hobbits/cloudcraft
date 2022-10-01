@@ -94,8 +94,7 @@ Includes user list, group list, current chat, and task list */
 
 /* container element for the draft input text box (container needed to allow padding without expanding input beyond 100% width) */
 #current-chat-draft-container {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 20px;
     border-top: 1px solid #e7ecef;
     margin-top: auto;
 }
@@ -107,6 +106,11 @@ Includes user list, group list, current chat, and task list */
     font-size: 20px;
     display: block;
     width: 100%;
+    margin-top: auto;
+}
+
+textarea {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* container for messages sent from others */
@@ -150,6 +154,11 @@ Includes user list, group list, current chat, and task list */
     text-align: left;
     background-color: white;
     color: black;
+}
+
+.task-list-task-checkbox {
+    width: 25px;
+    height: 25px;
 }
 
 /* hides the focus border around the input */
