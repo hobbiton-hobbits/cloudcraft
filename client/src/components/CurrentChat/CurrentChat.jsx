@@ -2,12 +2,10 @@ import React from "react";
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ChatMessage from './ChatMessage.jsx';
-import ChatMessage from './ChatMessage.jsx';
 
 const CurrentChat = (props) => {
   //get all messages that match user id and recipient id
-    //loop through messages passing them into self or other depending on message sending/recieving
-      //this can be done through .map with if statements?
+    //loop through messages passing them into ChatMessage
     return (
       <div id='current-chat' className='widget'>
         <div className='widget-title'>Chat with Current User</div>
