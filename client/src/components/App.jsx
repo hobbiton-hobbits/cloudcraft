@@ -1,4 +1,5 @@
 import React from "react";
+import { RecoilRoot } from 'recoil';
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import UserList from "./UserList/UserList.jsx";
@@ -46,17 +47,19 @@ const App = () => {
  // }
 
   return (
-    <div>
-      <div id='page-title'>cloudcraft</div>
-      <div id="main-content">
-        <div id="user-and-group-list">
-          <UserList />
-          <GroupList />
+    <RecoilRoot>
+      <div>
+        <div id='page-title'>cloudcraft</div>
+        <div id="main-content">
+          <div id="user-and-group-list">
+            <UserList />
+            <GroupList />
+          </div>
+          <CurrentChat />
+          <TaskList />
         </div>
-        <CurrentChat />
-        <TaskList />
       </div>
-    </div>
+    </RecoilRoot>
   );
 };
 
