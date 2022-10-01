@@ -7,7 +7,7 @@ import TaskList from "./TaskList/TaskList.jsx";
 const App = () => {
   return (
     <div>
-      <h1>CloudCraft</h1>
+      <div id='page-title'>cloudcraft</div>
       <div id="main-content">
         <div id="user-and-group-list">
           <UserList />
