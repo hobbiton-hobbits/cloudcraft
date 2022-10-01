@@ -25,47 +25,68 @@ cors: {
 });
 
 io.on('connection', (socket) => {
- // Placeholder emitted to client to confirm connection established
- socket.emit('welcome-back', socket.id);
- console.log(`User connected: ${socket.id}`)
+  // Placeholder emitted to client to confirm connection established
+  socket.emit('welcome-back', socket.id);
+  console.log(`User connected: ${socket.id}`)
 
- // Socket listener for entering a group room
- socket.on('join-room', (data) => {
-   const { username, recipient, group } = data;
-   const joinTime = new Date().toLocaleString();
+  // Socket listener for entering a group room
+  socket.on('join-room', async (data) => {
+    const { username, userId, group, groupId } = data;
+    const joinTime = new Date().toLocaleString();
 
-   // Insert db query here to get general room message history
-   // DB QUERY HERE
+    // general room message history
+    const messages = await getMessages(userId, groupId)
 
-   // Placeholder messages
-   const messages = [
-     { message: 'hello', username: 'user1' },
-     { message: 'hello', username: 'user2' },
-     { message: 'hello', username: 'user3' },
-     { message: 'hello', username: 'user4' },
-   ];
+    // Placeholder messages
+    const tempMessages = [{
+      message_text: 'Hello 1',
+      created: '1-2-1221',
+      sender_id: '2',
+      deleted: false
+      }, {
+      message_text: 'Hello 2',
+      created: '1-2-1221',
+      sender_id: '1',
+      deleted: false
+      }, {
+      message_text: 'Bye 1',
+      created: '1-2-1221',
+      sender_id: '2',
+      deleted: false
+      }, {
+      message_text: 'Bye 1',
+      created: '1-2-1221',
+      sender_id: '2',
+      deleted: true
+      }, {
+      message_text: 'Bye 2',
+      created: '1-2-1221',
+      sender_id: '1',
+      deleted: false
+    }]
 
-   if (!recipient) {
-     socket.join(group);
-   } else {
-     socket.join(recipient);
-   }
+    socket.join(group);
 
+    // Insert db query to insert user into group list if not already part of it
+    // addUserToGroup(userId, groupId); --- not created yet
 
-   // Insert db query to insert user into group list if not already part of it
-     // DB QUERY HERE
+    socket.emit('receive-msg', tempMessages);
+  });
 
-   socket.emit('receive-msg', messages);
-   // Default emit to notify all group members that user has entered
-   socket.to(group).emit('receive-msg', {
-     message: `${username} has joined the chat`,
-     username: 'CHAT_BOT',
-     joinTime,
-   })
- });
+  // socket for sending messages to other users or groups
+  socket.on('send-message', (data) => {
+    console.log('message sent:', data);
+    const { userId, group, groupId, text } = data;
+    socket.to(group).emit('receive-msg', data);
+    addMessage(userId, null, groupId, text);
+  });
 
+  // socket for disconnecting
+  socket.on('disconnect', () => {
+    console.log('User disconnected: ', socket.id)
+  })
 });
 
 server.listen(port, () => {
-console.log(`Example app listening on port ${port}`)
+  console.log(`Example app listening on port ${port}`)
 });

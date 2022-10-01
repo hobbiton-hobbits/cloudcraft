@@ -17,10 +17,10 @@ pool.connect().then(() => {
 const getMessages = async (sender_id, recipient_id = null, group_id = null) => {
   //may need to add in second query to get all messages that are from recipient to sender, right now it just goes from sender to recipient
   if (recipient_id) {
-    return await pool.query(`SELECT message_text, created FROM messages WHERE sender_id = $1 AND recipient_id = $2 AND deleted = false OR WHERE sender_id = $2 AND recipient_id = $1 AND deleted = false ORDER BY message_id DESC;`, [sender_id, recipient_id])
+    return await pool.query(`SELECT message_id, message_text, created, sender_id, deleted FROM messages WHERE sender_id = $1 AND recipient_id = $2 AND deleted = false OR WHERE sender_id = $2 AND recipient_id = $1 AND deleted = false ORDER BY message_id DESC;`, [sender_id, recipient_id])
   }
   if (group_id) {
-    return await pool.query(`SELECT message_text, created FROM messages WHERE sender_id = $1 AND recipient_group_id = $2 AND deleted = false OR WHERE sender_id = $2 AND recipient_group_id = $1 AND deleted = false ORDER BY message_id DESC;`, [sender_id, group_id])
+    return await pool.query(`SELECT message_id, message_text, created, sender_id, deleted FROM messages WHERE sender_id = $1 AND recipient_group_id = $2 AND deleted = false OR WHERE sender_id = $2 AND recipient_group_id = $1 AND deleted = false ORDER BY message_id DESC;`, [sender_id, group_id])
   }
 }
 
