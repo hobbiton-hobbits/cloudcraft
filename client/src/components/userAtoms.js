@@ -17,3 +17,9 @@ export const messageState = atom({
   default: [],
 });
 
+export const sendMsgState = atom({
+  key: 'sendMsgState',
+  // Change default when done testing
+  default: null,
+});
+

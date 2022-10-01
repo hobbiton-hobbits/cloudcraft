@@ -2,18 +2,31 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ChatMessage from './ChatMessage.jsx';
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { groupState, messageState } from '../userAtoms.js';
+import { usernameState, groupState, messageState, sendMsgState } from '../userAtoms.js';
 
 const CurrentChat = (props) => {
   const { socket } = props;
   const ref = useRef(null);
   const group = useRecoilValue(groupState);
+  const username = useRecoilValue(usernameState);
   const [msgHistory, setMsgHistory] = useRecoilState(messageState);
+  const [senderMsg, setSenderMsg] = useRecoilState(sendMsgState);
+
+  const handleMessage = (e) => {
+    // Update
+    // const msg = {
+    //   userId: username,
+    //   group: group,
+    //   groupId: ,
+    //   text: ,
+    // }
+    setSenderMsg(ref.current.value);
+  }
 
   const sendMessage = (e) => {
     e.preventDefault();
     console.log(ref.current.value);
-    ref.current.value = '';
+    socket.emit('send-message', senderMsg, (response) => 'Message sent!');
   }
 
   const searchChat = (e) => {
@@ -38,7 +51,7 @@ const CurrentChat = (props) => {
         ))}
         </div>
         <div id='current-chat-draft-container'>
-          <textarea ref={ref} id='current-chat-draft' placeholder='type your message'/>
+          <textarea ref={ref} id='current-chat-draft' placeholder='type your message' onChange={handleMessage}/>
           <div className="button" id='current-chat-send-button' onClick={sendMessage}>Send</div>
         </div>
     </div>

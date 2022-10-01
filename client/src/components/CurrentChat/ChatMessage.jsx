@@ -7,7 +7,7 @@ const ChatMessage = ({ message }) => {
   const [editModal, setEditModal] = useState(false);
   const username = useRecoilValue(usernameState);
 
-  console.log('From inside ChatMessage: ', message)
+  // console.log('From inside ChatMessage: ', message)
   if (message.deleted) {
      //message.message_text = 'This message was deleted'
   }

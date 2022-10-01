@@ -75,10 +75,11 @@ io.on('connection', (socket) => {
 
   // socket for sending messages to other users or groups
   socket.on('send-message', (data) => {
+    console.log('message sent:', data);
     const { userId, group, groupId, text } = data;
     socket.to(group).emit('receive-msg', data);
     addMessage(userId, null, groupId, text);
-  })
+  });
 
   // socket for disconnecting
   socket.on('disconnect', () => {
