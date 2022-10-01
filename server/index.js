@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
  console.log(`User connected: ${socket.id}`)
 
  // Socket listener for entering a group room
- socket.on('join-group', (data) => {
+ socket.on('join-room', (data) => {
    const { username, recipient, group } = data;
    const joinTime = new Date().toLocaleString();
 
@@ -45,7 +45,12 @@ io.on('connection', (socket) => {
      { message: 'hello', username: 'user4' },
    ];
 
-   socket.join(group);
+   if (!recipient) {
+     socket.join(group);
+   } else {
+     socket.join(recipient);
+   }
+
 
    // Insert db query to insert user into group list if not already part of it
      // DB QUERY HERE

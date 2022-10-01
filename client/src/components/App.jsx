@@ -25,7 +25,7 @@ const App = () => {
        // Confirm socketID connection with server
        console.log(`Welcome back: ${socketID}`);
        // Send default recipient and group
-       socket.emit('join-group', {
+       socket.emit('join-room', {
          username,
          recipient,
          group,
