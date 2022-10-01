@@ -94,15 +94,19 @@ Includes user list, group list, current chat, and task list */
 
 /* container element for the draft input text box (container needed to allow padding without expanding input beyond 100% width) */
 #current-chat-draft-container {
-    padding: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-top: 1px solid #e7ecef;
+    margin-top: auto;
 }
 
 /* draft input text box */
 #current-chat-draft {
-    height: 100px;
+    height: 80px;
     border: none;
     font-size: 20px;
     display: block;
+    width: 100%;
 }
 
 /* container for messages sent from others */
@@ -123,7 +127,6 @@ Includes user list, group list, current chat, and task list */
 .current-chat-message-other, .current-chat-message-self {
     margin-top: 20px;
     margin-bottom: 20px;
-
 }
 
 /* message bubble from someone else */
