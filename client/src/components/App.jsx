@@ -12,6 +12,7 @@ import TaskList from "./TaskList/TaskList.jsx";
 import {
   usernameState,
   groupState,
+  messageState,
 } from './userAtoms.js';
 
 const socket = io();
@@ -22,31 +23,23 @@ const App = () => {
   const [fullName, setFullName] = useState(null);
   const [username, setUsername] = useRecoilState(usernameState);
   const [group, setGroup] = useRecoilState(groupState);
-  const [recipient, setRecipient] = useState(null);
-  const [receivedMsg, setReceivedMsg] = useState(null);
-
+  const [msgHistory, setMsgHistory] = useRecoilState(messageState);
 
 useEffect(() => {
   // Once login is implemented, uncomment out if statement
   // if (loggedIn) {
     socket.emit('join-room', {
       username,
-      recipient,
       group,
-    }, (response) => console.log('Joined general room'));
+    }, (response) => console.log(`Joined ${group}!`));
 
     socket.on('welcome-back', (socketID) => {
       // Confirm socketID connection with server
       console.log(`Welcome back: ${socketID}`);
-      // Send default recipient and group
     });
 
     socket.on('receive-msg', (messages) => {
-      // data may be in different data structure;
-      setReceivedMsg(messages);
-      setGroup('Daniel');
-      console.log(group);
-      console.log(username);
+      setMsgHistory(messages);
       console.log('Messages received:', messages);
     });
   // }
