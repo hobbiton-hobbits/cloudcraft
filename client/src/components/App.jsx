@@ -1,4 +1,5 @@
 import React from "react";
+import { RecoilRoot } from 'recoil';
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import UserList from "./UserList/UserList.jsx";
@@ -6,7 +7,7 @@ import GroupList from "./GroupList/GroupList.jsx";
 import CurrentChat from "./CurrentChat/CurrentChat.jsx";
 import TaskList from "./TaskList/TaskList.jsx";
 
-const socket = io.connect('http://localhost:8085');
+const socket = io();
 
 const App = () => {
  // Change if using Recoil state manager
@@ -25,7 +26,7 @@ const App = () => {
        // Confirm socketID connection with server
        console.log(`Welcome back: ${socketID}`);
        // Send default recipient and group
-       socket.emit('join-group', {
+       socket.emit('join-room', {
          username,
          recipient,
          group,
@@ -46,17 +47,19 @@ const App = () => {
  // }
 
   return (
-    <div>
-      <div id='page-title'>cloudcraft</div>
-      <div id="main-content">
-        <div id="user-and-group-list">
-          <UserList />
-          <GroupList />
+    <RecoilRoot>
+      <div>
+        <div id='page-title'>cloudcraft</div>
+        <div id="main-content">
+          <div id="user-and-group-list">
+            <UserList />
+            <GroupList />
+          </div>
+          <CurrentChat />
+          <TaskList />
         </div>
-        <CurrentChat />
-        <TaskList />
       </div>
-    </div>
+    </RecoilRoot>
   );
 };
 
