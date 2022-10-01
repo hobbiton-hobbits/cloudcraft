@@ -4,7 +4,7 @@ const UserList = (props) => {
     return (
       <div id='user-list' className='widget'>
         <div className='widget-title'>Users</div>
-        <div className='user-list-user'>User 1</div>
+        <div className='user-list-user' id='selected'>User 1</div>
         <div className='user-list-user'>User 1</div>
         <div className='user-list-user'>User 1</div>
         <div className='user-list-user'>User 1</div>
