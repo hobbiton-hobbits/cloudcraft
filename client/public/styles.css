@@ -169,3 +169,11 @@ textarea:focus,
 button:focus {
     outline: none;
 }
+
+.user-list-user-username {
+    font-size: 12px;
+}
+
+#user-list-users, #group-list-groups, #current-chat-message-container {
+    overflow: scroll;
+}
