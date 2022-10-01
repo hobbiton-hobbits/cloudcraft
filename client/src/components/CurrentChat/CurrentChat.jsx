@@ -1,42 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ChatMessage from './ChatMessage.jsx';
-import { useRecoilValue } from 'recoil';
-import { groupState } from '../userAtoms.js';
-
-//Delete this once messages can be obtained from DB
-const tempMessages = [{
-  message_text: 'Hello 1',
-  created: '1-2-1221',
-  sender_id: '2',
-  deleted: false
-  }, {
-  message_text: 'Hello 2',
-  created: '1-2-1221',
-  sender_id: '1',
-  deleted: false
-  }, {
-  message_text: 'Bye 1',
-  created: '1-2-1221',
-  sender_id: '2',
-  deleted: false
-  }, {
-  message_text: 'Bye 1',
-  created: '1-2-1221',
-  sender_id: '2',
-  deleted: true
-  }, {
-  message_text: 'Bye 2',
-  created: '1-2-1221',
-  sender_id: '1',
-  deleted: false
-}]
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { groupState, messageState } from '../userAtoms.js';
 
 const CurrentChat = (props) => {
   const { socket } = props;
   const ref = useRef(null);
   const group = useRecoilValue(groupState);
-  const [messageArray, setMessageArray] = useState(tempMessages)
+  const [msgHistory, setMsgHistory] = useRecoilState(messageState);
 
   const sendMessage = (e) => {
     e.preventDefault();
@@ -47,21 +19,21 @@ const CurrentChat = (props) => {
   const searchChat = (e) => {
     if (e.target.value.length < 3) {
       //will need way to hold original array of messages so it defaults back to that list when the user is done searching
-      setMessageArray(tempMessages);
+      setMsgHistory([]);
       return;
     }
-    var filterMessages = messageArray.filter((item) => {
+    var filterMessages = msgHistory.filter((item) => {
       return item.message_text.toLowerCase().includes(e.target.value.toLowerCase())
     })
-    setMessageArray(filterMessages);
+    setMsgHistory(filterMessages);
   }
 
   return (
     <div id='current-chat' className='widget'>
       <input type='text' className='current-chat-search' onChange={searchChat}/>
       <div className='widget-title'>Chat with {group}</div>
-        <div className='current-chat-message-container'>
-        {messageArray.length === 0 ? <p>Start a chat with this user</p> : messageArray.map((message, key) => (
+        <div id='current-chat-message-container'>
+        {!msgHistory ? <p>Start a chat with this user</p> : msgHistory.map((message, key) => (
           <ChatMessage key={key} message={message}/>
         ))}
         </div>

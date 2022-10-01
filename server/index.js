@@ -31,32 +31,46 @@ io.on('connection', (socket) => {
 
   // Socket listener for entering a group room
   socket.on('join-room', async (data) => {
-    const { username, recipient, group, userId, groupId } = data;
+    const { username, userId, group, groupId } = data;
     const joinTime = new Date().toLocaleString();
 
     // general room message history
     const messages = await getMessages(userId, groupId)
 
     // Placeholder messages
-    const mockMessages = [
-      { message: 'hello', username: 'user1' },
-      { message: 'hello', username: 'user2' },
-      { message: 'hello', username: 'user3' },
-      { message: 'hello', username: 'user4' },
-    ];
+    const tempMessages = [{
+      message_text: 'Hello 1',
+      created: '1-2-1221',
+      sender_id: '2',
+      deleted: false
+      }, {
+      message_text: 'Hello 2',
+      created: '1-2-1221',
+      sender_id: '1',
+      deleted: false
+      }, {
+      message_text: 'Bye 1',
+      created: '1-2-1221',
+      sender_id: '2',
+      deleted: false
+      }, {
+      message_text: 'Bye 1',
+      created: '1-2-1221',
+      sender_id: '2',
+      deleted: true
+      }, {
+      message_text: 'Bye 2',
+      created: '1-2-1221',
+      sender_id: '1',
+      deleted: false
+    }]
 
     socket.join(group);
 
     // Insert db query to insert user into group list if not already part of it
-      // DB QUERY HERE
+    // addUserToGroup(userId, groupId); --- not created yet
 
-    socket.emit('receive-msg', mockMessages);
-    // Default emit to notify all group members that user has entered
-    socket.to(group).emit('receive-msg', {
-      message: `${username} has joined the chat`,
-      username: 'CHAT_BOT',
-      joinTime,
-    })
+    socket.emit('receive-msg', tempMessages);
   });
 
   // socket for sending messages to other users or groups
