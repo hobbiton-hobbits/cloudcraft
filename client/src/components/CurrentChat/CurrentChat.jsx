@@ -20,7 +20,7 @@ const CurrentChat = (props) => {
             <div className='current-chat-message-other'>Chat 5</div>
           </div>
           <div id='current-chat-draft-container'>
-            <input type='text' id='current-chat-draft' placeholder='type your message'></input>
+            <textarea id='current-chat-draft' placeholder='type your message'></textarea>
           </div>
           <div className="button" id='current-chat-send-button'>send</div>
 
