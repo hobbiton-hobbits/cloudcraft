@@ -14,9 +14,11 @@ pool.connect().then(() => {
 }).catch(err => (console.log('Client error: ', err)))
 
 //pass id of sender and recipient into params when invoking
-const getMessages = async (sender_id, recipient_id) => {
+const getMessages = async (sender_id, recipient_id = null, group_id = null) => {
   //may need to add in second query to get all messages that are from recipient to sender, right now it just goes from sender to recipient
-  return await pool.query(`SELECT message_text, created FROM messages WHERE sender_id = $1 AND recipient_id = $2 AND deleted = false ORDER BY message_id DESC;`, [sender_id, recipient_id])
+  if (recipient_id) {
+    return await pool.query(`SELECT message_text, created FROM messages WHERE sender_id = $1 AND recipient_id = $2 AND deleted = false ORDER BY message_id DESC;`, [sender_id, recipient_id])
+  }
 }
 
 //updates message, pass in message id and newly edited message
