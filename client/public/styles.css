@@ -107,6 +107,7 @@ Includes user list, group list, current chat, and task list */
     font-size: 20px;
     display: block;
     width: 100%;
+    resize: none;
 }
 
 /* container for messages sent from others */
