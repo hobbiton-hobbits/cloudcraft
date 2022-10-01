@@ -33,6 +33,8 @@ Includes user list, group list, current chat, and task list */
 .widget {
     background-color: white;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 /* The title at the top of each widget */
@@ -45,19 +47,22 @@ Includes user list, group list, current chat, and task list */
 }
 
 #user-list {
-    margin-bottom: 50px;
+    margin-bottom: 25px;
+    height: 400px;
 }
 
 #group-list {
-    margin-bottom: 50px;
+    height: 400px;
 }
 
 #current-chat {
-    width: 45%;
+    width: 47%;
+    height: 825px;
 }
 
 #task-list {
     width: 30%;
+    height: 825px;
 }
 
 /* all individual list items */
@@ -67,7 +72,7 @@ Includes user list, group list, current chat, and task list */
 }
 
 /* on hover over any item, change the colors to denote that it is being hovered over */
-.task-list-task:hover, .user-list-user:hover, .group-list-group:hover, .current-chat-message-other:hover, .current-chat-message-self:hover {
+#page-title:hover, .button:hover, .task-list-task:hover, .user-list-user:hover, .group-list-group:hover, .current-chat-message-other:hover, .current-chat-message-self:hover {
     background-color: #274c77;
     color: white;
 }
@@ -84,20 +89,29 @@ Includes user list, group list, current chat, and task list */
     padding: 20px;
     color: white;
     text-align: center;
+    margin-top: auto;
 }
 
 /* container element for the draft input text box (container needed to allow padding without expanding input beyond 100% width) */
 #current-chat-draft-container {
     padding: 20px;
+    border-top: 1px solid #e7ecef;
+    margin-top: auto;
 }
 
 /* draft input text box */
 #current-chat-draft {
-    height: 100px;
+    height: 80px;
     border: none;
     font-size: 20px;
     display: block;
     resize: none;
+    width: 100%;
+    margin-top: auto;
+}
+
+textarea {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* container for messages sent from others */
@@ -118,7 +132,6 @@ Includes user list, group list, current chat, and task list */
 .current-chat-message-other, .current-chat-message-self {
     margin-top: 20px;
     margin-bottom: 20px;
-
 }
 
 /* message bubble from someone else */
@@ -142,6 +155,11 @@ Includes user list, group list, current chat, and task list */
     text-align: left;
     background-color: white;
     color: black;
+}
+
+.task-list-task-checkbox {
+    width: 25px;
+    height: 25px;
 }
 
 /* hides the focus border around the input */
