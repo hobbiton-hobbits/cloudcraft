@@ -13,6 +13,7 @@ const CurrentChat = (props) => {
     }
     return (
       <div id='current-chat' className='widget'>
+        <input type='text' className='current-chat-search'/>
         <div className='widget-title'>Chat with Current User</div>
           <div className='current-chat-message-other-container'>
             <div className='current-chat-message-other'>Chat 1</div>
