@@ -34,6 +34,8 @@ const App = () => {
 useEffect(() => {
   // Once login is implemented, uncomment out if statement
   // if (loggedIn) {
+    setMsgHistory([]);
+
     socket.emit('join-room', {
       username,
       group,
@@ -52,7 +54,8 @@ useEffect(() => {
 //   return <Login/>
 // }
   const testButton = () => {
-    setGroup('Brian');
+    socket.emit('leave-room', group);
+    setGroup(3);
   }
 
   return (

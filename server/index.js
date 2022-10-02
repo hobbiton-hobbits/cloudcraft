@@ -33,7 +33,11 @@ cors: {
 io.on('connection', (socket) => {
   // Placeholder emitted to client to confirm connection established
   socket.emit('welcome-back', socket.id);
-  console.log(`User connected: ${socket.id}`)
+  console.log(`User connected: ${socket.id}`);
+
+  socket.on('leave-room', (room) => {
+    socket.leave(room);
+  });
 
   // Socket listener for entering a group room
   socket.on('join-room', async (data) => {
@@ -60,7 +64,9 @@ io.on('connection', (socket) => {
       created: '1-2-1221',
       sender_id: '1',
       deleted: false
-      }, {
+      }];
+
+    const tempMessages2 = [{
       message_text: 'Bye 1',
       created: '1-2-1221',
       sender_id: '2',
@@ -75,14 +81,14 @@ io.on('connection', (socket) => {
       created: '1-2-1221',
       sender_id: '1',
       deleted: false
-    }]
+    }];
 
     socket.join(group);
 
     // Insert db query to insert user into group list if not already part of it
     // addUserToGroup(userId, groupId); --- not created yet
-
-    socket.emit('receive-msg', tempMessages);
+    io.in(2).emit('receive-msg', tempMessages);
+    io.in(3).emit('receive-msg', tempMessages2);
   });
 
   // socket for sending messages to other users or groups
