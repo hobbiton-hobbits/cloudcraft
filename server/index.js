@@ -12,6 +12,8 @@ const {
   deleteMessage,
   addMessage,
   addUser,
+  addUserToGroup,
+  addGroup
 } = require('./db/dbLogic.js');
 const { Server } = require('socket.io');
 const port = process.env.SERVERPORT;
@@ -86,7 +88,9 @@ io.on('connection', (socket) => {
     socket.join(group);
 
     // Insert db query to insert user into group list if not already part of it
-    // addUserToGroup(userId, groupId); --- not created yet
+    await addUserToGroup(userId, groupId);
+
+    // io.in(group).emit('receive-msg', messages);
     io.in(2).emit('receive-msg', tempMessages);
     io.in(3).emit('receive-msg', tempMessages2);
   });
@@ -101,7 +105,9 @@ io.on('connection', (socket) => {
       sender_id: username.toString(),
       deleted: false,
     }
-    socket.emit('receive-msg', [emittedMessage]);
+
+    // io.to(group).emit('receive-msg', [emittedMessage])
+    io.to(2).emit('receive-msg', [emittedMessage]);
     addMessage(username, null, group, senderMsg);
   });
 

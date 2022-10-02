@@ -61,7 +61,24 @@ const addUser = async (username, firstName, lastName, token) => {
   );
 }
 
+// add user to group if not already in it -- make additional query to check if user is already in
+const addUserToGroup = async (user_id, group_id) => {
+  return await pool.query(
+    `UPDATE groups
+    SET user_ids = array_append(user_ids, $1)
+    WHERE group_id = $2`, [user_id, group_id]
+  );
+}
+
+// create group
+const addGroup = async (userId, addedUserIds) => {
+  return await pool.query(
+    `INSERT INTO groups
+    VALUES ($1, $2)`, [userId, addedUserIds]
+  );
+}
 
 
 
-module.exports = { getMessages, editMessage, deleteMessage, addMessage, addUser }
+
+module.exports = { getMessages, editMessage, deleteMessage, addMessage, addUser, addUserToGroup, addGroup }
