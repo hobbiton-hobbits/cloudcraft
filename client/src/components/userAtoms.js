@@ -22,4 +22,3 @@ export const sendMsgState = atom({
   // Change default when done testing
   default: null,
 });
-

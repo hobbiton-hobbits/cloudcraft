@@ -44,7 +44,7 @@ useEffect(() => {
       console.log(`Welcome back: ${socketID}`);
     });
   //}
-  }, [socket, username, group])
+  }, [group])
 
 
 // Implement conditional rendering of login page once finished with Auth
