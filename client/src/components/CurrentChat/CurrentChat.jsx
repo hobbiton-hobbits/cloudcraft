@@ -2,7 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ChatMessage from './ChatMessage.jsx';
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { usernameState, groupState, messageState, sendMsgState } from '../userAtoms.js';
+import {
+  usernameState,
+  groupState,
+  messageState,
+  sendMsgState,
+} from '../userAtoms.js';
 
 const CurrentChat = (props) => {
   const { socket } = props;
@@ -13,20 +18,33 @@ const CurrentChat = (props) => {
   const [senderMsg, setSenderMsg] = useRecoilState(sendMsgState);
 
   const handleMessage = (e) => {
-    // Update
-    // const msg = {
-    //   userId: username,
-    //   group: group,
-    //   groupId: ,
-    //   text: ,
-    // }
     setSenderMsg(ref.current.value);
+    localStorage.setItem('draft-message', ref.current.value);
   }
 
   const sendMessage = (e) => {
     e.preventDefault();
-    console.log(ref.current.value);
-    socket.emit('send-message', senderMsg, (response) => 'Message sent!');
+    // console.log(ref.current.value);
+    const msg = {
+      username,
+      group,
+      senderMsg,
+    }
+    socket.emit('send-message', msg);
+    localStorage.removeItem('draft-message');
+    setSenderMsg('');
+  }
+
+  const handleReturn = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(e);
+      return;
+    }
+    if (e.key === 'Enter' && e.shiftKey) {
+      setSenderMsg(senderMsg);
+      return;
+    }
   }
 
   const searchChat = (e) => {
@@ -41,6 +59,13 @@ const CurrentChat = (props) => {
     setMsgHistory(filterMessages);
   }
 
+  useEffect(() => {
+    const draftMsg = localStorage.getItem('draft-message');
+    if (draftMsg) {
+      setSenderMsg(draftMsg);
+    }
+  }, [])
+
   return (
     <div id='current-chat' className='widget'>
       <input type='text' className='current-chat-search' onChange={searchChat}/>
@@ -51,8 +76,19 @@ const CurrentChat = (props) => {
         ))}
         </div>
         <div id='current-chat-draft-container'>
-          <textarea ref={ref} id='current-chat-draft' placeholder='type your message' onChange={handleMessage}/>
-          <div className="button" id='current-chat-send-button' onClick={sendMessage}>Send</div>
+          <textarea
+            ref={ref}
+            id='current-chat-draft'
+            placeholder='Type your message...'
+            value={senderMsg}
+            onChange={handleMessage}
+            onKeyDown={handleReturn}/>
+          <div
+            className="button"
+            id='current-chat-send-button'
+            onClick={sendMessage}>
+            Send
+          </div>
         </div>
     </div>
   )

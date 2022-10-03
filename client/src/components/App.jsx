@@ -25,9 +25,17 @@ const App = () => {
   const [group, setGroup] = useRecoilState(groupState);
   const [msgHistory, setMsgHistory] = useRecoilState(messageState);
 
+  socket.on('receive-msg', (messages) => {
+    setMsgHistory([...msgHistory, ...messages]);
+    console.log('Messages received:', messages);
+    console.log(msgHistory);
+  });
+
 useEffect(() => {
   // Once login is implemented, uncomment out if statement
   // if (loggedIn) {
+    setMsgHistory([]);
+
     socket.emit('join-room', {
       username,
       group,
@@ -37,20 +45,17 @@ useEffect(() => {
       // Confirm socketID connection with server
       console.log(`Welcome back: ${socketID}`);
     });
+  //}
+  }, [group])
 
-    socket.on('receive-msg', (messages) => {
-      setMsgHistory(messages);
-      console.log('Messages received:', messages);
-    });
-  // }
- }, [socket, username, group])
 
 // Implement conditional rendering of login page once finished with Auth
 // if (!loggedIn) {
 //   return <Login/>
 // }
   const testButton = () => {
-    setGroup('Brian');
+    socket.emit('leave-room', group);
+    setGroup(3);
   }
 
   return (
