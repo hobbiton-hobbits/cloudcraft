@@ -81,12 +81,12 @@ const App = () => {
   }
 
   const testButton2 = () => {
-    if (username === 1) {
-      setRecipient(1);
-      setUsername(2);
+    if (username === 10) {
+      setRecipient(10);
+      setUsername(11);
     } else {
-      setRecipient(2);
-      setUsername(1);
+      setRecipient(11);
+      setUsername(10);
     }
   }
 

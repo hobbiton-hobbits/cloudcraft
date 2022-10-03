@@ -14,7 +14,8 @@ const {
   addMessage,
   addUser,
   addUserToGroup,
-  addGroup
+  addGroup,
+  getUserId,
 } = require('./db/dbLogic.js');
 const { Server } = require('socket.io');
 const port = process.env.SERVERPORT;
@@ -40,6 +41,7 @@ const userSocketIds = {};
 
 io.on('connection', (socket) => {
   let currentRoom;
+  let userId;
 
   // Placeholder emitted to client to confirm connection established
   socket.emit('welcome-back', socket.id);
@@ -62,17 +64,20 @@ io.on('connection', (socket) => {
     let messages;
     // Remove console logs in production
     console.log(`${socket.id} has emitted join event`);
-    console.log('data', data);
+    console.log('data sent when joining room:', data);
 
     // Need to clarify userId and data object being sent. Update when clarified with Auth side
-    const { username, userId, recipient, group, groupId } = data;
+    const { username, recipient, group } = data;
     const joinTime = new Date().toLocaleString();
 
     // Set room as either single socket for private chats or group name if group room
     if (!group) {
       // Update query when proper data structure is determine.
-      // messages = await getMessages(username, recipient, null).rows;
-      // console.log('recipient only messages', messages);
+      await addUser(username, 'Yong', 'Tang', 'Fake_Token');
+      userId = await getUserId(username);
+      console.log('id', userId);
+      messages = await getMessages(userId.rows[0].id, recipient, null);
+      console.log('recipient only messages', messages);
     } else {
       currentRoom = group;
       socket.join(group);
@@ -81,42 +86,41 @@ io.on('connection', (socket) => {
       // console.log('group messages', messages);
     }
     // Update once authentication finalized
-    await addUser(username, 'Yong', 'Tang', 'Fake_Token');
 
     // Placeholder messages
-    const tempMessages = [{
-      message_text: 'Hello 1',
-      created: '1-2-1221',
-      sender_id: '2',
-      deleted: false
-      }, {
-      message_text: 'Hello 2',
-      created: '1-2-1221',
-      sender_id: '1',
-      deleted: false
-      }];
+    // const tempMessages = [{
+      //   message_text: 'Hello 1',
+      //   created: '1-2-1221',
+    //   sender_id: '2',
+    //   deleted: false
+    //   }, {
+    //   message_text: 'Hello 2',
+    //   created: '1-2-1221',
+    //   sender_id: '1',
+    //   deleted: false
+    //   }];
 
-    const tempMessages2 = [{
-      message_text: 'Bye 1',
-      created: '1-2-1221',
-      sender_id: '2',
-      deleted: false
-      }, {
-      message_text: 'Bye 1',
-      created: '1-2-1221',
-      sender_id: '2',
-      deleted: true
-      }, {
-      message_text: 'Bye 2',
-      created: '1-2-1221',
-      sender_id: '1',
-      deleted: false
-    }];
+    // const tempMessages2 = [{
+    //   message_text: 'Bye 1',
+    //   created: '1-2-1221',
+    //   sender_id: '2',
+    //   deleted: false
+    //   }, {
+    //   message_text: 'Bye 1',
+    //   created: '1-2-1221',
+    //   sender_id: '2',
+    //   deleted: true
+    //   }, {
+    //   message_text: 'Bye 2',
+    //   created: '1-2-1221',
+    //   sender_id: '1',
+    //   deleted: false
+    // }];
 
     // Insert db query to insert user into group list if not already part of it
-    await addUserToGroup(userId, groupId);
+    // await addUserToGroup(userId, groupId);
 
-    io.to(socket.id).emit('receive-msg', tempMessages2);
+    io.to(socket.id).emit('receive-msg', messages);
   });
 
   // socket for sending messages to other users or groups
@@ -129,12 +133,12 @@ io.on('connection', (socket) => {
       currentRoom = group;
     }
     // Delete in production
-    const emittedMessage1 = {
-      message_text: senderMsg,
-      created: '1-2-1221',
-      sender_id: username,
-      deleted: false,
-    }
+    // const emittedMessage1 = {
+    //   message_text: senderMsg,
+    //   created: '1-2-1221',
+    //   sender_id: username,
+    //   deleted: false,
+    // }
 
     const emittedMessage2 = {
       message_text: senderMsg,
@@ -146,7 +150,8 @@ io.on('connection', (socket) => {
     if (!group) {
       console.log('message emitted to single user in room:', currentRoom);
       io.to(currentRoom).to(socket.id).emit('receive-msg', [emittedMessage2]);
-      addMessage(username, recipient, null, senderMsg);
+      console.log(userId);
+      addMessage(userId, recipient, null, senderMsg);
     }
     else {
       console.log('message emitted to group in room:', currentRoom);

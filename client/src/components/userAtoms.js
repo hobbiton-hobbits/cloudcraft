@@ -3,13 +3,13 @@ import { atom } from 'recoil';
 export const usernameState = atom({
   key: 'usernameState',
   // Change default when done testing
-  default: 1,
+  default: 10,
 });
 
 export const recipientState = atom({
   key: 'recipientState',
   // Change default when done testing
-  default: 2,
+  default: 11,
 });
 
 export const groupState = atom({

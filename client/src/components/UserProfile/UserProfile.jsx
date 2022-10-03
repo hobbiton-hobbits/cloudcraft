@@ -8,7 +8,7 @@ const UserProfile = () => {
   const [showImgModal, setShowImgModal] = useState(false);
   const [userInfo, setUserinfo] = useState({
     username: 'Tester 1',
-    img: "https://as1.ftcdn.net/v2/jpg/03/03/51/54/1000_F_303515472_Kr9lY8FlfqGj8A8UkXwRDPXH5jctp4nz.jpg"
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyQ-vUcpEFSjRXQrpRorT44Xx_gZW5iB2hBg&usqp=CAU"
   })
 
   const hiddenFileInput = React.useRef(null);

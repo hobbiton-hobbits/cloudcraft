@@ -16,24 +16,24 @@ pool.connect().then(() => {
 //pass id of sender and recipient into params when invoking
 const getMessages = async (sender_id, recipient_id = null, group_id = null) => {
   //may need to add in second query to get all messages that are from recipient to sender, right now it just goes from sender to recipient
-  // if (recipient_id) {
-  //   return await pool.query(
-  //     `SELECT message_id, message_text, created, sender_id, deleted
-  //     FROM messages
-  //     WHERE sender_id = $1 AND recipient_id = $2 AND deleted = false
-  //     OR WHERE sender_id = $2 AND recipient_id = $1 AND deleted = false
-  //     ORDER BY message_id DESC;`, [sender_id, recipient_id])
-  // }
-  // if (group_id) {
+  if (recipient_id) {
+    return await pool.query(
+      `SELECT message_id, message_text, created, sender_id, deleted
+      FROM messages
+      WHERE (sender_id = $1 AND recipient_id = $2 AND deleted = false)
+      OR (sender_id = $2 AND recipient_id = $1 AND deleted = false)
+      ORDER BY message_id DESC;`, [sender_id, recipient_id])
+  }
+  if (group_id) {
   return await pool.query(
     `SELECT message_id, message_text, created, sender_id, deleted
     FROM messages
     WHERE recipient_group_id = $1 AND deleted = false
     ORDER BY message_id DESC;`, [group_id]
-  );
-}
-  // }
+    );
+  }
   // OR WHERE sender_id = $2 AND recipient_group_id = $1 AND deleted = false
+}
 
 //updates message, pass in message id and newly edited message
 const editMessage = async (message_id, newMessage) => {
@@ -55,9 +55,9 @@ const addMessage = async (sender_id, recipient_id = null, recipient_group_id = n
 const addUser = async (username, firstName, lastName, token) => {
   return await pool.query(
     `INSERT INTO users (username, firstName, lastName, token)
-    VALUES ($1, $2, $3, $4)
-    ON CONFLICT (id)
-    DO NOTHING;`, [username, firstName, lastName, token]
+    SELECT $1, $2, $3, $4
+    WHERE NOT EXISTS
+    (SELECT 1 FROM users WHERE username = $1);`, [username, firstName, lastName, token]
   );
 }
 
@@ -82,14 +82,33 @@ const getUsers = async () => {
   return await pool.query(
     `SELECT *
     FROM users`
-  )
+  );
 }
 
 const getGroups = async () => {
   return await pool.query(
     `SELECT *
     FROM groups`
-  )
+  );
 }
 
-module.exports = { getMessages, editMessage, deleteMessage, addMessage, addUser, addUserToGroup, addGroup, getUsers, getGroups }
+const getUserId = async (username) => {
+  return await pool.query(
+    `SELECT id, username
+    FROM users
+    WHERE username = $1`, [username]
+  );
+}
+
+module.exports = {
+  getMessages,
+  editMessage,
+  deleteMessage,
+  addMessage,
+  addUser,
+  addUserToGroup,
+  addGroup,
+  getUsers,
+  getGroups,
+  getUserId,
+}
