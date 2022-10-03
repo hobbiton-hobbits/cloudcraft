@@ -20,6 +20,7 @@ client.connect((err) => {
 
 const makeAuthTable = async () => {
 
+  //CHANGE SCHEMA FOR AUTHENTICATION
   await client.query(`CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username TEXT,

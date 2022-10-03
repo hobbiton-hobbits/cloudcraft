@@ -39,12 +39,13 @@ app.get('/auth', authenticateToken, (req, res) => {
 
 app.post('/login', (req, res) => {
   //AUTHENTICATE USER BY CHECKING DATABASE AND PASSWORD
-
-  //SEND TOKEN BACK
   const username = req.body.username;
   const user = {
     name: username,
   }
+
+
+  //SEND TOKEN BACK
   const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
   res.json({accessToken: accessToken});
 });
