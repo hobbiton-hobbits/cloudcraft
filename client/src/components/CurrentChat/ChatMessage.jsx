@@ -43,7 +43,7 @@ const ChatMessage = ({ message }) => {
           <form id='edit-Message-Form' onSubmit={submitEditMessage}>
             <textarea id='editText'>{message.message_text}</textarea>
             <input type='submit' value='Edit message'/>
-          </form> : <p>{message.message_text}</p>}
+          </form> : <p id='message-box'>{message.message_text}</p>}
           <button className='current-chat-edit-button' onClick={editMessage}>Edit</button>
           <button className='current-chat-delete-button' onClick={deleteMessage}>Delete</button>
           <button className='current-chat-add-task-button' onClick={addMessageToTask}>Add to task</button>
