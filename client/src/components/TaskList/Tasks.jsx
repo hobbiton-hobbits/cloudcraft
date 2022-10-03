@@ -9,57 +9,8 @@ const reorder = (list, startIndex, endIndex) => {
 
   return result;
 };
-const data = {
-  row: [
-    {
-      id: "1",
-      text: "Create PR for the Task",
-      Due_Date: "25-May-2021",
-    },
-    {
-      id: "2",
-      text: "Fix Styling",
-      Due_Date: "26-May-2021",
-    },
-    {
-      id: "3",
-      text: "Handle Api Changes",
-      Due_Date: "27-May-2021",
-    },
-    {
-      id: "4",
-      text: "Call with Backend Team",
-      Due_Date: "23-Aug-2021",
-    },
-    {
-      id: "5",
-      text: "Call with Backend Team",
-      Due_Date: "05-Jan-2021",
-    },
-    {
-      id: "6",
-      text: "Handle Api Changes",
-      Due_Date: "27-May-2021",
-    },
-    {
-      id: "7",
-      text: "Call with Backend Team",
-      Due_Date: "23-Aug-2021",
-    },
-    {
-      id: "8",
-      text: "Call with Backend Team",
-      Due_Date: "05-Jan-2021",
-    },
-  ],
-};
-const Tasks = () => {
-  const [tasks, setTasks] = useState();
 
-  useEffect(() => {
-    setTasks(data.row);
-  }, []);
-
+const Tasks = ({ tasks, setTasks }) => {
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
