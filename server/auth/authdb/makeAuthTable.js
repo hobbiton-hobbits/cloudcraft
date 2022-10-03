@@ -10,7 +10,6 @@ const client = new Pool({
   database: process.env.AUTHDATABASE
 });
 
-// CONNECT TO DATABASE
 client.connect((err) => {
     if (err) {
       console.error('error connecting: ' + err.stack);
