@@ -187,6 +187,7 @@ textarea {
     box-sizing: border-box;
 }
 
+/* the interactive checkbox for each task */
 .task-list-task-checkbox {
     width: 25px;
     height: 25px;
@@ -200,11 +201,13 @@ button:focus {
     outline: none;
 }
 
+/* the username portion of the user's card */
 .user-list-user-username {
     font-size: 12px;
 }
 
-#user-list-users, #group-list-groups, .current-chat-message-container {
+/* make panes that can have numerous rows scrollable so they don't overflow but still have all content accessible (via scrolling) */
+#user-list-users, #group-list-groups, #current-chat-message-container {
     overflow: scroll;
 }
 
@@ -223,4 +226,25 @@ input[type="submit"] {
     color: white;
     text-align: center;
     margin-top: auto;
+}
+
+/* all lists and list items */
+ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+/* all bulleted list items */
+li {
+    list-style: none;
+}
+
+/* enables multi-line text entry to be properly formatted and sent */
+#message-box {
+    white-space: pre-line
+}
+
+/* all text inputs */
+input[type=text] {
+    border: none;
 }
