@@ -98,7 +98,7 @@ Includes user list, group list, current chat, and task list */
 button {
     padding: 10px;
     margin-bottom: 10px;
-    display: none;
+    /* display: none; */
 }
 
 .current-chat-message-self {
@@ -211,6 +211,23 @@ button:focus {
     overflow: scroll;
 }
 
+.user-profile-container-image:hover {
+    opacity: 0.4;
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+      -o-filter: grayscale(100%);
+     -ms-filter: grayscale(100%);
+         filter: grayscale(100%);
+}
+
+input[type="submit"] {
+    border: none;
+    background-color: #6096ba;
+    color: white;
+    text-align: center;
+    margin-top: auto;
+}
+
 /* all lists and list items */
 ul, li {
     margin: 0;
@@ -223,7 +240,7 @@ li {
 }
 
 /* enables multi-line text entry to be properly formatted and sent */
-#message-box { 
+#message-box {
     white-space: pre-line
 }
 
