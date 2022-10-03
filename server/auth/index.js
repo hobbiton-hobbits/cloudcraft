@@ -83,10 +83,6 @@ app.post('/login', async (req, res) => {
   }
 
   //SEND TOKEN BACK
-  const username = req.body.username;
-  const user = {
-    name: username,
-  }
   const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
   res.json({accessToken: accessToken});
 });
