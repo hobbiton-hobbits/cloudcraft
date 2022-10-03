@@ -63,7 +63,7 @@ app.post('/register', async (req, res) =>{
 
 
 app.get('/auth', authenticateToken, (req, res) => {
-  res.send(req.body.username + ' is logged in');
+  res.send('Logged in');
 })
 
 
@@ -108,7 +108,7 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.get('/token', (req, res) => {
+app.get('/refresh', (req, res) => {
   const refreshToken = req.body.token;
   if (refreshToken === null) {
     res.sendStatus(401);
@@ -122,7 +122,7 @@ app.get('/token', (req, res) => {
             if (err) {
               res.sendStatus(403);
             } else {
-              const accessToken = jwt.sign({username: user.username}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10m'});
+              const accessToken = jwt.sign({username: user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10m'});
               res.json({accessToken: accessToken});
             }
           })
