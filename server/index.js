@@ -38,8 +38,6 @@ const io = new Server(server, {
 // Data container for all connected users and their socket ids
 const userSocketIds = {};
 
-
-
 io.on('connection', (socket) => {
   let currentRoom;
 
@@ -114,7 +112,6 @@ io.on('connection', (socket) => {
       sender_id: '1',
       deleted: false
     }];
-
 
     // Insert db query to insert user into group list if not already part of it
     await addUserToGroup(userId, groupId);
