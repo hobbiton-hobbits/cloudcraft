@@ -15,6 +15,7 @@ import {
   groupState,
   messageState,
   recipientState,
+  socketState,
 } from './userAtoms.js';
 
 const socket = io();
@@ -27,6 +28,7 @@ const App = () => {
   const [recipient, setRecipient] = useRecoilState(recipientState);
   const [group, setGroup] = useRecoilState(groupState);
   const [msgHistory, setMsgHistory] = useRecoilState(messageState);
+  const [socketId, setSocketId] = useRecoilState(socketState);
 
   socket.on('receive-msg', (messages) => {
     setMsgHistory([...msgHistory, ...messages]);
@@ -47,10 +49,10 @@ useEffect(() => {
     socket.on('welcome-back', (socketID) => {
       // Remove in production
       console.log(`Welcome back: ${socketID}`);
-      // Send username so it can be stored with socket id.
+      setSocketId(socketID);
     });
     // Move back store-username into welcome-back after testing is done
-    socket.emit('store-username', username);
+    socket.emit('store-username', [username, socketId]);
   //}
   }, [group, username]);
 

@@ -38,3 +38,8 @@ export const groupsState = atom({
   key: 'groupsState',
   default: []
 })
+
+export const socketState = atom({
+  key: 'socketState',
+  default: null,
+})

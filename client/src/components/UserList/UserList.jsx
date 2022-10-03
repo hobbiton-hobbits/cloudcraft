@@ -27,7 +27,7 @@ const UserList = (props) => {
       <div className='widget-title'>Users</div>
         <div id='user-list-users'>
           {users?.map((user, i) => (
-            <div className='user-list-user' key={i} onClick={() => handleUserClick(i)} id={users[i].id === recipient ? 'selected' : null}>
+            <div className='user-list-user' key={i} onClick={() => handleUserClick(i)} id={user.id === recipient ? 'selected' : null}>
               <div className='user-list-user-fullname'>{`${user.firstname} ${user.lastname}`}</div>
               <div className='user-list-user-username'>{user.username}</div>
             </div>

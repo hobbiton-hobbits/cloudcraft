@@ -38,15 +38,20 @@ const io = new Server(server, {
 // Data container for all connected users and their socket ids
 const userSocketIds = {};
 
+
+
 io.on('connection', (socket) => {
   let currentRoom;
+
   // Placeholder emitted to client to confirm connection established
   socket.emit('welcome-back', socket.id);
   console.log(`User connected: ${socket.id}`);
 
   // When user logs in and connects to socket, store socked it with username
-  socket.on('store-username', (username) => {
-    userSocketIds[username] = socket.id;
+  socket.on('store-username', (userInfo) => {
+    // Implement username when Auth is finished
+    // This saves username associated with socket id;
+    userSocketIds[userInfo[0]] = userInfo[1];
   });
 
   socket.on('leave-room', (room) => {
@@ -67,8 +72,6 @@ io.on('connection', (socket) => {
 
     // Set room as either single socket for private chats or group name if group room
     if (!group) {
-      // Need to update with real recipient
-      currentRoom = userSocketIds[recipient];
       // Update query when proper data structure is determine.
       // messages = await getMessages(username, recipient, null).rows;
       // console.log('recipient only messages', messages);
@@ -116,17 +119,18 @@ io.on('connection', (socket) => {
     // Insert db query to insert user into group list if not already part of it
     await addUserToGroup(userId, groupId);
 
-    if (!group) {
-      io.to(currentRoom).to(socket.id).emit('receive-msg', tempMessages2);
-    } else {
-      io.in(currentRoom).emit('receive-msg', tempMessages);
-    }
+    io.to(socket.id).emit('receive-msg', tempMessages2);
   });
 
   // socket for sending messages to other users or groups
   socket.on('send-message', (message) => {
     console.log('message sent:', message);
     const { username, recipient, group, senderMsg } = message;
+    if (!group) {
+      currentRoom = userSocketIds[recipient];
+    } else {
+      currentRoom = group;
+    }
     // Delete in production
     const emittedMessage1 = {
       message_text: senderMsg,

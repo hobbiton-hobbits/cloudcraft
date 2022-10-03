@@ -216,3 +216,11 @@ button:focus {
      -ms-filter: grayscale(100%);
          filter: grayscale(100%);
 }
+
+input[type="submit"] {
+    border: none;
+    background-color: #6096ba;
+    color: white;
+    text-align: center;
+    margin-top: auto;
+}

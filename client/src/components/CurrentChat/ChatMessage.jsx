@@ -48,9 +48,9 @@ const ChatMessage = ({ message }) => {
           </form> : <p id='message-box'>{message.message_text}</p>}
           {message.deleted ? null :
           <>
-            <button className='current-chat-edit-button' onClick={editMessage}>Edit</button>
-            <button className='current-chat-delete-button' onClick={deleteMessage}>Delete</button>
-            <button className='current-chat-add-task-button' onClick={addMessageToTask}>Add to task</button>
+            <button className='current-chat-edit-button' title='Edit message' onClick={editMessage}>✎</button>
+            <button className='current-chat-delete-button' title='Delete message' onClick={deleteMessage}>␡</button>
+            <button className='current-chat-add-task-button' title='Add task' onClick={addMessageToTask}>+</button>
           </>
           }
           <div>Date sent/created: {message.created}</div>
@@ -64,7 +64,7 @@ const ChatMessage = ({ message }) => {
         <div>Name of sender: {message.sender_id}</div>
           <p>{message.message_text}</p>
           {message.deleted ? null :
-          <button className='current-chat-add-task-button' onClick={addMessageToTask}>Add to task</button>
+          <button className='current-chat-add-task-button' title='Add task' onClick={addMessageToTask}>+</button>
           }
           <div>Date sent/created: {message.created}</div>
         </div>

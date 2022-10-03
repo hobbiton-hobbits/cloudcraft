@@ -18,6 +18,7 @@ const CurrentChat = (props) => {
   const recipient = useRecoilValue(recipientState);
   const [msgHistory, setMsgHistory] = useRecoilState(messageState);
   const [senderMsg, setSenderMsg] = useRecoilState(sendMsgState);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleMessage = (e) => {
     setSenderMsg(ref.current.value);
@@ -52,16 +53,20 @@ const CurrentChat = (props) => {
 
   const searchChat = (e) => {
     if (e.target.value.length < 3) {
-      //will need way to hold original array of messages so it defaults back to that list when the user is done searching
-      setMsgHistory([]);
-      return;
+      setSearchQuery('');
+    } else {
+      setSearchQuery(e.target.value);
     }
-    var filterMessages = msgHistory.filter((item) => {
-      return item.message_text.toLowerCase().includes(e.target.value.toLowerCase())
-    })
-    setMsgHistory(filterMessages);
   }
 
+  const filterMessages = (array) => {
+    if (searchQuery !== '') {
+      return array.filter((item) => {
+        return item.message_text.toLowerCase().includes(searchQuery.toLowerCase())
+      })
+    }
+    return array;
+  }
   useEffect(() => {
     const draftMsg = localStorage.getItem('draft-message');
     if (draftMsg) {
@@ -74,7 +79,7 @@ const CurrentChat = (props) => {
       <div className='widget-title'>Chat with {group}</div>
       <input type='text' className='current-chat-search' onChange={searchChat}/>
         <div id='current-chat-message-container'>
-        {!msgHistory ? <p>Start a chat with this user</p> : msgHistory.map((message, key) => (
+        {!msgHistory ? <p>Start a chat with this user</p> : filterMessages(msgHistory).map((message, key) => (
           <ChatMessage key={key} message={message}/>
         ))}
         </div>
