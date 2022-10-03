@@ -7,6 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.27.2",
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "jsonwebtoken": "^8.5.1",
@@ -36,6 +37,7 @@
     "build": "webpack --mode=production",
     "dev": "webpack serve --open",
     "dev-server": "nodemon server/index.js localhost 8085",
-    "auth-server": "nodemon server/auth/index.js"
+    "auth-server": "nodemon server/auth/index.js",
+    "make-auth-tables": "node server/auth/authdb/makeAuthTable.js"
   }
 }
