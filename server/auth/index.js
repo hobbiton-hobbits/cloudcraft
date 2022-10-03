@@ -33,16 +33,14 @@ const authenticateToken = (req, res, next) => {
   })
 }
 
+
 app.post('/register', async (req, res) =>{
   //salt
   const salt = await bcrypt.genSalt();
   //hash password
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
   //create user
   const user = {username: req.body.username, password: hashedPassword};
-  console.log(user);
-
   //See if Username is taken
   await db.query(`Select username from auth where username = '${user.username}';`)
     .then( async (result) => {
@@ -64,30 +62,86 @@ app.post('/register', async (req, res) =>{
 })
 
 
-
 app.get('/auth', authenticateToken, (req, res) => {
-  res.send(req.user.name + ' is logged in');
+  res.send(req.body.username + ' is logged in');
 })
 
 
-app.post('/login', async (req, res) => {
+app.post('/login', (req, res) => {
   const user = {
     username: req.body.username,
     password: req.body.password
   }
   //AUTHENTICATE USER BY CHECKING DATABASE AND PASSWORD
-  await db.query(`SELECT password FROM auth WHERE username = '${user.username}'`)
+  db.query(`SELECT password FROM auth WHERE username = '${user.username}'`)
     .then(async (result) => {
       let isTrue = await bcrypt.compare(user.password, result.rows[0].password);
       if (!isTrue) {
-        res.status(400).send('Incorrect Login Credentials')
+        res.status(400).send('Incorrect Password')
       } else {
         //SEND TOKEN BACK
-        const accessToken = jwt.sign(user.username, process.env.ACCESS_TOKEN_SECRET);
-        res.status(201).json({accessToken: accessToken});
+        const accessToken = jwt.sign({username: user.username}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10m'});
+        const refreshToken = jwt.sign(user.username, process.env.REFRESH_TOKEN_SECRET);
+        db.query(`SELECT tokenid FROM refreshTokens WHERE tokenid = '${refreshToken}'`)
+          .then((result) => {
+            if (result.rows.length === 0) {
+              db.query(`INSERT INTO refreshTokens (tokenid) VALUES ('${refreshToken}')`)
+                .then((result) => {
+                  res.status(201).json({accessToken: accessToken, refreshToken: refreshToken});
+                })
+                .catch((err) => {
+                  console.log(err);
+                  res.sendStatus(400);
+                });
+            } else {
+              res.status(201).json({accessToken: accessToken, refreshToken: refreshToken});
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            res.sendStatus(400);
+          });
       }
     })
     .catch((err) => {
-      res.status(400).send('User Not Found');
+      res.status(400).send('Username Not Found');
     });
+});
+
+app.get('/token', (req, res) => {
+  const refreshToken = req.body.token;
+  if (refreshToken === null) {
+    res.sendStatus(401);
+  } else {
+    db.query(`SELECT tokenid FROM refreshtokens where tokenid = '${refreshToken}'`)
+      .then((result) => {
+        if (result.rows.length === 0) {
+          res.sendStatus(403);
+        } else {
+          jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+            if (err) {
+              res.sendStatus(403);
+            } else {
+              const accessToken = jwt.sign({username: user.username}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10m'});
+              res.json({accessToken: accessToken});
+            }
+          })
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.sendStatus(401);
+      })
+  }
+});
+
+app.delete('/logout', (req, res) => {
+  db.query(`DELETE FROM refreshTokens where tokenid = '${req.body.token}'`)
+    .then((result) => {
+      res.status(203).send('Logout Successful');
+    })
+    .catch((err) => {
+      console.log(err);
+      res.sendStatus(400);
+    })
 });
