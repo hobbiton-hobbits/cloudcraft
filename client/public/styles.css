@@ -81,15 +81,41 @@ Includes user list, group list, current chat, and task list */
 #selected {
     background-color: #274c77;
     color: white;
+    border: 1px solid transparent;
+
 }
 
 /* all buttons, using custom button class */
-.button {
+.button, button {
+    border: none;
     background-color: #6096ba;
     padding: 20px;
     color: white;
     text-align: center;
     margin-top: auto;
+}
+
+button {
+    padding: 10px;
+    margin-bottom: 10px;
+    display: none;
+}
+
+.current-chat-message-self {
+}
+
+.current-chat-message-self:hover button {
+    display: inline-block;
+     top: 100px;
+    left: 0;
+}
+
+.current-chat-message-other button {
+    margin-right: 20px;
+}
+
+.current-chat-message-self button {
+    margin-left: 20px;
 }
 
 /* container element for the draft input text box (container needed to allow padding without expanding input beyond 100% width) */
@@ -140,6 +166,8 @@ textarea {
     background-color: #274c77;
     color: white;
     margin-left: 20px;
+    border: 1px solid transparent;
+
 }
 
 /* message bubble from self */
@@ -155,6 +183,8 @@ textarea {
     text-align: left;
     background-color: white;
     color: black;
+    border: 1px solid #274c77;
+    box-sizing: border-box;
 }
 
 .task-list-task-checkbox {
@@ -168,4 +198,12 @@ select:focus,
 textarea:focus,
 button:focus {
     outline: none;
+}
+
+.user-list-user-username {
+    font-size: 12px;
+}
+
+#user-list-users, #group-list-groups, .current-chat-message-container {
+    overflow: scroll;
 }
