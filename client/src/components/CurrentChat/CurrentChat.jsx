@@ -7,6 +7,7 @@ import {
   groupState,
   messageState,
   sendMsgState,
+  recipientState,
 } from '../userAtoms.js';
 
 const CurrentChat = (props) => {
@@ -14,6 +15,7 @@ const CurrentChat = (props) => {
   const ref = useRef(null);
   const group = useRecoilValue(groupState);
   const username = useRecoilValue(usernameState);
+  const recipient = useRecoilValue(recipientState);
   const [msgHistory, setMsgHistory] = useRecoilState(messageState);
   const [senderMsg, setSenderMsg] = useRecoilState(sendMsgState);
 
@@ -27,6 +29,7 @@ const CurrentChat = (props) => {
     // console.log(ref.current.value);
     const msg = {
       username,
+      recipient,
       group,
       senderMsg,
     }
@@ -68,8 +71,8 @@ const CurrentChat = (props) => {
 
   return (
     <div id='current-chat' className='widget'>
-      <input type='text' className='current-chat-search' onChange={searchChat}/>
       <div className='widget-title'>Chat with {group}</div>
+      <input type='text' className='current-chat-search' onChange={searchChat}/>
         <div id='current-chat-message-container'>
         {!msgHistory ? <p>Start a chat with this user</p> : msgHistory.map((message, key) => (
           <ChatMessage key={key} message={message}/>

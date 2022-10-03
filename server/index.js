@@ -6,6 +6,7 @@ const path = require('path');
 const app = express();
 const compression = require('compression');
 const db = require('./db');
+const router = require('./routes');
 const {
   getMessages,
   editMessage,
@@ -20,40 +21,66 @@ const port = process.env.SERVERPORT;
 
 const server = http.createServer(app);
 
+// Express middleware for cors origin and static file serving
 app.use(cors());
 app.use(compression());
 app.use(express.static(path.join(__dirname, '../client/public')));
 app.use(express.json());
+app.use('/', router.users);
 
 const io = new Server(server, {
-cors: {
-  origin: `${process.env.SV_URL}`,
-  methods: ['GET', 'POST'],
-},
+  cors: {
+    origin: `${process.env.SV_URL}`,
+    methods: ['GET', 'POST'],
+  },
 });
 
+// Data container for all connected users and their socket ids
+const userSocketIds = {};
+
 io.on('connection', (socket) => {
+  let currentRoom;
   // Placeholder emitted to client to confirm connection established
   socket.emit('welcome-back', socket.id);
   console.log(`User connected: ${socket.id}`);
 
+  // When user logs in and connects to socket, store socked it with username
+  socket.on('store-username', (username) => {
+    userSocketIds[username] = socket.id;
+  });
+
   socket.on('leave-room', (room) => {
     socket.leave(room);
+    currentRoom = undefined;
   });
 
   // Socket listener for entering a group room
   socket.on('join-room', async (data) => {
+    let messages;
+    // Remove console logs in production
     console.log(`${socket.id} has emitted join event`);
     console.log('data', data);
-    const { username, userId, group, groupId } = data;
+
+    // Need to clarify userId and data object being sent. Update when clarified with Auth side
+    const { username, userId, recipient, group, groupId } = data;
     const joinTime = new Date().toLocaleString();
 
-    // Change once authentication finalized
+    // Set room as either single socket for private chats or group name if group room
+    if (!group) {
+      // Need to update with real recipient
+      currentRoom = userSocketIds[recipient];
+      // Update query when proper data structure is determine.
+      // messages = await getMessages(username, recipient, null).rows;
+      // console.log('recipient only messages', messages);
+    } else {
+      currentRoom = group;
+      socket.join(group);
+      // Update query when proper data structure is determine.
+      // messages = await getMessages(username, null, group).rows;
+      // console.log('group messages', messages);
+    }
+    // Update once authentication finalized
     await addUser(username, 'Yong', 'Tang', 'Fake_Token');
-
-    // general room message history
-    // const messages = await getMessages(userId, groupId);
-    const messages = await getMessages(username, null, group).rows;
 
     // Placeholder messages
     const tempMessages = [{
@@ -85,30 +112,46 @@ io.on('connection', (socket) => {
       deleted: false
     }];
 
-    socket.join(group);
 
     // Insert db query to insert user into group list if not already part of it
     await addUserToGroup(userId, groupId);
 
-    // io.in(group).emit('receive-msg', messages);
-    io.in(2).emit('receive-msg', tempMessages);
-    io.in(3).emit('receive-msg', tempMessages2);
+    if (!group) {
+      io.to(currentRoom).to(socket.id).emit('receive-msg', tempMessages2);
+    } else {
+      io.in(currentRoom).emit('receive-msg', tempMessages);
+    }
   });
 
   // socket for sending messages to other users or groups
   socket.on('send-message', (message) => {
     console.log('message sent:', message);
-    const { username, group, senderMsg } = message;
-    const emittedMessage = {
+    const { username, recipient, group, senderMsg } = message;
+    // Delete in production
+    const emittedMessage1 = {
       message_text: senderMsg,
       created: '1-2-1221',
-      sender_id: username.toString(),
+      sender_id: username,
       deleted: false,
     }
 
-    // io.to(group).emit('receive-msg', [emittedMessage])
-    io.to(2).emit('receive-msg', [emittedMessage]);
-    addMessage(username, null, group, senderMsg);
+    const emittedMessage2 = {
+      message_text: senderMsg,
+      created: '10-2-1221',
+      sender_id: username,
+      deleted: false,
+    }
+
+    if (!group) {
+      console.log('message emitted to single user in room:', currentRoom);
+      io.to(currentRoom).to(socket.id).emit('receive-msg', [emittedMessage2]);
+      addMessage(username, recipient, null, senderMsg);
+    }
+    else {
+      console.log('message emitted to group in room:', currentRoom);
+      io.in(currentRoom).to(socket.id).emit('receive-msg', [emittedMessage1]);
+      addMessage(username, null, group, senderMsg);
+    }
   });
 
   // socket for disconnecting

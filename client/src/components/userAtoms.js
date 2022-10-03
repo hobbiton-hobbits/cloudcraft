@@ -6,9 +6,15 @@ export const usernameState = atom({
   default: 1,
 });
 
+export const recipientState = atom({
+  key: 'recipientState',
+  // Change default when done testing
+  default: 2,
+});
+
 export const groupState = atom({
   key: 'groupState',
-  default: 2,
+  default: null,
 });
 
 export const messageState = atom({
@@ -22,3 +28,13 @@ export const sendMsgState = atom({
   // Change default when done testing
   default: '',
 });
+
+export const usersState = atom({
+  key: 'usersState',
+  default: []
+})
+
+export const groupsState = atom({
+  key: 'groupsState',
+  default: []
+})

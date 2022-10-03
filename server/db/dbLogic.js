@@ -78,7 +78,18 @@ const addGroup = async (userId, addedUserIds) => {
   );
 }
 
+const getUsers = async () => {
+  return await pool.query(
+    `SELECT *
+    FROM users`
+  )
+}
 
+const getGroups = async () => {
+  return await pool.query(
+    `SELECT *
+    FROM groups`
+  )
+}
 
-
-module.exports = { getMessages, editMessage, deleteMessage, addMessage, addUser, addUserToGroup, addGroup }
+module.exports = { getMessages, editMessage, deleteMessage, addMessage, addUser, addUserToGroup, addGroup, getUsers, getGroups }
