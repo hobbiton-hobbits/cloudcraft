@@ -4,7 +4,9 @@ import Tasks from "./Tasks.jsx";
 const TaskList = (props) => {
   const [createTask, setCreateTasks] = useState(false);
   const [newTask, setNewTask] = useState("");
-  const [tasks, setTasks] = useState();
+  const [allTasks, setTasks] = useState();
+  const [searchedTasks, setSearchedTasks] = useState();
+  const [searchText, setSearch] = useState("");
 
   const data = {
     row: [
@@ -43,21 +45,15 @@ const TaskList = (props) => {
         text: "Call with Backend Team",
         Due_Date: "23-Aug-2021",
       },
-      {
-        id: "8",
-        text: "Call with Backend Team",
-        Due_Date: "05-Jan-2021",
-      },
     ],
   };
 
-  console.log("CURRENTTASK", tasks);
-
   useEffect(() => {
     setTasks(data.row);
+    setSearchedTasks(data.row);
   }, []);
 
-  const onClick = () => {
+  const onClickCreate = () => {
     setCreateTasks((preState) => !preState);
     if (newTask !== "") {
       let newTaskText = newTask;
@@ -67,6 +63,7 @@ const TaskList = (props) => {
         date: new Date(),
       };
       setTasks((prevState) => [...prevState, taskObject]);
+      setSearchedTasks((prevState) => [...prevState, taskObject]);
     }
 
     if (!createTask) {
@@ -78,10 +75,35 @@ const TaskList = (props) => {
     setNewTask(e.target.value);
   };
 
+  const onComplete = () => {
+    console.log("complete");
+  };
+
+  const handleSearch = (searchText) => {
+    console.log(searchText.length);
+    if (searchText.length > 2) {
+      var filterMessages = searchedTasks.filter((task) => {
+        return task.text.toLowerCase().includes(searchText.toLowerCase());
+      });
+      setSearchedTasks(filterMessages);
+    } else {
+      setSearchedTasks(allTasks);
+    }
+  };
+
   return (
     <div id="task-list" className="widget">
       <div className="widget-title">Tasks List</div>
-      <Tasks tasks={tasks} setTasks={setTasks} />
+      <input
+        type="text"
+        placeholder="Search..."
+        onChange={(e) => handleSearch(e.target.value)}
+      />
+      <Tasks
+        searchedTasks={searchedTasks}
+        setSearchedTasks={setSearchedTasks}
+        onComplete={onComplete}
+      />
       {createTask ? (
         <>
           {" "}
@@ -92,7 +114,7 @@ const TaskList = (props) => {
             className="button"
             id="task-list-create-button"
             role="button"
-            onClick={onClick}
+            onClick={onClickCreate}
           >
             submit task
           </div>
@@ -102,7 +124,7 @@ const TaskList = (props) => {
           className="button"
           id="task-list-create-button"
           role="button"
-          onClick={onClick}
+          onClick={onClickCreate}
         >
           create a task
         </div>

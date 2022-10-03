@@ -10,19 +10,19 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const Tasks = ({ tasks, setTasks }) => {
+const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
     }
 
     const newTasks = reorder(
-      tasks,
+      searchedTasks,
       result.source.index,
       result.destination.index
     );
 
-    setTasks([...newTasks]);
+    setSearchedTasks([...newTasks]);
   };
 
   return (
@@ -31,8 +31,8 @@ const Tasks = ({ tasks, setTasks }) => {
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
             <ul {...provided.droppableProps} ref={provided.innerRef}>
-              {tasks &&
-                tasks.map((task, index) => {
+              {searchedTasks &&
+                searchedTasks.map((task, index) => {
                   return (
                     <Draggable
                       key={task.id}
@@ -46,10 +46,15 @@ const Tasks = ({ tasks, setTasks }) => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
+                          <input
+                            id="Checkbox1"
+                            type="checkbox"
+                            onClick={onComplete}
+                          />
+                          <label>Completed</label>
                           <div>{task.text}</div>
                           <div>{task.id}</div>
                           <div>{task.Due_Date}</div>
-                          <button>Complete</button>
                         </li>
                       )}
                     </Draggable>
