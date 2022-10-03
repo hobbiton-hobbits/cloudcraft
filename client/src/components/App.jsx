@@ -36,7 +36,7 @@ const App = () => {
     console.log(msgHistory);
   });
 
-useEffect(() => {
+  useEffect(() => {
   // Once login is implemented, uncomment out if statement
   // if (loggedIn) {
     setMsgHistory([]);
@@ -52,9 +52,15 @@ useEffect(() => {
       setSocketId(socketID);
     });
     // Move back store-username into welcome-back after testing is done
-    socket.emit('store-username', [username, socketId]);
+    // socket.emit('store-username', [username, socketId]);
+    // console.log('socketid', socketId);
   //}
   }, [group, username]);
+
+  useEffect(() => {
+    socket.emit('store-username', [username, socketId]);
+    console.log('socketid', socketId);
+  }, [socketId, group, username])
 
 
 // Implement conditional rendering of login page once finished with Auth

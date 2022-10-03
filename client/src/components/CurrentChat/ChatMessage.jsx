@@ -43,7 +43,8 @@ const ChatMessage = ({ message }) => {
         <div>Your name: {message.sender_id}</div>
           {editModal ?
           <form id='edit-Message-Form' onSubmit={submitEditMessage}>
-            <textarea id='editText'>{message.message_text}</textarea>
+            <textarea id='editText' defaultValue={message.message_text} />
+            <br/>
             <input type='submit' value='Edit message'/>
           </form> : <p id='message-box'>{message.message_text}</p>}
           {message.deleted ? null :

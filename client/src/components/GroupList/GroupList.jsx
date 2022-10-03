@@ -58,9 +58,9 @@ const GroupList = (props) => {
       <div className='widget-title'>Groups</div>
         <div id='group-list-groups'>
           {groups?.map((group, i) => (
-            <div className='group-list-group' key={i} onClick={() => handleGroupClick(i)} id={groups[i].group_id === group ? 'selected' : 'not'}>Group 4</div>
+            <div className='group-list-group' key={i} onClick={() => handleGroupClick(i)} id={groups[i].group_id === group ? 'selected' : null}>Group 4</div>
           ))}
-          {/* <div className='group-list-group'>Group 1</div>
+          <div className='group-list-group'>Group 1</div>
           <div className='group-list-group'>Group 2</div>
           <div className='group-list-group'>Group 3</div>
           <div className='group-list-group'>Group 4</div>
@@ -71,11 +71,10 @@ const GroupList = (props) => {
           <div className='group-list-group'>Group 4</div>
           <div className='group-list-group'>Group 4</div>
           <div className='group-list-group'>Group 4</div>
-          <div className='group-list-group'>Group 4</div> */}
+          <div className='group-list-group'>Group 4</div>
         </div>
-      <div className='button' id='group-list-create-button' onClick={createGroup}>create a group</div>
-      {/* placeholder select dropdown to create a new group */}
       <Select options={options} onChange={(selectedOption) => setSelected(selectedOption)} isMulti />
+      <div className='button' id='group-list-create-button' onClick={createGroup}>create a group</div>
     </div>
   )
 }
