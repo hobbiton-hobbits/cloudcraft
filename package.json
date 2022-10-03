@@ -9,6 +9,7 @@
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
+    "jsonwebtoken": "^8.5.1",
     "nodemon": "^2.0.20",
     "pg": "^8.8.0",
     "react": "^18.2.0",
@@ -34,6 +35,7 @@
     "start": "webpack --mode=development --watch",
     "build": "webpack --mode=production",
     "dev": "webpack serve --open",
-    "dev-server": "nodemon server/index.js localhost 8085"
+    "dev-server": "nodemon server/index.js localhost 8085",
+    "auth-server": "nodemon server/auth/index.js"
   }
 }
