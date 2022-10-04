@@ -1,21 +1,41 @@
 import { atom } from 'recoil';
 
-export const usernameState = atom({
-  key: 'usernameState',
+export const userState = atom({
+  key: 'userState',
   // Change default when done testing
-  default: 10,
+  default: {
+    username: 'yt',
+    firstName: 'Yong',
+    lastName: 'Tang',
+    img: null,
+  },
 });
 
-export const recipientState = atom({
-  key: 'recipientState',
+export const userIdState = atom({
+  key: 'userIdState',
+  // change default to null when done testing
+  default: 1,
+})
+
+export const recipientIdState = atom({
+  key: 'recipientIdState',
   // Change default when done testing
-  default: 11,
+  default: 42,
+});
+
+export const groupIdState = atom({
+  key: 'groupIdState',
+  default: null,
 });
 
 export const groupState = atom({
   key: 'groupState',
-  default: null,
-});
+  default: {
+    user_ids: [],
+    user_names: [],
+    name: null
+  }
+})
 
 export const messageState = atom({
   key: 'messageState',
@@ -29,14 +49,14 @@ export const sendMsgState = atom({
   default: '',
 });
 
-export const usersState = atom({
-  key: 'usersState',
-  default: []
+export const recipientListState = atom({
+  key: 'recipientListState',
+  default: [],
 })
 
-export const groupsState = atom({
-  key: 'groupsState',
-  default: []
+export const groupListState = atom({
+  key: 'groupListState',
+  default: [],
 })
 
 export const socketState = atom({

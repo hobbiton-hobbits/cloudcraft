@@ -11,85 +11,70 @@ import CurrentChat from "./CurrentChat/CurrentChat.jsx";
 import TaskList from "./TaskList/TaskList.jsx";
 import UserProfile from './UserProfile/UserProfile.jsx';
 import {
-  usernameState,
-  groupState,
+  userState,
+  groupIdState,
   messageState,
-  recipientState,
+  recipientIdState,
   socketState,
+  userIdState,
 } from './userAtoms.js';
 
 const socket = io();
 
 const App = () => {
   // Change if using Recoil state manager
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [fullName, setFullName] = useState(null);
-  const [username, setUsername] = useRecoilState(usernameState);
-  const [recipient, setRecipient] = useRecoilState(recipientState);
-  const [group, setGroup] = useRecoilState(groupState);
+  // Change loggedIn to false when in production
+  const [loggedIn, setLoggedIn] = useState(true);
+  const [user, setUser] = useRecoilState(userState);
+  const [userId, setUserId] = useRecoilState(userIdState);
+  const [recipientId, setRecipientId] = useRecoilState(recipientIdState);
+  const [groupId, setGroupId] = useRecoilState(groupIdState);
   const [msgHistory, setMsgHistory] = useRecoilState(messageState);
   const [socketId, setSocketId] = useRecoilState(socketState);
 
-  socket.on('receive-msg', (messages) => {
-    setMsgHistory([...msgHistory, ...messages]);
-    console.log('Messages received:', messages);
-    console.log(msgHistory);
-  });
-
   useEffect(() => {
   // Once login is implemented, uncomment out if statement
-  // if (loggedIn) {
-    setMsgHistory([]);
-    socket.emit('join-room', {
-      username,
-      recipient,
-      group,
+  // Set temp socket id for testing multiple users interacting
+  // let socketIDtemp = socketId;
+    if (loggedIn) {
+      socket.on('welcome-back', (socketID) => {
+        console.log(`Welcome back: ${socketID}`);
+        // socketIDtemp = socketID;
+        socket.emit('store-username', [user, socketID]);
+        setSocketId(socketID);
+      });
+    }
+
+    socket.on('user-id', (userId) => {
+      console.log('Your user id is:', userId);
+      setUserId(userId);
     });
+  }, [socket, user]);
 
-    socket.on('welcome-back', (socketID) => {
-      // Remove in production
-      console.log(`Welcome back: ${socketID}`);
-      setSocketId(socketID);
-    });
-    // Move back store-username into welcome-back after testing is done
-    // socket.emit('store-username', [username, socketId]);
-    // console.log('socketid', socketId);
-  //}
-  }, [group, username]);
+const testUser1 = {
+  username: 'yt',
+  firstName: 'Yong',
+  lastName: 'Tang',
+  img: 'null',
+}
 
-  useEffect(() => {
-    socket.emit('store-username', [username, socketId]);
-    console.log('socketid', socketId);
-  }, [socketId, group, username])
-
-
-// Implement conditional rendering of login page once finished with Auth
-// if (!loggedIn) {
-//   return <Login/>
-// }
+const testUser2 = {
+  username: 'ds',
+  firstName: 'Daniel',
+  lastName: 'Shin',
+  img: 'null',
+}
 
   // Remove test buttons in production
-  const testButton1 = () => {
-    if (group) {
-      socket.emit('leave-room', group);
-      setRecipient(1);
-      setGroup(null);
-    } else {
-      setRecipient(null);
-      setGroup(3);
-    }
-  }
-
   const testButton2 = () => {
-    if (username === 10) {
-      setRecipient(10);
-      setUsername(11);
+    if (user.username === 'yt') {
+      setRecipientId(userId);
+      setUser(testUser2);
     } else {
-      setRecipient(11);
-      setUsername(10);
+      setRecipientId(42);
+      setUser(testUser1);
     }
   }
-
 
   return (
       <div>
@@ -97,15 +82,15 @@ const App = () => {
         <UserProfile />
         <div id="main-content">
           <div id="user-and-group-list">
-            <UserList />
-            <GroupList />
+            <UserList socket={socket}/>
+            <GroupList socket={socket}/>
           </div>
           <CurrentChat socket={socket}/>
           <TaskList />
         </div>
         {/* Remove test buttons during production */}
-        <button onClick={testButton2}>Toggle user. You are currently user ${username}</button>
-        <button onClick={testButton1}>Set group to 3</button>
+        <button onClick={testButton2}>Toggle user. You are currently user ${user.username}</button>
+        {/* <button onClick={testButton1}>Set group to 3</button> */}
       </div>
   );
 };

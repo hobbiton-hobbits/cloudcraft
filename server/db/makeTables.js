@@ -15,6 +15,10 @@ client.connect().then(() => {
 
 const makeTables = async () => {
 
+  await client.query('DROP TABLE IF EXISTS users, groups, messages, tasks CASCADE').then(() => {
+    console.log('Tables dropped!')
+  }).catch(err => console.log('Table failed to drop: ', err))
+
   await client.query(`CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username TEXT,
@@ -27,6 +31,7 @@ const makeTables = async () => {
   await client.query(`CREATE TABLE IF NOT EXISTS groups (
     group_id SERIAL PRIMARY KEY,
     user_ids INTEGER[],
+    user_names TEXT[],
     group_name TEXT
   );`)
   .then(() => console.log('Table Created'))
