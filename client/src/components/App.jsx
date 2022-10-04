@@ -17,6 +17,8 @@ import {
   recipientState,
   socketState,
 } from './userAtoms.js';
+import Register from "./Login/register.jsx";
+import Login from "./Login/Login.jsx"
 
 const socket = io();
 
@@ -106,7 +108,10 @@ const App = () => {
         {/* Remove test buttons during production */}
         <button onClick={testButton2}>Toggle user. You are currently user ${username}</button>
         <button onClick={testButton1}>Set group to 3</button>
+        <Register/>
+        <Login/>
       </div>
+
   );
 };
 
