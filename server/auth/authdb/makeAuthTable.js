@@ -21,13 +21,21 @@ client.connect((err) => {
 const makeAuthTable = async () => {
 
   //CHANGE SCHEMA FOR AUTHENTICATION
-  await client.query(`CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    username TEXT,
-    firstName TEXT,
-    lastName TEXT,
-    token TEXT
-  );`).then(() => console.log('Auth Table Created'))
+  await client.query(`CREATE TABLE IF NOT EXISTS auth (
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY NOT NULL,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL,
+    createdAt timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+  );`)
+  .then(() => console.log('Auth Table Created'))
+  .catch(err => console.log('Table failed to create: ', err))
+
+  await client.query(`CREATE TABLE IF NOT EXISTS refreshTokens (
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY NOT NULL,
+    tokenid TEXT NOT NULL,
+    createdAt timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+  );`)
+  .then(() => console.log('refreshToken Table Created'))
   .catch(err => console.log('Table failed to create: ', err))
   client.end();
 }
