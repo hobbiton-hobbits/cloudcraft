@@ -207,7 +207,7 @@ button:focus {
 }
 
 /* make panes that can have numerous rows scrollable so they don't overflow but still have all content accessible (via scrolling) */
-#user-list-users, #group-list-groups, #current-chat-message-container {
+#user-list-users, #group-list-groups, #current-chat-message-container, #task-list {
     overflow: scroll;
 }
 
