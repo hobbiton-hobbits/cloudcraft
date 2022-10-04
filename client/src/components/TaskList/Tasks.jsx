@@ -9,69 +9,20 @@ const reorder = (list, startIndex, endIndex) => {
 
   return result;
 };
-const data = {
-  row: [
-    {
-      id: "1",
-      text: "Create PR for the Task",
-      Due_Date: "25-May-2021",
-    },
-    {
-      id: "2",
-      text: "Fix Styling",
-      Due_Date: "26-May-2021",
-    },
-    {
-      id: "3",
-      text: "Handle Api Changes",
-      Due_Date: "27-May-2021",
-    },
-    {
-      id: "4",
-      text: "Call with Backend Team",
-      Due_Date: "23-Aug-2021",
-    },
-    {
-      id: "5",
-      text: "Call with Backend Team",
-      Due_Date: "05-Jan-2021",
-    },
-    {
-      id: "6",
-      text: "Handle Api Changes",
-      Due_Date: "27-May-2021",
-    },
-    {
-      id: "7",
-      text: "Call with Backend Team",
-      Due_Date: "23-Aug-2021",
-    },
-    {
-      id: "8",
-      text: "Call with Backend Team",
-      Due_Date: "05-Jan-2021",
-    },
-  ],
-};
-const Tasks = () => {
-  const [tasks, setTasks] = useState();
 
-  useEffect(() => {
-    setTasks(data.row);
-  }, []);
-
+const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
     }
 
     const newTasks = reorder(
-      tasks,
+      searchedTasks,
       result.source.index,
       result.destination.index
     );
 
-    setTasks([...newTasks]);
+    setSearchedTasks([...newTasks]);
   };
 
   return (
@@ -80,8 +31,8 @@ const Tasks = () => {
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
             <ul {...provided.droppableProps} ref={provided.innerRef}>
-              {tasks &&
-                tasks.map((task, index) => {
+              {searchedTasks &&
+                searchedTasks.map((task, index) => {
                   return (
                     <Draggable
                       key={task.id}
@@ -95,10 +46,15 @@ const Tasks = () => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
+                          <input
+                            id="Checkbox1"
+                            type="checkbox"
+                            defaultChecked={task.completed}
+                            onClick={onComplete}
+                          />
+                          <label>Completed</label>
                           <div>{task.text}</div>
-                          <div>{task.id}</div>
                           <div>{task.Due_Date}</div>
-                          <button>Complete</button>
                         </li>
                       )}
                     </Draggable>
@@ -113,6 +69,3 @@ const Tasks = () => {
 };
 
 export default Tasks;
-
-// create new drag and drop context to not allow mixing for completed and not completed
-// create tasks

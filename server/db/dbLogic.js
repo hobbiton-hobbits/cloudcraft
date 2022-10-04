@@ -58,6 +58,7 @@ const addUser = async (username, firstName, lastName, img) => {
     SELECT $1, $2, $3, $4
     WHERE NOT EXISTS
     (SELECT username FROM users WHERE username = $1);`, [username, firstName, lastName, img]
+
   );
 }
 

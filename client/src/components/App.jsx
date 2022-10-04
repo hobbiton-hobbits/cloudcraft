@@ -18,6 +18,7 @@ import {
   socketState,
   userIdState,
 } from './userAtoms.js';
+import Login from "./Login/Login.jsx"
 
 const socket = io();
 
@@ -35,15 +36,15 @@ const App = () => {
   useEffect(() => {
   // Once login is implemented, uncomment out if statement
   // Set temp socket id for testing multiple users interacting
-  // let socketIDtemp = socketId;
+  let socketIDtemp = socketId;
     if (loggedIn) {
       socket.on('welcome-back', (socketID) => {
         console.log(`Welcome back: ${socketID}`);
-        // socketIDtemp = socketID;
-        socket.emit('store-username', [user, socketID]);
-        setSocketId(socketID);
+        socketIDtemp = socketID;
       });
     }
+    socket.emit('store-username', [user, socketID]);
+    setSocketId(socketID);
 
     socket.on('user-id', (userId) => {
       console.log('Your user id is:', userId);
@@ -91,8 +92,10 @@ const testUser2 = {
         {/* Remove test buttons during production */}
         <button onClick={testButton2}>Toggle user. You are currently user ${user.username}</button>
         {/* <button onClick={testButton1}>Set group to 3</button> */}
+
       </div>
-  );
+    );
+  }
 };
 
 export default App;
