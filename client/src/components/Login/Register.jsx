@@ -62,7 +62,7 @@ const Register = ({setIsRegistering}) => {
     event.persist();
     setValues((values) => ({
       ...values,
-      passWord: event.target.value,
+      password: event.target.value,
     }));
   };
 
@@ -109,9 +109,9 @@ const Register = ({setIsRegistering}) => {
      <br/>
 
       <label htmlFor="password">password </label>
-      <input style={inputStyle} type="password" className="password" className="form-field" name="password" value={values.passWord} onChange={handlePassWordInputChange}/>
+      <input style={inputStyle} type="password" className="password" className="form-field" name="password" value={values.password} onChange={handlePassWordInputChange}/>
       <br/>
-     { submitted && !values.passWord && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
+     { submitted && !values.password && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
      <br/>
 
       <input type="submit" value="Submit"/>
