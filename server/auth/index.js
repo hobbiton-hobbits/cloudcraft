@@ -7,6 +7,7 @@ const db = require('./authdb');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+
 const app = express();
 
 //MIDDLEWARE
@@ -40,14 +41,15 @@ app.post('/register', async (req, res) =>{
   //hash password
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
   //create user
-  const user = {username: req.body.username, password: hashedPassword};
+  console.log('I AM INFO:', req.body);
+  const user = {username: req.body.username, password: hashedPassword, firstName: req.body.firstName, lastName: req.body.lastName};
   //See if Username is taken
   await db.query(`Select username from auth where username = '${user.username}';`)
     .then( async (result) => {
       if (result.rows.length > 0) {
         res.status(500).send('Username Already Taken')
       } else {
-        await db.query(`INSERT INTO auth (username, password) VALUES ('${user.username}', '${user.password}');`)
+        await db.query(`INSERT INTO auth (username, password, firstName, lastName) VALUES ('${user.username}', '${user.password}', '${user.firstName}', '${user.lastName}');`)
           .then((data) => {
             res.status(201).send('Registered User')
           })
@@ -63,7 +65,7 @@ app.post('/register', async (req, res) =>{
 
 
 app.get('/auth', authenticateToken, (req, res) => {
-  res.send(req.body.username + ' is logged in');
+  res.send('Logged in');
 })
 
 
@@ -73,8 +75,13 @@ app.post('/login', (req, res) => {
     password: req.body.password
   }
   //AUTHENTICATE USER BY CHECKING DATABASE AND PASSWORD
-  db.query(`SELECT password FROM auth WHERE username = '${user.username}'`)
+  db.query(`SELECT * FROM auth WHERE username = '${user.username}';`)
     .then(async (result) => {
+      const userInfo = {
+        username: result.rows[0].username,
+        firstName: result.rows[0].firstName,
+        lastName:result.rows[0].lastName
+      };
       let isTrue = await bcrypt.compare(user.password, result.rows[0].password);
       if (!isTrue) {
         res.status(400).send('Incorrect Password')
@@ -82,10 +89,10 @@ app.post('/login', (req, res) => {
         //SEND TOKEN BACK
         const accessToken = jwt.sign({username: user.username}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10m'});
         const refreshToken = jwt.sign(user.username, process.env.REFRESH_TOKEN_SECRET);
-        db.query(`SELECT tokenid FROM refreshTokens WHERE tokenid = '${refreshToken}'`)
+        db.query(`SELECT tokenid FROM refreshTokens WHERE tokenid = '${refreshToken}';`)
           .then((result) => {
             if (result.rows.length === 0) {
-              db.query(`INSERT INTO refreshTokens (tokenid) VALUES ('${refreshToken}')`)
+              db.query(`INSERT INTO refreshTokens (tokenid) VALUES ('${refreshToken}');`)
                 .then((result) => {
                   res.status(201).json({accessToken: accessToken, refreshToken: refreshToken});
                 })
@@ -94,7 +101,7 @@ app.post('/login', (req, res) => {
                   res.sendStatus(400);
                 });
             } else {
-              res.status(201).json({accessToken: accessToken, refreshToken: refreshToken});
+              res.status(201).json({accessToken: accessToken, refreshToken: refreshToken, username: userInfo.username, firstName: userInfo.firstName, lastName: userInfo.lastName});
             }
           })
           .catch((err) => {
@@ -108,12 +115,12 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.get('/token', (req, res) => {
+app.get('/refresh', (req, res) => {
   const refreshToken = req.body.token;
   if (refreshToken === null) {
     res.sendStatus(401);
   } else {
-    db.query(`SELECT tokenid FROM refreshtokens where tokenid = '${refreshToken}'`)
+    db.query(`SELECT tokenid FROM refreshtokens where tokenid = '${refreshToken}';`)
       .then((result) => {
         if (result.rows.length === 0) {
           res.sendStatus(403);
@@ -122,7 +129,7 @@ app.get('/token', (req, res) => {
             if (err) {
               res.sendStatus(403);
             } else {
-              const accessToken = jwt.sign({username: user.username}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10m'});
+              const accessToken = jwt.sign({username: user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10m'});
               res.json({accessToken: accessToken});
             }
           })
@@ -136,7 +143,7 @@ app.get('/token', (req, res) => {
 });
 
 app.delete('/logout', (req, res) => {
-  db.query(`DELETE FROM refreshTokens where tokenid = '${req.body.token}'`)
+  db.query(`DELETE FROM refreshTokens where tokenid = '${req.body.token}';`)
     .then((result) => {
       res.status(203).send('Logout Successful');
     })
