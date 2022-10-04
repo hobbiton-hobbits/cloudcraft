@@ -41,10 +41,11 @@ const App = () => {
       socket.on('welcome-back', (socketID) => {
         console.log(`Welcome back: ${socketID}`);
         socketIDtemp = socketID;
+        socket.emit('store-username', [user, socketIDtemp]);
+        setSocketId(socketIDtemp);
       });
     }
-    socket.emit('store-username', [user, socketID]);
-    setSocketId(socketID);
+    socket.emit('store-username', [user, socketIDtemp]);
 
     socket.on('user-id', (userId) => {
       console.log('Your user id is:', userId);
@@ -72,7 +73,7 @@ const testUser2 = {
       setRecipientId(userId);
       setUser(testUser2);
     } else {
-      setRecipientId(42);
+      setRecipientId(43);
       setUser(testUser1);
     }
   }
@@ -96,6 +97,6 @@ const testUser2 = {
       </div>
     );
   }
-};
+// };
 
 export default App;

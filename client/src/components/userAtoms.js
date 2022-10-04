@@ -20,7 +20,7 @@ export const userIdState = atom({
 export const recipientIdState = atom({
   key: 'recipientIdState',
   // Change default when done testing
-  default: 42,
+  default: 43,
 });
 
 export const groupIdState = atom({
