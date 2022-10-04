@@ -75,11 +75,11 @@ const Tasks = () => {
   };
 
   return (
-    <>
+    <div>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
-            <ul {...provided.droppableProps} ref={provided.innerRef}>
+            <ul {...provided.droppableProps} ref={provided.innerRef} id='task-list-tasks'>
               {tasks &&
                 tasks.map((task, index) => {
                   return (
@@ -108,7 +108,7 @@ const Tasks = () => {
           )}
         </Droppable>
       </DragDropContext>
-    </>
+    </div>
   );
 };
 
