@@ -111,8 +111,8 @@ const App = () => {
           <TaskList />
         </div>
         {/* Remove test buttons during production */}
-        <button onClick={testButton2}>Toggle user. You are currently user ${username}</button>
-        <button onClick={testButton1}>Set group to 3</button>
+        {/* <button onClick={testButton2}>Toggle user. You are currently user ${username}</button>
+        <button onClick={testButton1}>Set group to 3</button> */}
       </div>
     );
   }
