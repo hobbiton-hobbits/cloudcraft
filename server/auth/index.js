@@ -41,6 +41,7 @@ app.post('/register', async (req, res) =>{
   //hash password
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
   //create user
+  console.log('I AM INFO:', req.body);
   const user = {username: req.body.username, password: hashedPassword, firstName: req.body.firstName, lastName: req.body.lastName};
   //See if Username is taken
   await db.query(`Select username from auth where username = '${user.username}';`)
