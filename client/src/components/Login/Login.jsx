@@ -1,19 +1,46 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import Register from "./register.jsx";
+
+const divStyle = {
+  justifyContent:'center',
+  alignItems: 'center',
+  padding: '1em',
+  width: 'fit-content',
+  margin: '1em auto',
+}
+
+const formStyle = {
+  margin: 'auto'
+}
+
+const inputErrStyle ={
+  color: 'red'
+}
+
+const inputStyle = {
+  border: 'solid',
+  borderWidth: 'thin'
+
+}
+
+const regBtn = {
+  margin: '5px'
+}
 
 const Login = (props) => {
   const [submitted, setSubmitted] = useState(false);
   const [valid, setValid] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false)
   const [values, setValues] = useState({
-    userName: '',
-    passWord: ''
+    username: '',
+    password: ''
   });
 
   const handleUserNameInputChange = (event) => {
     event.persist();
     setValues((values) => ({
       ...values,
-      userName: event.target.value,
+      username: event.target.value,
     }));
   };
 
@@ -21,13 +48,13 @@ const Login = (props) => {
     event.persist();
     setValues((values) => ({
       ...values,
-      passWord: event.target.value,
+      password: event.target.value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(values.userName && values.passWord) {
+    if(values.username && values.password) {
       setValid(true);
   }
     setSubmitted(true);
@@ -38,27 +65,41 @@ const Login = (props) => {
     // show chat if no error
   };
 
-  return (
-    <div id="login" className="widget">
-      <h1>LOGIN</h1>
-      <form onSubmit={handleSubmit}>
-      <label htmlFor="username">username</label>
-      <input type="text" id="username" className="form-field" name="username"
-      value={values.userName} onChange={handleUserNameInputChange}
-      />
-     { submitted && !values.userName && <span id="user-name-error">Please enter a username</span>}
-     <br/>
+  const handleRegister = (e) => {
+    setIsRegistering(true);
+  }
 
-      <label htmlFor="password">password</label>
-      <input type="password" id="password" className="form-field" name="password"
-      value={values.passWord} onChange={handlePassWordInputChange}
-      />
-     { submitted && !values.passWord && <span id="pass-word-error">Please enter a password</span>}
+
+  if (isRegistering) {
+    return (
+      <div>
+        <Register/>
+      </div>
+    );
+  } else {
+
+    return (
+      <div style={divStyle} id="login" className="widget">
+      <h1>LOGIN</h1>
+      <form  style={formStyle} onSubmit={handleSubmit}>
+      <label htmlFor="username">username </label>
+      <input style={inputStyle} type="text" className="username" className="form-field" name="username"
+      value={values.userName} onChange={handleUserNameInputChange} />
+       <br/>
+     { submitted && !values.userName && <span style={inputErrStyle} id="user-name-error">Please enter a username</span>}
+     <br/>
+      <label htmlFor="password">password </label>
+      <input style={inputStyle} type="password" className="password" className="form-field" name="password"
+      value={values.passWord} onChange={handlePassWordInputChange} />
+       <br/>
+     { submitted && !values.passWord && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
      <br/>
      <input type="submit" value="Submit"/>
+     <button style={regBtn} onClick={(e) => {handleRegister(e)}}>Need to Register?</button>
       </form>
     </div>
-  );
+    );
+  }
 };
 
 export default Login;

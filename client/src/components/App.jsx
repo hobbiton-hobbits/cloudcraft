@@ -17,7 +17,6 @@ import {
   recipientState,
   socketState,
 } from './userAtoms.js';
-import Register from "./Login/register.jsx";
 import Login from "./Login/Login.jsx"
 
 const socket = io();
@@ -92,27 +91,31 @@ const App = () => {
     }
   }
 
-
-  return (
+  if (!loggedIn) {
+    return (
       <div>
-        <div id='page-title'>cloudcraft</div>
-        <UserProfile />
-        <div id="main-content">
-          <div id="user-and-group-list">
-            <UserList />
-            <GroupList />
-          </div>
-          <CurrentChat socket={socket}/>
+        <Login/>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+         <div id='page-title'>cloudcraft</div>
+         <UserProfile />
+         <div id="main-content">
+           <div id="user-and-group-list">
+             <UserList />
+             <GroupList />
+           </div>
+           <CurrentChat socket={socket}/>
           <TaskList />
         </div>
         {/* Remove test buttons during production */}
         <button onClick={testButton2}>Toggle user. You are currently user ${username}</button>
         <button onClick={testButton1}>Set group to 3</button>
-        <Register/>
-        <Login/>
       </div>
-
-  );
+    );
+  }
 };
 
 export default App;
