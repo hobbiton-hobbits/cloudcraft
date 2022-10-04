@@ -11,6 +11,8 @@ const reorder = (list, startIndex, endIndex) => {
 };
 
 const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
+  const [comp, setComp] = useState();
+
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
@@ -49,11 +51,11 @@ const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
                           <input
                             id="Checkbox1"
                             type="checkbox"
+                            defaultChecked={task.completed}
                             onClick={onComplete}
                           />
                           <label>Completed</label>
                           <div>{task.text}</div>
-                          <div>{task.id}</div>
                           <div>{task.Due_Date}</div>
                         </li>
                       )}
