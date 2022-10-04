@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+
 
 const divStyle = {
   justifyContent:'center',
@@ -67,23 +68,26 @@ const Register = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(values.firstName && values.lastName && values.userName && values.passWord) {
+    console.log('VALUES:', values);
+
+    if(values.firstName && values.lastName && values.username && values.password) {
       setValid(true);
   }
     setSubmitted(true);
     axios.post('http://ec2-3-128-156-90.us-east-2.compute.amazonaws.com:8087/register', values)
+      .then((data) => {
+        console.log(data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <div style={divStyle} id="register" className="widget">
       <h1>REGISTER</h1>
 
-      <form  style={formStyle} onSubmit={handleSubmit}>
-
-      {/* <label for="img">Select Profile Photo:  </label>
-      <input type="file" id="img" name="img" accept="image/*"/>
-      <br/>
-      <br/> */}
+      <form  onSubmit={handleSubmit} style={formStyle} >
 
       <label htmlFor="firstname">first name </label>
       <input style={inputStyle} type="text" className="firstname" className="form-field" name="firstname" value={values.firstName} onChange={handleFirstNameInputChange}/>

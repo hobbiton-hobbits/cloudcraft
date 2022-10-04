@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
 import Register from "./register.jsx";
+import axios from 'axios';
+import {
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
+import {
+  usernameState,
+} from './userAtoms.js';
 
 const divStyle = {
   justifyContent:'center',
@@ -29,6 +37,7 @@ const regBtn = {
 
 const Login = (props) => {
   const [submitted, setSubmitted] = useState(false);
+  const [user, setUser] = useRecoilState(usernameState);
   const [valid, setValid] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false)
   const [values, setValues] = useState({
@@ -58,10 +67,26 @@ const Login = (props) => {
       setValid(true);
   }
     setSubmitted(true);
+    console.log('LOGIN VALUES:', values);
+    axios.post('http://ec2-3-128-156-90.us-east-2.compute.amazonaws.com:8087/login', values)
+    .then((data) => {
+      console.log(data.data);
+      axios.defaults.headers.common['Authorization'] = `BEARER ${data.data.accessToken}`;
+      setUser({
+        username: data.data.username,
+        firstName: data.data.firstName,
+        lastName: data.data.lastName,
+        img: null
+      });
+
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
     // if valid and submitted send form data to be authenticated
-    //get response with jwt if in database
-    //show error if error
+    // get response with jwt if in database
+    // show error if error
     // show chat if no error
   };
 
