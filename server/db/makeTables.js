@@ -20,7 +20,7 @@ const makeTables = async () => {
     username TEXT,
     firstName TEXT,
     lastName TEXT,
-    token TEXT
+    img TEXT
   );`).then(() => console.log('Table Created'))
   .catch(err => console.log('Table failed to create: ', err))
 

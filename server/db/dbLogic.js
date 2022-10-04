@@ -52,12 +52,12 @@ const addMessage = async (sender_id, recipient_id = null, recipient_group_id = n
     VALUES ($1, $2, $3, $4, false);`, [sender_id, recipient_id, recipient_group_id, message_text]);
 }
 
-const addUser = async (username, firstName, lastName, token) => {
+const addUser = async (username, firstName, lastName, img) => {
   return await pool.query(
-    `INSERT INTO users (username, firstName, lastName, token)
+    `INSERT INTO users (username, firstName, lastName, img)
     VALUES ($1, $2, $3, $4)
     ON CONFLICT (id)
-    DO NOTHING;`, [username, firstName, lastName, token]
+    DO NOTHING;`, [username, firstName, lastName, img]
   );
 }
 
@@ -78,7 +78,18 @@ const addGroup = async (userId, addedUserIds) => {
   );
 }
 
+const getUsers = async () => {
+  return await pool.query(
+    `SELECT *
+    FROM users`
+  )
+}
 
+const getGroups = async () => {
+  return await pool.query(
+    `SELECT *
+    FROM groups`
+  )
+}
 
-
-module.exports = { getMessages, editMessage, deleteMessage, addMessage, addUser, addUserToGroup, addGroup }
+module.exports = { getMessages, editMessage, deleteMessage, addMessage, addUser, addUserToGroup, addGroup, getUsers, getGroups }

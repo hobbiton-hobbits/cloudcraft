@@ -28,13 +28,17 @@ const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
   };
 
   return (
-    <>
+    <div>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
-            <ul {...provided.droppableProps} ref={provided.innerRef}>
-              {searchedTasks &&
-                searchedTasks.map((task, index) => {
+            <ul
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              id="task-list-tasks"
+            >
+              {tasks &&
+                tasks.map((task, index) => {
                   return (
                     <Draggable
                       key={task.id}
@@ -66,7 +70,7 @@ const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
           )}
         </Droppable>
       </DragDropContext>
-    </>
+    </div>
   );
 };
 
