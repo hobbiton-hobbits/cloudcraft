@@ -40,14 +40,14 @@ app.post('/register', async (req, res) =>{
   //hash password
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
   //create user
-  const user = {username: req.body.username, password: hashedPassword};
+  const user = {username: req.body.username, password: hashedPassword, firstName: req.body.firstName, lastName: req.body.lastName};
   //See if Username is taken
   await db.query(`Select username from auth where username = '${user.username}';`)
     .then( async (result) => {
       if (result.rows.length > 0) {
         res.status(500).send('Username Already Taken')
       } else {
-        await db.query(`INSERT INTO auth (username, password) VALUES ('${user.username}', '${user.password}');`)
+        await db.query(`INSERT INTO auth (username, password, firstName, lastName) VALUES ('${user.username}', '${user.password}', '${user.firstName}', '${user.lastName}');`)
           .then((data) => {
             res.status(201).send('Registered User')
           })
