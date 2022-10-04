@@ -25,6 +25,8 @@ const makeAuthTable = async () => {
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY NOT NULL,
     username TEXT NOT NULL,
     password TEXT NOT NULL,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
     createdAt timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
   );`)
   .then(() => console.log('Auth Table Created'))

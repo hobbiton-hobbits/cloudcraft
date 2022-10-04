@@ -94,7 +94,7 @@ const App = () => {
   if (!loggedIn) {
     return (
       <div>
-        <Login/>
+        <Login setLoggedIn={setLoggedIn}/>
       </div>
     );
   } else {

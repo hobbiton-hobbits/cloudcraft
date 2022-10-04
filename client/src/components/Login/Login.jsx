@@ -7,7 +7,7 @@ import {
 } from 'recoil';
 import {
   usernameState,
-} from './userAtoms.js';
+} from '../userAtoms.js';
 
 const divStyle = {
   justifyContent:'center',
@@ -35,7 +35,7 @@ const regBtn = {
   margin: '5px'
 }
 
-const Login = (props) => {
+const Login = ({setLoggedIn}) => {
   const [submitted, setSubmitted] = useState(false);
   const [user, setUser] = useRecoilState(usernameState);
   const [valid, setValid] = useState(false);
@@ -78,7 +78,11 @@ const Login = (props) => {
         lastName: data.data.lastName,
         img: null
       });
-
+      return;
+    })
+    .then((val) => {
+      setLoggedIn(true);
+      return;
     })
     .catch((err) => {
       console.log(err);
@@ -98,7 +102,7 @@ const Login = (props) => {
   if (isRegistering) {
     return (
       <div>
-        <Register/>
+        <Register setIsRegistering={setIsRegistering}/>
       </div>
     );
   } else {

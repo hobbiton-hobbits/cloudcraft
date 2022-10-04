@@ -23,7 +23,7 @@ const inputStyle = {
   borderWidth: 'thin'
 
 }
-const Register = (props) => {
+const Register = ({setIsRegistering}) => {
   const [submitted, setSubmitted] = useState(false);
   const [valid, setValid] = useState(false);
   const [values, setValues] = useState({
@@ -77,6 +77,7 @@ const Register = (props) => {
     axios.post('http://ec2-3-128-156-90.us-east-2.compute.amazonaws.com:8087/register', values)
       .then((data) => {
         console.log(data.data);
+        setIsRegistering(false);
       })
       .catch((err) => {
         console.log(err);
