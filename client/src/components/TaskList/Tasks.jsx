@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const reorder = (list, startIndex, endIndex) => {
@@ -32,34 +31,38 @@ const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
           {(provided, snapshot) => (
             <ul {...provided.droppableProps} ref={provided.innerRef}>
               {searchedTasks &&
-                searchedTasks.map((task, index) => {
-                  return (
-                    <Draggable
-                      key={task.id}
-                      draggableId={task.id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <li
-                          className="task-list-task"
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <input
-                            id="Checkbox1"
-                            type="checkbox"
-                            defaultChecked={task.completed}
-                            onClick={onComplete}
-                          />
-                          <label>Completed</label>
-                          <div>{task.text}</div>
-                          <div>{task.Due_Date}</div>
-                        </li>
-                      )}
-                    </Draggable>
-                  );
-                })}
+                searchedTasks
+                  .sort((a, b) => {
+                    return a.completed - b.completed;
+                  })
+                  .map((task, index) => {
+                    return (
+                      <Draggable
+                        key={task.id}
+                        draggableId={task.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <li
+                            className="task-list-task"
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <input
+                              id={task.id}
+                              type="checkbox"
+                              defaultChecked={task.completed}
+                              onClick={onComplete}
+                            />
+                            <label>Completed</label>
+                            <div>{task.text}</div>
+                            <div>{task.Due_Date}</div>
+                          </li>
+                        )}
+                      </Draggable>
+                    );
+                  })}
             </ul>
           )}
         </Droppable>
