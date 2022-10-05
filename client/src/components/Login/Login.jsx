@@ -35,7 +35,7 @@ const regBtn = {
   margin: '5px'
 }
 
-const Login = ({setLoggedIn}) => {
+const Login = ({setLoggedIn, setCount, setTokenGood}) => {
   const [submitted, setSubmitted] = useState(false);
   const [user, setUser] = useRecoilState(userState);
   const [valid, setValid] = useState(false);
@@ -73,6 +73,7 @@ const Login = ({setLoggedIn}) => {
       console.log(data.data);
       axios.defaults.headers.common['Authorization'] = `BEARER ${data.data.accessToken}`;
       localStorage.setItem('token', data.data.refreshToken);
+      localStorage.setItem('accessToken', data.data.accessToken);
       setUser({
         username: data.data.username,
         firstName: data.data.firstName,
@@ -82,17 +83,19 @@ const Login = ({setLoggedIn}) => {
       return;
     })
     .then((val) => {
+      return axios.post('/auth')
+    })
+    .then((data) => {
+      return setTokenGood(data.data.check);
+    })
+    .then((val) => {
       setLoggedIn(true);
+      setCount(1);
       return;
     })
     .catch((err) => {
       console.log(err);
     });
-
-    // if valid and submitted send form data to be authenticated
-    // get response with jwt if in database
-    // show error if error
-    // show chat if no error
   };
 
   const handleRegister = (e) => {

@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userState } from '../userAtoms.js';
 import axios from 'axios';
+import io from 'socket.io-client';
+
+
+const socket = io();
 
 const UserProfile = () => {
   const userInfo = useRecoilState(userState);
@@ -22,13 +26,18 @@ const UserProfile = () => {
 
   //refresh Token function to get new access token every 10 minutes
   const refreshToken = () => {
-    axios.get('http://ec2-3-128-156-90.us-east-2.compute.amazonaws.com:8087/refresh', {token: localStorage.getItem('token')})
+    axios.post('http://ec2-3-128-156-90.us-east-2.compute.amazonaws.com:8087/refresh', {token: localStorage.getItem('token')})
       .then((data) => {
+        console.log(data.data);
         axios.defaults.headers.common['Authorization'] = `BEARER ${data.data.accessToken}`;
         setTimeout(() => {
           refreshToken();
         }, 598000);
+        return;
       })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   //start refreshToken counter

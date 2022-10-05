@@ -115,7 +115,7 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.get('/refresh', (req, res) => {
+app.post('/refresh', (req, res) => {
   const refreshToken = req.body.token;
   console.log('I HAVE REFRESHED:', refreshToken);
   if (refreshToken === null) {

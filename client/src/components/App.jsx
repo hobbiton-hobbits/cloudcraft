@@ -20,7 +20,7 @@ import {
 } from './userAtoms.js';
 import Login from "./Login/Login.jsx"
 
-const socket = io();
+let socket = undefined;
 
 const App = () => {
   // Change if using Recoil state manager
@@ -32,6 +32,8 @@ const App = () => {
   const [groupId, setGroupId] = useRecoilState(groupIdState);
   const [msgHistory, setMsgHistory] = useRecoilState(messageState);
   const [socketId, setSocketId] = useRecoilState(socketState);
+  const [count, setCount] = useState(0);
+  const [tokenGood, setTokenGood] = useState(false);
 
   useEffect(() => {
   // Once login is implemented, uncomment out if statement
@@ -44,13 +46,13 @@ const App = () => {
         socket.emit('store-username', [user, socketIDtemp]);
         setSocketId(socketIDtemp);
       });
+      socket.emit('store-username', [user, socketIDtemp]);
+      socket.on('user-id', (userId) => {
+        console.log('Your user id is:', userId);
+        setUserId(userId);
+      });
     }
-    socket.emit('store-username', [user, socketIDtemp]);
 
-    socket.on('user-id', (userId) => {
-      console.log('Your user id is:', userId);
-      setUserId(userId);
-    });
   }, [socket, user]);
 
 const testUser1 = {
@@ -67,6 +69,7 @@ const testUser2 = {
   img: 'null',
 }
 
+
   // Remove test buttons in production
   const testButton2 = () => {
     if (user.username === 'yt') {
@@ -81,10 +84,21 @@ const testUser2 = {
   if (!loggedIn) {
     return (
       <div>
-        <Login setLoggedIn={setLoggedIn}/>
+        <Login setTokenGood={setTokenGood} setCount={setCount} setLoggedIn={setLoggedIn}/>
       </div>
     );
   } else {
+    if (!tokenGood) {
+      setLoggedIn(false);
+    }
+    if (count === 1) {
+      socket = io({
+        auth: {
+          token: localStorage.getItem('accessToken')
+        }
+      });
+      setCount(2);
+    }
     return (
       <div>
          <div id='page-title'>cloudcraft</div>

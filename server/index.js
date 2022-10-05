@@ -7,6 +7,7 @@ const app = express();
 const compression = require('compression');
 const db = require('./db');
 const router = require('./routes');
+const jwt = require('jsonwebtoken');
 const {
   getMessages,
   editMessage,
@@ -36,12 +37,47 @@ const io = new Server(server, {
   },
 });
 
+// Socket.io Token Authentication
+io.use((socket, next) => {
+  console.log('TOKENNNN HEREEEE:', socket.handshake.auth.token);
+  let token = socket.handshake.auth.token;
+  if (token === null) {
+    next(new Error("invalid"));
+  }
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) {
+      socket.to(socket.id).emit('bad token');
+      next(new Error("invalid"));
+    }
+    next();
+  })
+});
+
+//Check token via express
+app.post('/auth', (req, res) => {
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1];
+  console.log('AUTH TOKEN:', token);
+  if (token === null) {
+    return res.sendStatus(401);
+  }
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({check: false});
+    }
+    console.log('NOT AN ERROR');
+    return res.status(200).json({check: true});
+  })
+});
+
 // Data container for all connected users and their socket ids
 const userSocketIds = {};
 
 io.on('connection', (socket) => {
   let currentRoom;
   let userId;
+
+
 
   // Placeholder emitted to client to confirm connection established
   socket.emit('welcome-back', socket.id);
@@ -80,6 +116,7 @@ io.on('connection', (socket) => {
   // socket for sending messages to other users or groups
   socket.on('send-message', (message) => {
     console.log('message sent to server:', message);
+
     const { userId, recipientId, groupId, senderMsg } = message;
     // Delete in production
     const emittedMessage = {
