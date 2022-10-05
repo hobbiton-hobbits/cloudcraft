@@ -1,13 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import axios from 'axios';
-import { usernameState } from '../userAtoms.js';
+import { userState, recipientIdState } from '../userAtoms.js';
 
 const ChatMessage = ({ message }) => {
   const [editModal, setEditModal] = useState(false);
-  const username = useRecoilValue(usernameState);
-
+  const { username } = useRecoilValue(userState);
+  const allUsers = useRecoilValue(recipientIdState);
   var message = {...message}
+
+  var img;
+  var name;
+  for (var i = 0; i < allUsers.length; i++) {
+    if (message.sender_id === allUsers[i].id) {
+      img = allUsers[i].img;
+      name = allUsers[i].username;
+      break;
+    }
+  }
+
+  if (img === undefined) {
+    img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyQ-vUcpEFSjRXQrpRorT44Xx_gZW5iB2hBg&usqp=CAU";
+  }
 
   // console.log('From inside ChatMessage: ', message)
   if (message.deleted) {
@@ -36,11 +50,12 @@ const ChatMessage = ({ message }) => {
     console.log('Attempted to add message to task')
   }
   //update this if statement when we have acess to the current users id
-  if (message.sender_id === username) {
+  if (message.sender_id === username.id) {
     return (
       <div className='current-chat-message-self-container'>
         <div className='current-chat-message-self'>
-        <div>Your name: {message.sender_id}</div>
+        <div>{name}</div>
+        <img src={img} className='current-chat-message-self-img' />
           {editModal ?
           <form id='edit-Message-Form' onSubmit={submitEditMessage}>
             <textarea id='editText' defaultValue={message.message_text} />
@@ -54,7 +69,7 @@ const ChatMessage = ({ message }) => {
             <button className='current-chat-add-task-button' title='Add task' onClick={addMessageToTask}>+</button>
           </>
           }
-          <div>Date sent/created: {message.created}</div>
+          <div>Posted: {message.created}</div>
         </div>
       </div>
     )
@@ -62,12 +77,13 @@ const ChatMessage = ({ message }) => {
     return (
       <div className='current-chat-message-other-container' >
         <div className='current-chat-message-other'>
-        <div>Name of sender: {message.sender_id}</div>
+        <img src={img} className='current-chat-message-other-img' />
+        <div>{name}</div>
           <p>{message.message_text}</p>
           {message.deleted ? null :
           <button className='current-chat-add-task-button' title='Add task' onClick={addMessageToTask}>+</button>
           }
-          <div>Date sent/created: {message.created}</div>
+          <div>Posted: {message.created}</div>
         </div>
       </div>
     )
