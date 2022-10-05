@@ -25,7 +25,7 @@ const socket = io();
 const App = () => {
   // Change if using Recoil state manager
   // Change loggedIn to false when in production
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useRecoilState(userState);
   const [userId, setUserId] = useRecoilState(userIdState);
   const [recipientId, setRecipientId] = useRecoilState(recipientIdState);

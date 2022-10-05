@@ -116,8 +116,7 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/refresh', (req, res) => {
-  const authHeader = req.headers['Authorization']
-  const refreshToken = authHeader && authHeader.split(' ')[1];
+  const refreshToken = req.body.token;
   console.log('I HAVE REFRESHED:', refreshToken);
   if (refreshToken === null) {
     res.sendStatus(401);
@@ -145,7 +144,7 @@ app.get('/refresh', (req, res) => {
 });
 
 app.delete('/logout', (req, res) => {
-  const authHeader = req.headers['Authorization']
+  const authHeader = req.headers['authorization']
   const refreshToken = authHeader && authHeader.split(' ')[1];
   db.query(`DELETE FROM refreshTokens where tokenid = '${refreshToken}';`)
     .then((result) => {

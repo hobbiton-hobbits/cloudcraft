@@ -6,7 +6,7 @@ import {
   useRecoilValue,
 } from 'recoil';
 import {
-  usernameState,
+  userState,
 } from '../userAtoms.js';
 
 const divStyle = {
@@ -72,6 +72,7 @@ const Login = ({setLoggedIn}) => {
     .then((data) => {
       console.log(data.data);
       axios.defaults.headers.common['Authorization'] = `BEARER ${data.data.accessToken}`;
+      localStorage.setItem('token', data.data.refreshToken);
       setUser({
         username: data.data.username,
         firstName: data.data.firstName,
