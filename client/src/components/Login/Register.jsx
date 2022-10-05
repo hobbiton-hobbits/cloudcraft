@@ -105,7 +105,9 @@ const Register = ({setIsRegistering}) => {
       <label htmlFor="username">username </label>
       <input style={inputStyle} type="text" id="username" className="form-field" name="username" value={values.userName} onChange={handleUserNameInputChange} />
       <br/>
-     { submitted && !values.userName && <span style={inputErrStyle} id="user-name-error">Please enter a username</span>}
+      { submitted && !values.username && <span style={inputErrStyle} id="user-name-error">
+      Please enter a username
+         </span>}
      <br/>
 
       <label htmlFor="password">password </label>

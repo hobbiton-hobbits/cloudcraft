@@ -116,13 +116,13 @@ const Login = ({setLoggedIn}) => {
       <input style={inputStyle} type="text" className="username" className="form-field" name="username"
       value={values.userName} onChange={handleUserNameInputChange} />
        <br/>
-     { submitted && !values.userName && <span style={inputErrStyle} id="user-name-error">Please enter a username</span>}
+     { submitted && !values.username && <span style={inputErrStyle} id="user-name-error">Please enter a username</span>}
      <br/>
       <label htmlFor="password">password </label>
       <input style={inputStyle} type="password" className="password" className="form-field" name="password"
       value={values.passWord} onChange={handlePassWordInputChange} />
        <br/>
-     { submitted && !values.passWord && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
+     { submitted && !values.password && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
      <br/>
      <input type="submit" value="Submit"/>
      <button style={regBtn} onClick={(e) => {handleRegister(e)}}>Need to Register?</button>
