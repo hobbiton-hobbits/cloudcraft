@@ -23,14 +23,24 @@ const inputErrStyle ={
 const inputStyle = {
   border: 'solid',
   borderWidth: 'thin',
-  float: 'right'
+  float: 'right',
+  borderColor: 'grey'
 }
 const labelStyle = {
   margin: '3px'
 }
+
+const Btn = {
+  marginRight: '5px',
+  marginLeft: '5px',
+  paddingTop: '1px',
+  paddingBottom:'1px'
+}
+
 const Register = ({setIsRegistering}) => {
   const [submitted, setSubmitted] = useState(false);
   const [valid, setValid] = useState(false);
+  const[validPass, setValidPass] = useState(null)
   const [taken, setTaken] = useState(false);
   const [values, setValues] = useState({
     firstName: '',
@@ -105,6 +115,10 @@ const Register = ({setIsRegistering}) => {
     }
   };
 
+  const handleBackToLog = (e) =>{
+    setIsRegistering(false);
+  }
+
   return (
     <div style={divStyle} id="register" className="widget">
       <h1>REGISTER</h1>
@@ -140,7 +154,7 @@ const Register = ({setIsRegistering}) => {
      { submitted && !values.password && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
      <br/>
 
-     <label style = {labelStyle} htmlFor="confirm" >    confirm </label>
+     <label style = {labelStyle} htmlFor="confirm" > confirm </label>
       <input style={inputStyle} type="password" className="confirm" className="form-field" name="confirm" value={values.confirm} onChange={handleConfirmInputChange}/>
       <br/>
      { submitted && !values.confirm && <span style={inputErrStyle} id="confirm-error">Please confirm password</span>}
@@ -148,6 +162,7 @@ const Register = ({setIsRegistering}) => {
      <br/>
 
       <input type="submit" value="Submit"/>
+      <button style={Btn} onClick={handleBackToLog}>back to login</button>
 
       </form>
     </div>

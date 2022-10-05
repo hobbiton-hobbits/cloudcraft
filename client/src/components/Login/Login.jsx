@@ -30,6 +30,7 @@ const inputErrStyle ={
 const inputStyle = {
   border: 'solid',
   borderWidth: 'thin',
+  borderColor: 'grey'
   // float: 'right'
 }
 const labelStyle = {
@@ -37,7 +38,10 @@ const labelStyle = {
 }
 
 const regBtn = {
-  margin: '5px'
+  marginRight: '5px',
+  marginLeft: '5px',
+  paddingTop: '1px',
+  paddingBottom:'1px'
 }
 
 const Login = ({setLoggedIn}) => {
