@@ -5,13 +5,14 @@ import axios from 'axios';
 const divStyle = {
   justifyContent:'center',
   alignItems: 'center',
-  padding: '1em',
   width: 'fit-content',
   margin: '1em auto',
+  position:'relative'
 }
 
 const formStyle = {
-  margin: 'auto'
+  margin: 'auto',
+  padding: '1em'
 }
 
 const inputErrStyle ={
@@ -35,6 +36,14 @@ const Btn = {
   marginLeft: '5px',
   paddingTop: '1px',
   paddingBottom:'1px'
+}
+
+const headerDiv ={
+  backgroundColor: 'rgb(163, 206, 241)',
+  color: 'white',
+  postion: 'absolute',
+  width: '100%',
+  textAlign: 'center'
 }
 
 const Register = ({setIsRegistering}) => {
@@ -121,7 +130,10 @@ const Register = ({setIsRegistering}) => {
 
   return (
     <div style={divStyle} id="register" className="widget">
-      <h1>REGISTER</h1>
+      <div style={headerDiv}>
+       <h1>REGISTER</h1>
+      </div>
+
 
       <form  onSubmit={handleSubmit} style={formStyle} >
 

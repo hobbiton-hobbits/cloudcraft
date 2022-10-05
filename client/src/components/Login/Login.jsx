@@ -12,13 +12,14 @@ import {
 const divStyle = {
   justifyContent:'center',
   alignItems: 'center',
-  padding: '1em',
   width: 'fit-content',
   margin: '1em auto',
+  position:'relative'
 }
 
 const formStyle = {
-  margin: 'auto'
+  margin: 'auto',
+  padding: '1em'
 }
 
 const inputErrStyle ={
@@ -42,6 +43,14 @@ const regBtn = {
   marginLeft: '5px',
   paddingTop: '1px',
   paddingBottom:'1px'
+}
+
+const headerDiv ={
+  backgroundColor: 'rgb(163, 206, 241)',
+  color: 'white',
+  postion: 'absolute',
+  width: '100%',
+  textAlign: 'center'
 }
 
 const Login = ({setLoggedIn}) => {
@@ -132,8 +141,13 @@ const Login = ({setLoggedIn}) => {
   } else {
 
     return (
-      <div style={divStyle} id="login" className="widget">
-      <h1>LOGIN</h1>
+
+
+        <div style={divStyle} id="login" className="widget">
+        <div style={headerDiv}>
+          <h1 >LOGIN</h1>
+        </div>
+        <br/>
       <form  style={formStyle} onSubmit={handleSubmit}>
       <label htmlFor="username">username </label>
       <input style={inputStyle} type="text" className="username" className="form-field" name="username"
@@ -157,6 +171,8 @@ const Login = ({setLoggedIn}) => {
      <button style={regBtn} onClick={(e) => {handleRegister(e)}}>Need to Register?</button>
       </form>
     </div>
+
+
     );
   }
 };
