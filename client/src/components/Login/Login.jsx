@@ -40,6 +40,8 @@ const Login = ({setLoggedIn}) => {
   const [user, setUser] = useRecoilState(userState);
   const [valid, setValid] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false)
+  const [incorrectPassword, setIncorrectPassword] = useState(null)
+  const[invalidUser, setInvalidUser] =useState(null)
   const [values, setValues] = useState({
     username: '',
     password: ''
@@ -59,6 +61,9 @@ const Login = ({setLoggedIn}) => {
       ...values,
       password: event.target.value,
     }));
+    if(event.target.value === ''){
+      setIncorrectPassword(null)
+    }
   };
 
   const handleSubmit = (e) => {
@@ -86,7 +91,16 @@ const Login = ({setLoggedIn}) => {
       return;
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err.response.data);
+      if(err.response.data ===
+        'Incorrect Password'){
+        setIncorrectPassword(true);
+      }
+
+      if(err.response.data ===
+        'Username Not Found'){
+        setInvalidUser(true);
+      }
     });
 
     // if valid and submitted send form data to be authenticated
@@ -117,12 +131,18 @@ const Login = ({setLoggedIn}) => {
       value={values.userName} onChange={handleUserNameInputChange} />
        <br/>
      { submitted && !values.username && <span style={inputErrStyle} id="user-name-error">Please enter a username</span>}
+     { submitted && values.username && invalidUser && <span style={inputErrStyle} id="user-name-error">
+      invalid user
+         </span>}
      <br/>
       <label htmlFor="password">password </label>
       <input style={inputStyle} type="password" className="password" className="form-field" name="password"
       value={values.passWord} onChange={handlePassWordInputChange} />
        <br/>
      { submitted && !values.password && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
+     { submitted && values.username && incorrectPassword && <span style={inputErrStyle} id="user-name-error">
+      unrecognized password
+         </span>}
      <br/>
      <input type="submit" value="Submit"/>
      <button style={regBtn} onClick={(e) => {handleRegister(e)}}>Need to Register?</button>
