@@ -26,6 +26,7 @@ const inputStyle = {
 const Register = ({setIsRegistering}) => {
   const [submitted, setSubmitted] = useState(false);
   const [valid, setValid] = useState(false);
+  const [taken, setTaken] = useState(false);
   const [values, setValues] = useState({
     firstName: '',
     lastName: '',
@@ -81,6 +82,9 @@ const Register = ({setIsRegistering}) => {
       })
       .catch((err) => {
         console.log(err);
+        if(err.response.data === 'Username Already Taken'){
+          setTaken(true);
+        }
       });
   };
 
@@ -107,6 +111,9 @@ const Register = ({setIsRegistering}) => {
       <br/>
       { submitted && !values.username && <span style={inputErrStyle} id="user-name-error">
       Please enter a username
+         </span>}
+         { submitted && values.username && taken && <span style={inputErrStyle} id="user-name-error">
+      username taken
          </span>}
      <br/>
 
