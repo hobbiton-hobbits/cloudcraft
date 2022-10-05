@@ -78,6 +78,10 @@ const testUser2 = {
     }
   }
 
+  const logOut = ()=>{
+    setLoggedIn(false);
+  }
+
   if (!loggedIn) {
     return (
       <div>
@@ -87,6 +91,7 @@ const testUser2 = {
   } else {
     return (
       <div>
+        <div style={{padding: '5px', float:'right'}}><button class='button' onClick ={logOut}>Log Out</button></div>
          <div id='page-title'>cloudcraft</div>
          <UserProfile />
          <div id="main-content">
