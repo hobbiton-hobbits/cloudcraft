@@ -106,7 +106,7 @@ button {
 
 .current-chat-message-self:hover button {
     display: inline-block;
-     top: 100px;
+    top: 100px;
     left: 0;
 }
 
@@ -184,6 +184,21 @@ textarea {
     color: black;
     border: 1px solid #274c77;
     box-sizing: border-box;
+}
+
+/* the ... that displays when the other party is typing */
+#current-chat-ellipsis {
+    animation: wave 1s infinite alternate;
+}
+
+/* keyframes for the pulsating in and out ellipsis */
+@keyframes wave {
+    0% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1.0;
+    }
 }
 
 /* the interactive checkbox for each task */
