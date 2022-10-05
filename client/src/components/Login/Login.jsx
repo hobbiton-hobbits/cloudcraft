@@ -37,7 +37,7 @@ const regBtn = {
 
 const Login = ({setLoggedIn}) => {
   const [submitted, setSubmitted] = useState(false);
-  const [user, setUser] = useRecoilState(usernameState);
+  const [user, setUser] = useRecoilState(userState);
   const [valid, setValid] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false)
   const [values, setValues] = useState({
