@@ -120,7 +120,6 @@ button {
 
 /* container element for the draft input text box (container needed to allow padding without expanding input beyond 100% width) */
 #current-chat-draft-container {
-    padding: 20px;
     border-top: 1px solid #e7ecef;
     margin-top: auto;
 }
@@ -132,8 +131,8 @@ button {
     font-size: 20px;
     display: block;
     resize: none;
-    width: 100%;
     margin-top: auto;
+    padding: 20px;
 }
 
 textarea {
@@ -207,7 +206,7 @@ button:focus {
 }
 
 /* make panes that can have numerous rows scrollable so they don't overflow but still have all content accessible (via scrolling) */
-#user-list-users, #group-list-groups, #current-chat-message-container, #task-list {
+#user-list-users, #group-list-groups, #current-chat-message-container, #task-list-tasks, ul {
     overflow: scroll;
 }
 
@@ -247,4 +246,8 @@ li {
 /* all text inputs */
 input[type=text] {
     border: none;
+}
+
+.button {
+    margin: 20px;
 }

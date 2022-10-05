@@ -107,11 +107,13 @@ const TaskList = (props) => {
         placeholder="Search..."
         onChange={(e) => handleSearch(e.target.value)}
       />
+      <div id='task-list-tasks'>
       <Tasks
         searchedTasks={searchedTasks}
         setSearchedTasks={setSearchedTasks}
         onComplete={onComplete}
       />
+      </div>
       {createTask ? (
         <>
           <input type="text" onChange={(e) => onChange(e)} value={newTask} />
