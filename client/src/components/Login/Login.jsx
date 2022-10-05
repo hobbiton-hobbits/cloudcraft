@@ -22,13 +22,18 @@ const formStyle = {
 }
 
 const inputErrStyle ={
-  color: 'red'
+  color: 'red',
+  fontSize: '12px',
+  float:'right'
 }
 
 const inputStyle = {
   border: 'solid',
-  borderWidth: 'thin'
-
+  borderWidth: 'thin',
+  // float: 'right'
+}
+const labelStyle = {
+  // margin: '5px'
 }
 
 const regBtn = {
