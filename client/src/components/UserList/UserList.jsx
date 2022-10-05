@@ -16,6 +16,7 @@ const UserList = (props) => {
       socket.emit('leave-room', groupId);
     }
     setRecipientId(recipientList[i].id);
+    console.log('switched recipient to: ', recipientList[i].id);
     setGroupId(null);
   }
 
@@ -39,14 +40,13 @@ const UserList = (props) => {
             if (user.id === userId) {
               return null;
             }
-            console.log('user images: ', user.img)
             return (
             <div className='user-list-user' key={i} onClick={() => handleUserClick(i)} id={user.id === recipientId ? 'selected' : null}>
               <div className='user-list-user-fullname'>
                 <img className='user-list-user-img' src={user.img} />
-                {`${user.firstname} ${user.lastname}`}
+                {`${user.firstname} ${user.lastname}  (${user.username})`}
               </div>
-              <div className='user-list-user-username'>{user.username}</div>
+              {/* <div className='user-list-user-username'>{user.username}</div> */}
             </div>
           )})}
         </div>

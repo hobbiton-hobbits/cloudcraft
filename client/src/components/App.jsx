@@ -67,13 +67,26 @@ const testUser2 = {
   img: 'null',
 }
 
+const testUser3 = {
+  username: 'bv',
+  firstName: 'Brian',
+  lastName: 'Vose',
+  img: 'null',
+}
+
   // Remove test buttons in production
-  const testButton2 = () => {
+  const testButton1 = () => {
     if (user.username === 'yt') {
-      // setRecipientId(userId);
       setUser(testUser2);
     } else {
-      // setRecipientId(userId);
+      setUser(testUser1);
+    }
+  }
+
+  const testButton2 = () => {
+    if (user.username === 'yt') {
+      setUser(testUser3);
+    } else {
       setUser(testUser1);
     }
   }
@@ -91,9 +104,8 @@ const testUser2 = {
           <TaskList />
         </div>
         {/* Remove test buttons during production */}
-        <button onClick={testButton2}>Toggle user. You are currently user ${user.username}</button>
-        {/* <button onClick={testButton1}>Set group to 3</button> */}
-
+        <div onClick={testButton1}>Toggle user. You are currently {user.username}</div>
+        <div onClick={testButton2}>Toggle another user. You are currently {user.username}</div>
       </div>
     );
   }

@@ -37,10 +37,13 @@ const GroupList = (props) => {
       item.value
     ));
     names.push(`${user.firstName} ${user.lastName}`)
+    if (ids.length < 3) {
+      alert('You need more than 3 members for a group!')
+      return;
+    }
     axios.post('/groups', { ids, names })
       .then(res => {
         getGroupList();
-        setSelected([]);
       })
   }
 

@@ -14,9 +14,14 @@ const UserProfile = () => {
   const handleFileChange = (e) => {
     let file = e.target.files[0];
     let reader = new FileReader();
+    let fileSize = file.size / 1024;
+    if (fileSize > 64) {
+    alert('File size exceeds 64 KB');
+    return;
+    }
+    // $(file).val(''); //for clearing with Jquery
     reader.onloadend = function() {
       setImg(reader.result)
-      console.log('new image: ', reader.result);
       axios.put('/updatePhoto', { img: reader.result, userId: id }).catch(() => {
         alert('Picture was not updated correctly, please try again');
       })

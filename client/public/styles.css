@@ -67,7 +67,7 @@ Includes user list, group list, current chat, and task list */
 
 /* all individual list items */
 .task-list-task, .user-list-user, .group-list-group, .current-chat-message-other, .current-chat-message-self {
-    padding: 15px;
+    padding: 5px;
     font-size: 15px;
 }
 
@@ -100,30 +100,18 @@ Includes user list, group list, current chat, and task list */
 
 button {
     padding: 5px;
-    margin-bottom: 10px;
+    height: 25px;
+    width: 25px;
     /* display: none; */
 }
 
-.current-chat-message-self {
-}
-
-.current-chat-message-self:hover button {
-    display: inline-block;
-     top: 100px;
-    left: 0;
-}
-
-.current-chat-message-other button {
-    margin-right: 20px;
-}
-
 .current-chat-message-self button {
-    margin-left: 20px;
+    margin-left: 5px;
 }
 
 /* container element for the draft input text box (container needed to allow padding without expanding input beyond 100% width) */
 #current-chat-draft-container {
-    padding: 20px;
+    padding: 10px;
     border-top: 1px solid #e7ecef;
     margin-top: auto;
 }
@@ -148,19 +136,24 @@ textarea {
     display: flex;
     flex-direction: row;
     justify-content: left;
+    margin: 0;
+    padding: 0;
 }
 
 /* container for messages sent by self */
 .current-chat-message-self-container {
     display: flex;
     flex-direction: row;
-    justify-content: right;
+    justify-content: left;
+    margin: 0;
+    padding: 0;
 }
 
 /* message bubbles */
 .current-chat-message-other, .current-chat-message-self {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    /* margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px; */
 }
 
 /* message bubble from someone else */
@@ -168,17 +161,16 @@ textarea {
     text-align: left;
     background-color: #274c77;
     color: white;
-    margin-left: 20px;
     border: 1px solid transparent;
-
+    flex-grow: 1;
 }
 
 /* message bubble from self */
 .current-chat-message-self {
-    text-align: right;
-    margin-right: 20px;
+    text-align: left;
     background-color: #8b8c89;
     color: white;
+    flex-grow: 1;
 }
 
 /* reverse colors when a colorful element is hovered over */
@@ -241,6 +233,8 @@ li {
 /* all text inputs */
 input[type=text] {
     border: none;
+    background-color:#274c77;
+    color:#e7ecef;
 }
 .user-profile-container {
     position: absolute;
@@ -279,4 +273,32 @@ input[type="submit"] {
     color: white;
     text-align: center;
     margin-top: auto;
+}
+
+.current-chat-button-container {
+    position: relative;
+    top: -50px;
+    float: right;
+}
+
+.current-chat-button-hide {
+    position: relative;
+    top: -50px;
+    float: right;
+    visibility: hidden;
+}
+
+.current-chat-delete-button {
+    position: relative;
+    top: 1px;
+}
+
+.current-chat-add-task-button {
+    position: relative;
+    top: -1px;
+}
+
+#editText {
+    resize: none;
+    width: 95%;
 }

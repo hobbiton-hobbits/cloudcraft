@@ -21,7 +21,8 @@ const CurrentChat = (props) => {
   const { username } = useRecoilValue(userState);
   const userId = useRecoilValue(userIdState);
   const recipientId = useRecoilValue(recipientIdState);
-  const [msgHistory, setMsgHistory] = useRecoilState(messageState);
+  // const [msgHistory, setMsgHistory] = useRecoilState(messageState);
+  const [msgHistory, setMsgHistory] = useState([]);
   const [senderMsg, setSenderMsg] = useRecoilState(sendMsgState);
   const [searchQuery, setSearchQuery] = useState('');
   const [isTyping, setIsTyping] = useRecoilState(isTypingState);
@@ -29,13 +30,16 @@ const CurrentChat = (props) => {
 
   socket.on('receive-msg', (messages) => {
     const sender = messages[0].sender_id;
-    // console.log(sender);
+
     if (messages[0].ellipsis === true) {
-      console.log('sender and recipient id:', sender === userId)
-      // if (sender !== userId) {
-        console.log('sender true:', sender === userId)
-        setPendingMsg({...pendingMsg, [sender]: messages[0]});
-      // }
+      // console.log('sender:', sender);
+      if (pendingMsg[sender]) {
+        console.log('pending sender msg history', pendingMsg[sender]);
+      }
+      setPendingMsg((prevState) => {
+        const updatedPending = { ...prevState, [messages[0].sender_id]: messages[0] };
+        return updatedPending;
+      });
     }
     else if (messages[0].deleteDraft === true) {
       setPendingMsg((pendingMsg) => {
@@ -49,8 +53,8 @@ const CurrentChat = (props) => {
       console.log('pending', pendingMsg);
       if (pendingMsg[sender]) {
         console.log('pendingMsg from sender still present:', pendingMsg[sender])
-        setPendingMsg((pendingMsg) => {
-          const updatedPending = { ...pendingMsg };
+        setPendingMsg((prevState) => {
+          const updatedPending = { ...prevState };
           delete updatedPending[messages[0].sender_id];
           console.log('pending updated', updatedPending);
           return updatedPending;
@@ -58,14 +62,48 @@ const CurrentChat = (props) => {
       }
       setMsgHistory([...msgHistory, ...messages]);
       console.log('Messages received:', messages);
-      console.log(msgHistory);
+      // console.log(msgHistory);
     }
     console.log('pending Messages', pendingMsg)
   });
 
   const handleMessage = (e) => {
+    // if (recipientId || groupId) {
+    //   if (!ref.current.value.length) {
+    //     if (isTyping) {
+    //       socket.emit('send-message', {
+    //         userId,
+    //         recipientId,
+    //         groupId,
+    //         ellipsis: false,
+    //         deleteDraft: true,
+    //       });
+    //       setIsTyping(false);
+    //     }
+      // } else {
+    //     if (!isTyping) {
+    //       setIsTyping(true);
+    //     }
+    //       const ellipsis = {
+    //         userId,
+    //         recipientId,
+    //         groupId,
+    //         senderMsg: ref.current.value,
+    //         ellipsis: true,
+    //       }
+    //       socket.emit('send-message', ellipsis);
+    //     // }
+      // }
+      setSenderMsg(ref.current.value);
+      localStorage.setItem('draft-message', ref.current.value);
+    //};
+    scrollToBottom();
+  }
+
+  useEffect(() => {
+    console.log('senderMsg should be updated: ', senderMsg);
     if (recipientId || groupId) {
-      if (!ref.current.value.length) {
+      if (!senderMsg.length) {
         if (isTyping) {
           socket.emit('send-message', {
             userId,
@@ -79,21 +117,18 @@ const CurrentChat = (props) => {
       } else {
         if (!isTyping) {
           setIsTyping(true);
-          const ellipsis = {
-            userId,
-            recipientId,
-            groupId,
-            senderMsg: ref.current.value,
-            ellipsis: true,
-          }
-          socket.emit('send-message', ellipsis);
         }
+        const ellipsis = {
+          userId,
+          recipientId,
+          groupId,
+          senderMsg,
+          ellipsis: true,
+        }
+        socket.emit('send-message', ellipsis);
       }
-      setSenderMsg(ref.current.value);
-      localStorage.setItem('draft-message', ref.current.value);
-    };
-    scrollToBottom();
-  }
+    }
+  }, [senderMsg])
 
   const sendMessage = (e) => {
     e.preventDefault();
@@ -115,7 +150,7 @@ const CurrentChat = (props) => {
   const handleReturn = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (senderMsg.length) {
+      if (senderMsg.length > 0) {
         sendMessage(e);
       }
       return;
@@ -171,21 +206,22 @@ const CurrentChat = (props) => {
     }
   }, [recipientId, groupId]);
 
-  // useEffect(() => {
-  //   scrollToBottom();
-  // }, [pendingMsg, msgHistory]);
+  useEffect(() => {
+    const chatbox = document.getElementById('current-chat-message-container');
+    chatbox.scrollTop = chatbox.scrollHeight - chatbox.clientHeight;
+    // scrollToBottom();
+  }, [pendingMsg, msgHistory]);
 
   return (
     <div id='current-chat' className='widget'>
-      <div className='widget-title'>Chat with {groupId}</div>
-      <input type='text' className='current-chat-search' onChange={searchChat}/>
+      <input type='text' className='widget-title' placeholder="Search Chat..." onChange={searchChat}/>
         <div id='current-chat-message-container'>
         {!msgHistory ? <p>Start a chat with this user</p> : filterMessages(msgHistory).map((message, key) => (
           <ChatMessage key={key} message={message}/>
         ))}
         {Object.keys(pendingMsg).length
           ? filterMessages(Object.values(pendingMsg)).map((pending, key) => (
-          <ChatMessage id='current-chat-ellipsis' key={key} message={pending}/>
+          <ChatMessage id='current-chat-ellipsis' key={key} message={pending} pend={true}/>
           )) : null
         }
         <div ref={messagesEndRef} />
@@ -201,12 +237,12 @@ const CurrentChat = (props) => {
           <div
             className="button"
             id='current-chat-send-button'
-            onClick={sendMessage}>
+            onClick={handleReturn}>
             Send
           </div>
         </div>
     </div>
   )
-  }
+}
 
-  export default CurrentChat;
+export default CurrentChat;

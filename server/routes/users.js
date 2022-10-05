@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getUsers, getGroups, addGroup, getMessages, editMessage, deleteMessage, getTasks, addTask, completeTask, updatePhoto } = require('../db/dbLogic.js');
+const { getUsers, updatePhoto, getGroups, addGroup, getMessages, editMessage, deleteMessage, getTasks, addTask, completeTask } = require('../db/dbLogic.js');
 
 router.get('/users', async (req, res) => {
   const { userId } = req.query;
@@ -8,6 +8,15 @@ router.get('/users', async (req, res) => {
   console.log('result: ', result)
   res.send(result.rows);
 });
+
+router.put('/updatePhoto', async (req, res) => {
+  await updatePhoto(req.body).then(() => {
+    res.sendStatus(201);
+  }).catch(err => {
+    console.log('Update photo error: ', err)
+    res.sendStatus(400);
+  })
+})
 
 router.get('/groups', async (req, res) => {
   const { userId } = req.query;
