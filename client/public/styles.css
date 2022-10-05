@@ -211,6 +211,14 @@ button:focus {
     overflow: scroll;
 }
 
+.user-profile-container {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    display: inline-block;
+}
+
+
 .user-profile-container-image:hover {
     opacity: 0.4;
     -webkit-filter: grayscale(100%);
