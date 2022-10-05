@@ -20,6 +20,24 @@ const UserProfile = () => {
     setShowImgModal(false);
   }
 
+  //refresh Token function to get new access token every 10 minutes
+  const refreshToken = () => {
+    axios.get('http://ec2-3-128-156-90.us-east-2.compute.amazonaws.com:8087/refresh')
+      .then((data) => {
+        axios.defaults.headers.common['Authorization'] = `BEARER ${data.data.accessToken}`;
+        setTimeout(() => {
+          refreshToken();
+        }, 598000);
+      })
+  };
+
+  //start refreshToken counter
+  useEffect(() => {
+    setTimeout(() => {
+      refreshToken();
+    }, 2000); //change this back after testing
+  }, [])
+
   return (
     <div className='user-profile-container'>
       <input type='file' accept=".jpg, .jpeg, .png" ref={hiddenFileInput} style={{display: 'none'}} onChange={updateImage}/>
