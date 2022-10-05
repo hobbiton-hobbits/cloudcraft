@@ -18,6 +18,7 @@ import {
   socketState,
 } from './userAtoms.js';
 import Login from "./Login/Login.jsx"
+import axios from 'axios';
 
 const socket = io();
 
@@ -62,6 +63,24 @@ const App = () => {
     socket.emit('store-username', [username, socketId]);
     console.log('socketid', socketId);
   }, [socketId, group, username])
+
+  //refresh Token function to get new access token every 10 minutes
+  const refreshToken = () => {
+    axios.get('/refresh')
+      .then((data) => {
+        axios.defaults.headers.common['Authorization'] = `BEARER ${data.data.accessToken}`;
+        setTimeout(() => {
+          refreshToken();
+        }, 598000);
+      })
+  };
+
+  //start refreshToken counter
+  useEffect(() => {
+    setTimeout(() => {
+      refreshToken();
+    }, 2000);
+  }, [])
 
 
 // Implement conditional rendering of login page once finished with Auth
