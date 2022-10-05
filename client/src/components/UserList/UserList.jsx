@@ -21,26 +21,34 @@ const UserList = (props) => {
 
   useEffect(() => {
     var data = {
-      params: {
-        userId
-      }
+      params: { userId }
     }
-    axios.get('/users', data)
+    if (userId) {
+      axios.get('/users', data)
       .then(res => {
         setRecipientList(res.data)
-      })
-  }, [])
+      });
+    }
+  }, [userId]);
 
   return (
     <div id='user-list' className='widget'>
       <div className='widget-title'>Users</div>
         <div id='user-list-users'>
-          {recipientList?.map((user, i) => (
+          {recipientList?.map((user, i) => {
+            if (user.id === userId) {
+              return null;
+            }
+            console.log('user images: ', user.img)
+            return (
             <div className='user-list-user' key={i} onClick={() => handleUserClick(i)} id={user.id === recipientId ? 'selected' : null}>
-              <div className='user-list-user-fullname'>{`${user.firstname} ${user.lastname}`}</div>
+              <div className='user-list-user-fullname'>
+                <img className='user-list-user-img' src={user.img} />
+                {`${user.firstname} ${user.lastname}`}
+              </div>
               <div className='user-list-user-username'>{user.username}</div>
             </div>
-          ))}
+          )})}
         </div>
     </div>
   )

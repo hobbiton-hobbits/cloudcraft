@@ -76,6 +76,9 @@ Includes user list, group list, current chat, and task list */
     background-color: #274c77;
     color: white;
 }
+.button:hover, .task-list-task:hover, .user-list-user:hover, .group-list-group:hover, button:hover {
+    cursor: pointer;
+}
 
 /* currently-selected user or group in user list or group list (only one at a time) */
 #selected {
@@ -96,7 +99,7 @@ Includes user list, group list, current chat, and task list */
 }
 
 button {
-    padding: 10px;
+    padding: 5px;
     margin-bottom: 10px;
     /* display: none; */
 }
@@ -208,32 +211,15 @@ button:focus {
 
 /* make panes that can have numerous rows scrollable so they don't overflow but still have all content accessible (via scrolling) */
 #user-list-users, #group-list-groups, #current-chat-message-container, #task-list {
-    overflow: scroll;
+    overflow-y: scroll;
+}
+::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
 }
 
-.user-profile-container {
-    position: absolute;
-    top: 25px;
-    left: 25px;
-    display: inline-block;
-}
-
-
-.user-profile-container-image:hover {
-    opacity: 0.4;
-    -webkit-filter: grayscale(100%);
-    -moz-filter: grayscale(100%);
-      -o-filter: grayscale(100%);
-     -ms-filter: grayscale(100%);
-         filter: grayscale(100%);
-}
-
-input[type="submit"] {
-    border: none;
-    background-color: #6096ba;
-    color: white;
-    text-align: center;
-    margin-top: auto;
+#current-chat-message-container {
+    height: 100%;
 }
 
 /* all lists and list items */
@@ -255,4 +241,42 @@ li {
 /* all text inputs */
 input[type=text] {
     border: none;
+}
+.user-profile-container {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    display: inline-block;
+}
+
+.user-profile-container-image {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.user-profile-container-image:hover {
+    opacity: 0.4;
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+      -o-filter: grayscale(100%);
+     -ms-filter: grayscale(100%);
+         filter: grayscale(100%);
+         cursor: pointer;
+}
+
+.current-chat-message-self-img, .current-chat-message-other-img, .user-list-user-img {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+input[type="submit"] {
+    border: none;
+    background-color: #6096ba;
+    color: white;
+    text-align: center;
+    margin-top: auto;
 }

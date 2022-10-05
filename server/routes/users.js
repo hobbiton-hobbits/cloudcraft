@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getUsers, getGroups, addGroup, getMessages } = require('../db/dbLogic.js');
+const { getUsers, getGroups, addGroup, getMessages, editMessage, deleteMessage, getTasks, addTask, completeTask, updatePhoto } = require('../db/dbLogic.js');
 
 router.get('/users', async (req, res) => {
   const { userId } = req.query;
@@ -16,18 +16,54 @@ router.get('/groups', async (req, res) => {
 })
 
 router.post('/groups', async (req, res) => {
-  const { ids } = req.body;
-  const result = await addGroup(ids);
+  const { ids, names } = req.body;
+  const result = await addGroup(ids, names);
   res.send(result);
-  // const { ids, names } = req.body;
-  // const result = await addGroup(ids, names);
-  // res.send(result);
 })
 
-// router.get('/messages', async (req, res) => {
-//   const { userId, groupId, recipientId } = req.query;
-//   const result = await getMessages(userId, null, groupId)
-//   res.send(result.rows);
-// })
+router.get('/messages', async (req, res) => {
+  const { userId, recipientId, groupId } = req.query;
+  const result = await getMessages(userId, recipientId, groupId);
+  res.send(result.rows);
+})
+
+router.put('/messages', async (req, res) => {
+  const { messageId, text } = req.body;
+  const result = await editMessage(messageId, text);
+  res.send(result);
+})
+
+router.delete('/messages', async(req, res) => {
+  const { messageId } = req.body;
+  const result = await deleteMessage(messageId);
+  res.send(result);
+})
+
+router.get('/tasks', async (req, res) => {
+  const { userId } = req.query;
+  const result = await getTasks(userId);
+  res.send(result.rows);
+})
+
+router.post('/tasks', async (req, res) => {
+  const { userId, text, messageId } = req.body;
+  const result = await addTask(userId, text, messageId);
+  res.send(result);
+})
+
+router.put('/tasks', async (req, res) => {
+  const { taskId } = req.body;
+  const result = await completeTask(taskId);
+  res.send(result);
+})
+
+router.put('/updatePhoto', async (req, res) => {
+  await updatePhoto(req.body).then(() => {
+    res.sendStatus(201);
+  }).catch(err => {
+    console.log('Update photo error: ', err)
+    res.sendStatus(400);
+  })
+})
 
 module.exports = router;

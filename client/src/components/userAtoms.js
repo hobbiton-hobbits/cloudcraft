@@ -14,13 +14,13 @@ export const userState = atom({
 export const userIdState = atom({
   key: 'userIdState',
   // change default to null when done testing
-  default: 1,
-})
+  default: null,
+});
 
 export const recipientIdState = atom({
   key: 'recipientIdState',
   // Change default when done testing
-  default: 43,
+  default: null,
 });
 
 export const groupIdState = atom({
@@ -52,14 +52,24 @@ export const sendMsgState = atom({
 export const recipientListState = atom({
   key: 'recipientListState',
   default: [],
-})
+});
 
 export const groupListState = atom({
   key: 'groupListState',
   default: [],
-})
+});
 
 export const socketState = atom({
   key: 'socketState',
   default: null,
-})
+});
+
+export const isTypingState = atom({
+  key: 'isTypingState',
+  default: false,
+});
+
+export const pendingMsgState = atom({
+  key: 'pendingMsgState',
+  default: {},
+});

@@ -22,14 +22,14 @@ const getMessages = async (sender_id, recipient_id = null, group_id = null) => {
       FROM messages
       WHERE (sender_id = $1 AND recipient_id = $2 AND deleted = false)
       OR (sender_id = $2 AND recipient_id = $1 AND deleted = false)
-      ORDER BY message_id DESC;`, [sender_id, recipient_id])
+      ORDER BY message_id ASC;`, [sender_id, recipient_id])
   }
   if (group_id) {
   return await pool.query(
     `SELECT message_id, message_text, created, sender_id, deleted
     FROM messages
     WHERE recipient_group_id = $1 AND deleted = false
-    ORDER BY message_id DESC;`, [group_id]
+    ORDER BY message_id ASC;`, [group_id]
     );
   }
   // OR WHERE sender_id = $2 AND recipient_group_id = $1 AND deleted = false
@@ -58,29 +58,24 @@ const addUser = async (username, firstName, lastName, img) => {
     SELECT $1, $2, $3, $4
     WHERE NOT EXISTS
     (SELECT username FROM users WHERE username = $1);`, [username, firstName, lastName, img]
-
   );
 }
 
 // add user to group if not already in it -- make additional query to check if user is already in
-const addUserToGroup = async (user_id, group_id) => {
-  return await pool.query(
-    `UPDATE groups
-    SET user_ids = array_append(user_ids, $1)
-    WHERE group_id = $2`, [user_id, group_id]
-  );
-}
+// const addUserToGroup = async (user_id, group_id) => {
+//   return await pool.query(
+//     `UPDATE groups
+//     SET user_ids = array_append(user_ids, $1)
+//     WHERE group_id = $2`, [user_id, group_id]
+//   );
+// }
 
 // create group
-const addGroup = async (ids) => {
+const addGroup = async (ids, names) => {
   return await pool.query(
-    `INSERT INTO groups (user_ids)
-    VALUES ($1)`, [ids]
-  );
-  // return await pool.query(
-  //   `INSERT INTO groups(user_ids, user_names)
-  //   values($1, $2)`, [ids, names]
-  // )
+    `INSERT INTO groups(user_ids, user_names)
+    values($1, $2)`, [ids, names]
+  )
 }
 
 // get all users except self
@@ -96,8 +91,8 @@ const getUsers = async (userId) => {
 const getGroups = async (id) => {
   return await pool.query(
     `SELECT *
-    FROM groups`
-    // WHERE (${id} = ANY (user_ids))
+    FROM groups
+    WHERE (${id} = ANY (user_ids))`
   )
 }
 
@@ -109,15 +104,52 @@ const getSingleUser = async (username) => {
   );
 }
 
+const getTasks = async (userId) => {
+  return await pool.query(
+    `SELECT *
+    FROM tasks
+    WHERE user_id = $1`, [userId]
+  )
+}
+
+const addTask = async (userId, text, messageId) => {
+  return await pool.query(
+    `INSERT INTO tasks (user_id, task_text, completed, deleted, message_id)
+    VALUES ($1, $2, false, false, $3)`, [userId, text, messageId]
+  )
+}
+
+const completeTask = async (taskId) => {
+  return await pool.query(
+    `UPDATE tasks
+    SET completed = true
+    WHERE task_id = $1`, [taskId]
+  )
+}
+
+const reorderTasks = async(userId) => {
+}
+
+const updatePhoto = async ({ img, userId }) => {
+  return await pool.query(
+    `UPDATE users
+     SET img = $1
+     WHERE id = $2`, [img, userId])
+}
+
 module.exports = {
   getMessages,
   editMessage,
   deleteMessage,
   addMessage,
   addUser,
-  addUserToGroup,
   addGroup,
   getUsers,
   getGroups,
   getSingleUser,
+  getTasks,
+  addTask,
+  completeTask,
+  reorderTasks,
+  updatePhoto
 }

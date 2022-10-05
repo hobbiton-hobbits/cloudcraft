@@ -70,10 +70,10 @@ const testUser2 = {
   // Remove test buttons in production
   const testButton2 = () => {
     if (user.username === 'yt') {
-      setRecipientId(userId);
+      // setRecipientId(userId);
       setUser(testUser2);
     } else {
-      setRecipientId(43);
+      // setRecipientId(userId);
       setUser(testUser1);
     }
   }

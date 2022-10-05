@@ -56,7 +56,8 @@ const makeTables = async () => {
     task_created DATE DEFAULT now(),
     completed BOOLEAN,
     deleted BOOLEAN,
-    message_id INTEGER REFERENCES messages(message_id)
+    message_id INTEGER REFERENCES messages(message_id),
+    position INTEGER
   );`)
   .then(() => console.log('Table Created'))
   .catch(err => console.log('Table failed to create: ', err))

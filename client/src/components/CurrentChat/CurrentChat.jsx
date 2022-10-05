@@ -9,11 +9,14 @@ import {
   sendMsgState,
   recipientIdState,
   userIdState,
+  isTypingState,
+  pendingMsgState,
 } from '../userAtoms.js';
 
 const CurrentChat = (props) => {
   const { socket } = props;
   const ref = useRef(null);
+  const messagesEndRef = useRef(null)
   const groupId = useRecoilValue(groupIdState);
   const { username } = useRecoilValue(userState);
   const userId = useRecoilValue(userIdState);
@@ -21,36 +24,100 @@ const CurrentChat = (props) => {
   const [msgHistory, setMsgHistory] = useRecoilState(messageState);
   const [senderMsg, setSenderMsg] = useRecoilState(sendMsgState);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isTyping, setIsTyping] = useRecoilState(isTypingState);
+  const [pendingMsg, setPendingMsg] = useRecoilState(pendingMsgState);
 
   socket.on('receive-msg', (messages) => {
-    setMsgHistory([...msgHistory, ...messages]);
-    console.log('Messages received:', messages);
-    console.log(msgHistory);
+    const sender = messages[0].sender_id;
+    // console.log(sender);
+    if (messages[0].ellipsis === true) {
+      console.log('sender and recipient id:', sender === userId)
+      // if (sender !== userId) {
+        console.log('sender true:', sender === userId)
+        setPendingMsg({...pendingMsg, [sender]: messages[0]});
+      // }
+    }
+    else if (messages[0].deleteDraft === true) {
+      setPendingMsg((pendingMsg) => {
+        const updatedPending = { ...pendingMsg };
+        delete updatedPending[messages[0].sender_id];
+        console.log('pending updated after deleting draft', updatedPending);
+        return updatedPending;
+      });
+    }
+    else {
+      console.log('pending', pendingMsg);
+      if (pendingMsg[sender]) {
+        console.log('pendingMsg from sender still present:', pendingMsg[sender])
+        setPendingMsg((pendingMsg) => {
+          const updatedPending = { ...pendingMsg };
+          delete updatedPending[messages[0].sender_id];
+          console.log('pending updated', updatedPending);
+          return updatedPending;
+        });
+      }
+      setMsgHistory([...msgHistory, ...messages]);
+      console.log('Messages received:', messages);
+      console.log(msgHistory);
+    }
+    console.log('pending Messages', pendingMsg)
   });
 
   const handleMessage = (e) => {
-    setSenderMsg(ref.current.value);
-    localStorage.setItem('draft-message', ref.current.value);
-  };
+    if (recipientId || groupId) {
+      if (!ref.current.value.length) {
+        if (isTyping) {
+          socket.emit('send-message', {
+            userId,
+            recipientId,
+            groupId,
+            ellipsis: false,
+            deleteDraft: true,
+          });
+          setIsTyping(false);
+        }
+      } else {
+        if (!isTyping) {
+          setIsTyping(true);
+          const ellipsis = {
+            userId,
+            recipientId,
+            groupId,
+            senderMsg: ref.current.value,
+            ellipsis: true,
+          }
+          socket.emit('send-message', ellipsis);
+        }
+      }
+      setSenderMsg(ref.current.value);
+      localStorage.setItem('draft-message', ref.current.value);
+    };
+    scrollToBottom();
+  }
 
   const sendMessage = (e) => {
     e.preventDefault();
-    // console.log(ref.current.value);
     const msg = {
       userId,
       recipientId,
       groupId,
       senderMsg,
+      ellipsis: false,
     }
-    socket.emit('send-message', msg);
-    localStorage.removeItem('draft-message');
-    setSenderMsg('');
+    // if (senderMsg.length) {
+      socket.emit('send-message', msg);
+      localStorage.removeItem('draft-message');
+      setSenderMsg('');
+      setIsTyping(false);
+    // }
   };
 
   const handleReturn = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      sendMessage(e);
+      if (senderMsg.length) {
+        sendMessage(e);
+      }
       return;
     }
     if (e.key === 'Enter' && e.shiftKey) {
@@ -76,12 +143,37 @@ const CurrentChat = (props) => {
     return array;
   };
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
   useEffect(() => {
     const draftMsg = localStorage.getItem('draft-message');
     if (draftMsg) {
       setSenderMsg(draftMsg);
     }
   }, []);
+
+  useEffect(() => {
+    var data = {
+      params: {
+        userId,
+        recipientId,
+        groupId
+      }
+    }
+    if (recipientId || groupId) {
+      axios.get('/messages', data)
+      .then(res => {
+        console.log('messages received: ', res.data);
+        setMsgHistory(res.data);
+      });
+    }
+  }, [recipientId, groupId]);
+
+  // useEffect(() => {
+  //   scrollToBottom();
+  // }, [pendingMsg, msgHistory]);
 
   return (
     <div id='current-chat' className='widget'>
@@ -91,6 +183,12 @@ const CurrentChat = (props) => {
         {!msgHistory ? <p>Start a chat with this user</p> : filterMessages(msgHistory).map((message, key) => (
           <ChatMessage key={key} message={message}/>
         ))}
+        {Object.keys(pendingMsg).length
+          ? filterMessages(Object.values(pendingMsg)).map((pending, key) => (
+          <ChatMessage id='current-chat-ellipsis' key={key} message={pending}/>
+          )) : null
+        }
+        <div ref={messagesEndRef} />
         </div>
         <div id='current-chat-draft-container'>
           <textarea
