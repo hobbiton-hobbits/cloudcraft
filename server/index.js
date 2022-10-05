@@ -111,13 +111,16 @@ io.on('connection', (socket) => {
       currentRoom = groupId;
       console.log('message emitted to group in room:', currentRoom);
       io.in(currentRoom).to(socket.id).emit('receive-msg', [emittedMessage]);
-      addMessage(userId, null, groupId, senderMsg);
+      if (!ellipsis) {
+        addMessage(userId, null, groupId, senderMsg);
+      }
     }
   });
 
   // socket for disconnecting
   socket.on('disconnect', () => {
-    console.log('User disconnected: ', socket.id);
+    console.log('Socket disconnected: ', socket.id);
+    console.log('User disconnected (debug): ', userId)
     delete userSocketIds[userId];
   });
 });

@@ -93,7 +93,7 @@ const testUser3 = {
 
   return (
       <div>
-        <div id='page-title'>cloudcraft</div>
+        <div id='page-title'>CloudCraft</div>
         <UserProfile />
         <div id="main-content">
           <div id="user-and-group-list">

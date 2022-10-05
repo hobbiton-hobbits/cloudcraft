@@ -72,11 +72,7 @@ const ChatMessage = ({ message, pend }) => {
   }
 
   useEffect(() => {
-    setMsg(message)
-    var date = new Date(message.created).toLocaleDateString('en-us', {hour:"numeric", minute: 'numeric', second:"numeric"});
-    console.log('date: ', date);
-    // var hour = date.getHours();
-    // console.log('hour: ', hour);
+    setMsg(message);
   }, [message])
 
   //update this if statement when we have acess to the current users id
@@ -84,16 +80,15 @@ const ChatMessage = ({ message, pend }) => {
     return (
       <div className='current-chat-message-self-container' onMouseEnter={() => setShowButtons(true)} onMouseLeave={() => setShowButtons(false)}>
         <div className='current-chat-message-self'>
-        <div>
-        <img src={img} className='current-chat-message-self-img' />
-          {name}
-          <div style={{fontSize: '8px'}}>Posted: {new Date(msg.created).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})}</div>
-          {/* <div style={{fontSize: '8px'}}>Posted: {new Date(msg.created).getHours()}</div> */}
+        <div className='current-chat-message-header'>
+          <img src={img} className='current-chat-message-self-img' />
+          <span className='current-chat-username'>{username}</span>
         </div>
+          <div className='current-chat-date'>Posted: {new Date(msg.created).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})}</div>
           {msg.deleted ? null :
           <div className={showButtons ? 'current-chat-button-container' : 'current-chat-button-hide'}>
             <button className='current-chat-edit-button' title='Edit message' onClick={editMessage}>✎</button>
-            <button className='current-chat-delete-button' title='Delete message' onClick={deleteMessage}>␡</button>
+            <button className='current-chat-delete-button' title='Delete message' onClick={deleteMessage}>x</button>
             <button className='current-chat-add-task-button' title='Add task' onClick={addMessageToTask}>+</button>
           </div>
           }
@@ -102,7 +97,7 @@ const ChatMessage = ({ message, pend }) => {
             <textarea id='editText' defaultValue={msg.message_text} />
             <br/>
             <input type='submit' value='Edit message'/>
-          </form> : <div id='message-box'>{msg.message_text}</div>}
+          </form> : <div className='message-box'>{msg.message_text}</div>}
         </div>
       </div>
     )
@@ -110,17 +105,21 @@ const ChatMessage = ({ message, pend }) => {
     return (
       <div className='current-chat-message-other-container' onMouseEnter={() => setShowButtons(true)} onMouseLeave={() => setShowButtons(false)}>
         <div className='current-chat-message-other'>
-        <div>
-        <img src={img} className='current-chat-message-other-img' />
-          {name}
-          <div style={{fontSize: '8px'}}>Posted: {new Date(msg.created).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})}</div>
-        </div>
-          {msg.deleted ? null :
-          <div className={showButtons ? 'current-chat-button-container' : 'current-chat-button-hide'}>
-            <button className='current-chat-add-task-button' title='Add task' onClick={addMessageToTask}>+</button>
+          <div className='current-chat-message-header'>
+            <img src={img} className='current-chat-message-other-img' />
+              <span className='current-chat-username'>{name}</span>
+              {pend
+              ? <span className='typing'> is typing...</span>
+              : null
+              }
           </div>
-          }
-          <div>{msg.message_text}</div>
+            <div className='current-chat-date'>Posted: {new Date(msg.created).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})}</div>
+            {msg.deleted ? null :
+            <div className={showButtons ? 'current-chat-button-container' : 'current-chat-button-hide'}>
+              <button className='current-chat-add-task-button' title='Add task' onClick={addMessageToTask}>+</button>
+            </div>
+            }
+            <div className='message-box'>{msg.message_text}</div>
         </div>
       </div>
     )

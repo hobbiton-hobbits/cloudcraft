@@ -21,7 +21,6 @@ const CurrentChat = (props) => {
   const { username } = useRecoilValue(userState);
   const userId = useRecoilValue(userIdState);
   const recipientId = useRecoilValue(recipientIdState);
-  // const [msgHistory, setMsgHistory] = useRecoilState(messageState);
   const [msgHistory, setMsgHistory] = useState([]);
   const [senderMsg, setSenderMsg] = useRecoilState(sendMsgState);
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,7 +31,6 @@ const CurrentChat = (props) => {
     const sender = messages[0].sender_id;
 
     if (messages[0].ellipsis === true) {
-      // console.log('sender:', sender);
       if (pendingMsg[sender]) {
         console.log('pending sender msg history', pendingMsg[sender]);
       }
@@ -40,14 +38,14 @@ const CurrentChat = (props) => {
         const updatedPending = { ...prevState, [messages[0].sender_id]: messages[0] };
         return updatedPending;
       });
-    }
-    else if (messages[0].deleteDraft === true) {
-      setPendingMsg((pendingMsg) => {
-        const updatedPending = { ...pendingMsg };
-        delete updatedPending[messages[0].sender_id];
-        console.log('pending updated after deleting draft', updatedPending);
-        return updatedPending;
-      });
+      if (messages[0].deleteDraft === true) {
+        setPendingMsg((pendingMsg) => {
+          const updatedPending = { ...pendingMsg };
+          delete updatedPending[messages[0].sender_id];
+          console.log('pending updated after deleting draft', updatedPending);
+          return updatedPending;
+        });
+      }
     }
     else {
       console.log('pending', pendingMsg);
@@ -62,42 +60,13 @@ const CurrentChat = (props) => {
       }
       setMsgHistory([...msgHistory, ...messages]);
       console.log('Messages received:', messages);
-      // console.log(msgHistory);
     }
     console.log('pending Messages', pendingMsg)
   });
 
   const handleMessage = (e) => {
-    // if (recipientId || groupId) {
-    //   if (!ref.current.value.length) {
-    //     if (isTyping) {
-    //       socket.emit('send-message', {
-    //         userId,
-    //         recipientId,
-    //         groupId,
-    //         ellipsis: false,
-    //         deleteDraft: true,
-    //       });
-    //       setIsTyping(false);
-    //     }
-      // } else {
-    //     if (!isTyping) {
-    //       setIsTyping(true);
-    //     }
-    //       const ellipsis = {
-    //         userId,
-    //         recipientId,
-    //         groupId,
-    //         senderMsg: ref.current.value,
-    //         ellipsis: true,
-    //       }
-    //       socket.emit('send-message', ellipsis);
-    //     // }
-      // }
       setSenderMsg(ref.current.value);
       localStorage.setItem('draft-message', ref.current.value);
-    //};
-    scrollToBottom();
   }
 
   useEffect(() => {
@@ -109,7 +78,7 @@ const CurrentChat = (props) => {
             userId,
             recipientId,
             groupId,
-            ellipsis: false,
+            ellipsis: true,
             deleteDraft: true,
           });
           setIsTyping(false);
@@ -139,12 +108,12 @@ const CurrentChat = (props) => {
       senderMsg,
       ellipsis: false,
     }
-    // if (senderMsg.length) {
+    if (senderMsg.length) {
       socket.emit('send-message', msg);
       localStorage.removeItem('draft-message');
       setSenderMsg('');
       setIsTyping(false);
-    // }
+    }
   };
 
   const handleReturn = (e) => {
@@ -209,19 +178,18 @@ const CurrentChat = (props) => {
   useEffect(() => {
     const chatbox = document.getElementById('current-chat-message-container');
     chatbox.scrollTop = chatbox.scrollHeight - chatbox.clientHeight;
-    // scrollToBottom();
   }, [pendingMsg, msgHistory]);
 
   return (
     <div id='current-chat' className='widget'>
-      <input type='text' className='widget-title' placeholder="Search Chat..." onChange={searchChat}/>
+      <input type='text' className='widget-title search-chat' placeholder="Search Chat..." onChange={searchChat}/>
         <div id='current-chat-message-container'>
         {!msgHistory ? <p>Start a chat with this user</p> : filterMessages(msgHistory).map((message, key) => (
           <ChatMessage key={key} message={message}/>
         ))}
         {Object.keys(pendingMsg).length
           ? filterMessages(Object.values(pendingMsg)).map((pending, key) => (
-          <ChatMessage id='current-chat-ellipsis' key={key} message={pending} pend={true}/>
+            <ChatMessage id='current-chat-ellipsis' key={key} message={pending} pend={true}/>
           )) : null
         }
         <div ref={messagesEndRef} />

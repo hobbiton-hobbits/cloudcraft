@@ -3,7 +3,6 @@ import axios from 'axios';
 import { userIdState, recipientListState, groupIdState, recipientIdState } from '../userAtoms.js';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-// This component renders a list of all users stored in the database, any of whom can be chatted with
 const UserList = (props) => {
   const { socket } = props;
   const userId = useRecoilValue(userIdState);
@@ -46,7 +45,6 @@ const UserList = (props) => {
                 <img className='user-list-user-img' src={user.img} />
                 {`${user.firstname} ${user.lastname}  (${user.username})`}
               </div>
-              {/* <div className='user-list-user-username'>{user.username}</div> */}
             </div>
           )})}
         </div>
