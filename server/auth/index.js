@@ -120,8 +120,7 @@ app.get('/refresh', (req, res) => {
   const refreshToken = authHeader && authHeader.split(' ')[1];
   console.log('I HAVE REFRESHED:', refreshToken);
   if (refreshToken === null) {
-    console.log('FIRST 401');
-    res.status(401).send('FIRST 401');
+    res.sendStatus(401);
   } else {
     db.query(`SELECT tokenid FROM refreshtokens where tokenid = '${refreshToken}';`)
       .then((result) => {
@@ -140,7 +139,7 @@ app.get('/refresh', (req, res) => {
       })
       .catch((err) => {
         console.log(err);
-        res.status(401).send('SECOND 401');
+        res.sendStatus(401);
       })
   }
 });
