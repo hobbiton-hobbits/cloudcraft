@@ -24,7 +24,7 @@ const UserProfile = () => {
 
   //refresh Token function to get new access token every 10 minutes
   const refreshToken = () => {
-    axios.get('/refresh')
+    axios.get('http://ec2-3-128-156-90.us-east-2.compute.amazonaws.com:8087/refresh')
       .then((data) => {
         axios.defaults.headers.common['Authorization'] = `BEARER ${data.data.accessToken}`;
         setTimeout(() => {
