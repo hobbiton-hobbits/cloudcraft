@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Tasks from "./Tasks.jsx";
 import { useRecoilValue } from "recoil";
-import { userIdState } from "../userAtoms.js";
+import { userIdState, taskListUpdate } from "../userAtoms.js";
 
 const TaskList = () => {
   const [createTask, setCreateTasks] = useState(false);
@@ -10,6 +10,7 @@ const TaskList = () => {
   const [allTasks, setTasks] = useState([]);
   const [searchedTasks, setSearchedTasks] = useState([]);
   const userId = useRecoilValue(userIdState);
+  const taskUpdate = useRecoilValue(taskListUpdate);
   const [taskCompleted, setTaskCompleted] = useState(false);
 
   useEffect(() => {
@@ -18,14 +19,14 @@ const TaskList = () => {
         userId,
       },
     };
+
     if (userId) {
       axios.get("/tasks", data).then((res) => {
         setTasks(res.data);
         setSearchedTasks(res.data);
       });
-      // axios request will go here for tasks
     }
-  }, [userId, taskCompleted]);
+  }, [userId, taskCompleted, taskUpdate]);
 
   const onClickCreate = () => {
     setCreateTasks((preState) => !preState);
@@ -41,9 +42,8 @@ const TaskList = () => {
 
         axios
           .post("/tasks", taskObject)
-          .then((res) => {
+          .then(() => {
             setTaskCompleted((prevState) => !prevState);
-            res.status(200);
           })
           .catch((err) => {
             console.error(err);
@@ -68,7 +68,6 @@ const TaskList = () => {
       .put("/tasks", taskId)
       .then((res) => {
         setTaskCompleted((prevState) => !prevState);
-        res.status(204);
       })
       .catch((err) => {
         console.error(err);

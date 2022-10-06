@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const reorder = (list, startIndex, endIndex) => {
@@ -39,7 +39,7 @@ const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
                     return (
                       <Draggable
                         key={task.task_id}
-                        draggableId="draggableId"
+                        draggableId={`${task.task_id}`}
                         index={index}
                       >
                         {(provided, snapshot) => (
