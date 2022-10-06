@@ -29,7 +29,6 @@ const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
-            
             <ul {...provided.droppableProps} ref={provided.innerRef}>
               {searchedTasks &&
                 searchedTasks
@@ -39,8 +38,8 @@ const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
                   .map((task, index) => {
                     return (
                       <Draggable
-                        key={task.id}
-                        draggableId={task.id}
+                        key={task.task_id}
+                        draggableId="draggableId"
                         index={index}
                       >
                         {(provided, snapshot) => (
@@ -51,25 +50,32 @@ const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
                             {...provided.dragHandleProps}
                           >
                             <input
-                              id={task.id}
+                              id={task.task_id}
                               type="checkbox"
                               defaultChecked={task.completed}
                               onClick={onComplete}
                             />
                             <label>Completed</label>
-                            <div>{task.text}</div>
-                            <div>{task.Due_Date}</div>
+                            <div>{task.task_text}</div>
+                            <div>
+                              {new Date(task.task_created).toLocaleDateString(
+                                "en-us",
+                                {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                }
+                              )}
+                            </div>
                           </li>
                         )}
                       </Draggable>
                     );
                   })}
             </ul>
-            
           )}
         </Droppable>
       </DragDropContext>
-      
     </>
   );
 };

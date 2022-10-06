@@ -1,80 +1,53 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Tasks from "./Tasks.jsx";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
+import { userIdState } from "../userAtoms.js";
 
 const TaskList = () => {
   const [createTask, setCreateTasks] = useState(false);
   const [newTask, setNewTask] = useState("");
   const [allTasks, setTasks] = useState([]);
   const [searchedTasks, setSearchedTasks] = useState([]);
-
-  const data = {
-    row: [
-      {
-        id: "1",
-        text: "Create PR for the Task",
-        Due_Date: "25-May-2021",
-        completed: true,
-      },
-      {
-        id: "2",
-        text: "Fix Styling",
-        Due_Date: "26-May-2021",
-        completed: false,
-      },
-      {
-        id: "3",
-        text: "Handle Api Changes",
-        Due_Date: "27-May-2021",
-        completed: false,
-      },
-      {
-        id: "4",
-        text: "Call with Backend Team",
-        Due_Date: "23-Aug-2021",
-        completed: true,
-      },
-      {
-        id: "5",
-        text: "Call with Backend Team",
-        Due_Date: "05-Jan-2021",
-        completed: true,
-      },
-      {
-        id: "6",
-        text: "Handle Api Changes",
-        Due_Date: "27-May-2021",
-        completed: true,
-      },
-      {
-        id: "7",
-        text: "Call with Backend Team",
-        Due_Date: "23-Aug-2021",
-        completed: false,
-      },
-    ],
-  };
+  const userId = useRecoilValue(userIdState);
+  const [taskCompleted, setTaskCompleted] = useState(false);
 
   useEffect(() => {
-    // axios request will go here for tasks
-    setTasks(data.row);
-    setSearchedTasks(data.row);
-  }, []);
+    var data = {
+      params: {
+        userId,
+      },
+    };
+    if (userId) {
+      axios.get("/tasks", data).then((res) => {
+        setTasks(res.data);
+        setSearchedTasks(res.data);
+      });
+      // axios request will go here for tasks
+    }
+  }, [userId, taskCompleted]);
 
   const onClickCreate = () => {
     setCreateTasks((preState) => !preState);
     if (createTask) {
       if (newTask !== "") {
         let newTaskText = newTask;
+
         let taskObject = {
-          id: "10",
+          userId: userId,
           text: newTaskText,
-          date: new Date(),
-          completed: false,
+          messageId: null,
         };
-        setTasks((prevState) => [...prevState, taskObject]);
-        setSearchedTasks((prevState) => [...prevState, taskObject]);
+
+        axios
+          .post("/tasks", taskObject)
+          .then((res) => {
+            setTaskCompleted((prevState) => !prevState);
+            res.status(200);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       }
     }
 
@@ -88,22 +61,24 @@ const TaskList = () => {
   };
 
   const onComplete = (e) => {
-    // axios request to update flag
-
-    const newTasks = allTasks.map((task) => {
-      if (task.id === e.target.id) {
-        task.completed = !task.completed;
-      }
-      return task;
-    });
-    setTasks(newTasks);
-    setSearchedTasks(newTasks);
+    var taskId = {
+      taskId: e.target.id,
+    };
+    axios
+      .put("/tasks", taskId)
+      .then((res) => {
+        setTaskCompleted((prevState) => !prevState);
+        res.status(204);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const handleSearch = (searchText) => {
     if (searchText.length > 2) {
       var filterMessages = searchedTasks.filter((task) => {
-        return task.text.toLowerCase().includes(searchText.toLowerCase());
+        return task.task_text.toLowerCase().includes(searchText.toLowerCase());
       });
       setSearchedTasks(filterMessages);
     } else {
@@ -119,12 +94,12 @@ const TaskList = () => {
         placeholder="Search..."
         onChange={(e) => handleSearch(e.target.value)}
       />
-      <div id='task-list-tasks'>
-      <Tasks
-        searchedTasks={searchedTasks}
-        setSearchedTasks={setSearchedTasks}
-        onComplete={onComplete}
-      />
+      <div id="task-list-tasks">
+        <Tasks
+          searchedTasks={searchedTasks}
+          setSearchedTasks={setSearchedTasks}
+          onComplete={onComplete}
+        />
       </div>
       {createTask ? (
         <>
