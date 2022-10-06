@@ -83,6 +83,7 @@ const GroupList = (props) => {
 
   useEffect(() => {
     getGroupList();
+    console.log('user state: ', user);
   }, [userId]);
 
   useEffect(() => {

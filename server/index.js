@@ -86,10 +86,10 @@ io.on('connection', (socket) => {
   socket.on('store-username', async (userInfo) => {
     const [ user, socketID ] = userInfo;
     console.log('userInfo socketID', socketID);
-    const { username, firstName, lastName, img } = user;
+    const { username, firstname, lastname, img } = user;
     // This saves username associated with socket id;
     // Add user to database if not exists
-    await addUser(username, firstName, lastName, img);
+    await addUser(username, firstname, lastname, img);
     userId = await getSingleUser(username);
     userSocketIds[userId.rows[0].id] = socketID;
     // Remove console log in production
