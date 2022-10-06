@@ -7,25 +7,19 @@ const divStyle = {
   alignItems: 'center',
   width: 'fit-content',
   margin: '1em auto',
-
   position:'relative',
   marginTop: '10%',
-
 }
 
 const formStyle = {
   margin: 'auto',
-
   padding: '1em',
   fontSize: '150%'
-
 }
 
 const inputErrStyle ={
   color: 'red',
-
   fontSize: '20px',
-
   float:'right'
 }
 
@@ -33,10 +27,22 @@ const inputStyle = {
   border: 'solid',
   borderWidth: 'thin',
   float: 'right',
-
   borderColor: 'grey',
   fontSize: '100%'
 }
+
+const passInput = {
+  border: 'solid',
+  borderWidth: 'thin',
+  float: 'right',
+  borderColor: 'grey',
+  fontSize: '100%',
+  backgroundColor:'#a3cef1',
+  color:'#e7ecef',
+  bordeRadius: '0.3rem',
+  marginBottom: '10px',
+}
+
 const labelStyle = {
   margin: '3px'
 }
@@ -47,7 +53,8 @@ const Btn = {
   paddingTop: '1px',
   paddingBottom:'1px',
   fontSize: '100%',
-  display: 'inline-block'
+  width: 'fit-content',
+  height: 'fit-content'
 }
 
 const Btn2 = {
@@ -65,7 +72,6 @@ const headerDiv ={
   width: '100%',
   textAlign: 'center',
   fontSize: '150%'
-
 }
 
 const Register = ({setIsRegistering}) => {
@@ -159,25 +165,19 @@ const Register = ({setIsRegistering}) => {
 
       <form  onSubmit={handleSubmit} style={formStyle} >
 
-
       <label style = {labelStyle} htmlFor="firstname">First Name </label>
-
       <input style={inputStyle} type="text" className="firstname" className="form-field" name="firstname" value={values.firstName} onChange={handleFirstNameInputChange}/>
       <br/>
       {submitted && !values.firstName && <span style={inputErrStyle} id='first-name-error'>Please enter a first name</span>}
       <br/>
 
-
       <label style = {labelStyle} htmlFor="lastname">Last Name </label>
-
       <input style={inputStyle} type="text" id="lastname" className="form-field" name="lastname" value={values.lastName} onChange={handleLastNameInputChange}/>
       <br/>
      { submitted && !values.lastName && <span style={inputErrStyle} id="last-name-error">Please enter a last name</span>}
       <br/>
 
-
       <label style = {labelStyle} htmlFor="username">Username </label>
-
       <input style={inputStyle} type="text" id="username" className="form-field" name="username" value={values.userName} onChange={handleUserNameInputChange} />
       <br/>
       { submitted && !values.username && <span style={inputErrStyle} id="user-name-error">
@@ -188,23 +188,20 @@ const Register = ({setIsRegistering}) => {
          </span>}
      <br/>
 
-
       <label style = {labelStyle} htmlFor="password">Password </label>
-      <input style={inputStyle} type="password" className="password" className="form-field" name="password" value={values.password} onChange={handlePassWordInputChange}/>
+      <input style={passInput} type="password" className="password" className="form-field" name="password" value={values.password} onChange={handlePassWordInputChange}/>
       <br/>
      { submitted && !values.password && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
      <br/>
 
      <label style = {labelStyle} htmlFor="confirm" > Confirm </label>
-
-      <input style={inputStyle} type="password" className="confirm" className="form-field" name="confirm" value={values.confirm} onChange={handleConfirmInputChange}/>
+      <input style={passInput} type="password" className="confirm" className="form-field" name="confirm" value={values.confirm} onChange={handleConfirmInputChange}/>
       <br/>
      { submitted && !values.confirm && <span style={inputErrStyle} id="confirm-error">Please confirm password</span>}
      { submitted && values.confirm && (values.confirm !== values.password) && <span style={inputErrStyle} id="confirm-error">does not match password</span>}
      <br/>
 
-
-      <input style={Btn2} className= 'button' type="submit" value="Submit"/>
+      <input style={Btn} className= 'button' type="submit" value="Submit"/>
       <div style={Btn} className= 'button' onClick={handleBackToLog}>Back to Login</div>
 
       </form>
