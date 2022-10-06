@@ -27,6 +27,8 @@ const ChatMessage = ({ message, pend }) => {
     img = '/assets/Craft.png';
   }
 
+  var userImg = userInfo.img || img;
+
   if (msg.deleted) {
      msg.message_text = 'This message was deleted'
   }
@@ -82,7 +84,7 @@ const ChatMessage = ({ message, pend }) => {
       <div className='current-chat-message-self-container' onMouseEnter={() => setShowButtons(true)} onMouseLeave={() => setShowButtons(false)}>
         <div className='current-chat-message-self'>
         <div className='current-chat-message-header'>
-          <img src={img} className='current-chat-message-self-img' />
+          <img src={userImg} className='current-chat-message-self-img' />
           <span className='current-chat-username'>{`${userInfo.firstname} ${userInfo.lastname}`}</span>
         </div>
           <div className='current-chat-date'>Posted: {new Date(msg.created).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})}</div>
@@ -108,7 +110,7 @@ const ChatMessage = ({ message, pend }) => {
         <div className='current-chat-message-other'>
           <div className='current-chat-message-header'>
             <img src={img} className='current-chat-message-other-img' />
-              <span className='current-chat-username'>{`${userInfo.firstname} ${userInfo.lastname}`}</span>
+              <span className='current-chat-username'>{name}</span>
               {pend
               ? <span className='typing'> is typing...</span>
               : null

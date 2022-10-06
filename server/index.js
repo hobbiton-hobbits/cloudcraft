@@ -93,9 +93,9 @@ io.on('connection', (socket) => {
     userId = await getSingleUser(username);
     userSocketIds[userId.rows[0].id] = socketID;
     // Remove console log in production
-    console.log('user-id', userId.rows[0].id);
+    console.log('user-id', userId.rows[0]);
     // Send back userId to client
-    io.to(socketID).emit('user-id', userId.rows[0].id);
+    io.to(socketID).emit('user-id', {...userId.rows[0]});
   });
 
   // Executes if a user previously joined a room
@@ -155,11 +155,13 @@ io.on('connection', (socket) => {
 
   socket.on('create-group', (ids) => {
     console.log('ids: ', ids);
-    const socketIds = ids.map(id => (
-      userSocketIds[id]
-    ))
-    console.log('socket ids: ', socketIds);
+    const socketIds = ids.forEach(id => {
+      if (userSocketIds[id]) {
+        io.to(userSocketIds[id]).emit('refresh-group');
+      }
   })
+    console.log('socket ids: ', socketIds);
+  });
 
   // socket for disconnecting
   socket.on('disconnect', () => {

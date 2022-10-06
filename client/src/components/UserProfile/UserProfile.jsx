@@ -13,7 +13,7 @@ const UserProfile = () => {
   const hiddenFileInput = React.useRef(null);
   const [img, setImg] = useState(userInfo.img);
   console.log('User image: ', img)
-  var showImg = img || '/assets/Craft.png'
+  var showImg = userInfo.img || img || '/assets/Craft.png'
 
   const handleFileChange = (e) => {
     let file = e.target.files[0];

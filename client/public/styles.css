@@ -62,7 +62,7 @@ Includes user list, group list, current chat, and task list */
 #current-chat {
     width: 47%;
     height: 750px;
-    background-color: #274c77;
+    background-color: #1d3857;
 }
 
 #task-list {
@@ -144,7 +144,6 @@ textarea {
     justify-content: left;
     margin: 0;
     padding: 0;
-    margin-bottom: 2px;
 }
 
 /* container for messages sent by self */
@@ -154,7 +153,6 @@ textarea {
     justify-content: left;
     margin: 0;
     padding: 0;
-    margin-bottom: 2px;
 }
 
 /* message bubbles */
@@ -376,7 +374,7 @@ input[type="submit"] {
 
 .current-chat-message-self-container,
 .current-chat-message-other-container {
-    padding: 0.2rem;
+    /* padding: 0.2rem; */
 }
 
 .current-chat-message-self,

@@ -48,13 +48,15 @@ const App = () => {
         setSocketId(socketIDtemp);
       });
       socket.emit('store-username', [user, socketIDtemp]);
-      socket.on('user-id', (userId) => {
+      socket.on('user-id', (userInfo) => {
+        const { id, username, firstname, lastname, img } = userInfo;
         console.log('Your user id is:', userId);
-        setUserId(userId);
+        setUser({username, firstname, lastname, img});
+        setUserId(id);
       });
     }
 
-  }, [socket, user]);
+  }, [socket]);
 
 const testUser1 = {
   username: 'yt',
@@ -135,7 +137,7 @@ const testUser3 = {
          <div id="main-content">
            <div id="user-and-group-list">
              <UserList />
-             <GroupList />
+             <GroupList socket={socket}/>
            </div>
            <CurrentChat socket={socket}/>
           <TaskList />

@@ -100,7 +100,6 @@ const CurrentChat = (props) => {
   }, [senderMsg])
 
   const sendMessage = (e) => {
-    e.preventDefault();
     const msg = {
       userId,
       recipientId,
