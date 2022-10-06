@@ -107,12 +107,7 @@ Includes user list, group list, current chat, and task list */
     border-radius: 0.5rem;
 }
 
-button {
-    padding: 5px;
-    height: 25px;
-    width: 25px;
-    /* display: none; */
-}
+
 
 .current-chat-message-self button {
     margin-left: 5px;
@@ -296,6 +291,8 @@ input[type="submit"] {
     color: white;
     text-align: center;
     margin-top: auto;
+    border-radius: 0.5rem;
+    cursor: pointer;
 }
 
 .current-chat-button-container {
@@ -315,17 +312,26 @@ input[type="submit"] {
     position: relative;
     top: -1px;
     border-radius: 0.5rem;
+    padding: 5px;
+    height: 25px;
+    width: 25px;
 }
 
 .current-chat-add-task-button {
     position: relative;
     top: -1px;
     border-radius: 0.5rem;
+    padding: 5px;
+    height: 25px;
+    width: 25px;
 }
 
 .current-chat-edit-button {
     position: relative;
     border-radius: 0.5rem;
+    padding: 5px;
+    height: 25px;
+    width: 25px;
 }
 
 #editText {
@@ -369,4 +375,9 @@ input[type="submit"] {
 .current-chat-message-self,
 .current-chat-message-other {
     padding: 0.5rem;
+}
+
+.regBtn, .backBtn {
+    width: fit-content;
+    height: fit-content;
 }
