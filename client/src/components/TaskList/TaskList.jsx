@@ -97,6 +97,7 @@ const TaskList = () => {
       return task;
     });
     setTasks(newTasks);
+    setSearchedTasks(newTasks);
   };
 
   const handleSearch = (searchText) => {
