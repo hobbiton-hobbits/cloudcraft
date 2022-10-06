@@ -39,7 +39,9 @@ const Btn = {
   marginLeft: '5px',
   paddingTop: '1px',
   paddingBottom:'1px',
-  fontSize: '100%'
+  fontSize: '100%',
+  width: 'fit-content',
+  height: 'fit-content'
 }
 
 const Btn2 = {

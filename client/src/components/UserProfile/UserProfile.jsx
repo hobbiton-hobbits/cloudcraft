@@ -62,7 +62,7 @@ const UserProfile = () => {
       <input type='file' accept=".jpg, .jpeg, .png" ref={hiddenFileInput} style={{display: 'none'}} onChange={handleFileChange}/>
       <div>
       <img className='user-profile-container-image' src={img} onClick={() => {hiddenFileInput.current.click()}} style={{height: '50px', width: '50px', borderRadius: '50%'}}></img>
-        {userInfo.username}</div>
+        {`${userInfo.firstname} ${userInfo.lastname}  (${userInfo.username})`}</div>
     </div>
   )
 }

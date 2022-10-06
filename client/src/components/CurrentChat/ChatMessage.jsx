@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import axios from 'axios';
 import { userState, recipientListState, userIdState } from '../userAtoms.js';
 
 const ChatMessage = ({ message, pend }) => {
   const [editModal, setEditModal] = useState(false);
-  const { username } = useRecoilValue(userState);
+  const userInfo = useRecoilState(userState);
   const userId = useRecoilValue(userIdState);
   const allUsers = useRecoilValue(recipientListState);
   const [msg, setMsg] = useState({});
@@ -17,7 +17,7 @@ const ChatMessage = ({ message, pend }) => {
   for (var i = 0; i < allUsers.length; i++) {
     if (msg.sender_id === allUsers[i].id) {
       img = allUsers[i].img;
-      name = allUsers[i].username;
+      name = `${allUsers[i].firstname} ${allUsers[i].lastname}`;
       break;
     }
   }
@@ -82,7 +82,7 @@ const ChatMessage = ({ message, pend }) => {
         <div className='current-chat-message-self'>
         <div className='current-chat-message-header'>
           <img src={img} className='current-chat-message-self-img' />
-          <span className='current-chat-username'>{username}</span>
+          <span className='current-chat-username'>{`${userInfo.firstname} ${userInfo.lastname}`}</span>
         </div>
           <div className='current-chat-date'>Posted: {new Date(msg.created).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})}</div>
           {msg.deleted ? null :

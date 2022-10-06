@@ -106,8 +106,10 @@ const GroupList = (props) => {
             <div className='group-list-group' key={i} onClick={() => handleGroupClick(i)} id={group.group_id === groupId ? 'selected' : null}>{listUsernames(group.user_names)}</div>
           ))}
         </div>
-      <Select options={options} onChange={(selectedOption) => setSelected(selectedOption)} isMulti />
-      <div className='button' id='group-list-create-button' onClick={createGroup}>create a group</div>
+        <div className='group-list-select'>
+          <Select options={options} onChange={(selectedOption) => setSelected(selectedOption)} isMulti />
+          <div className='button' id='group-list-create-button' onClick={createGroup}>create a group</div>
+        </div>
     </div>
   )
 }
