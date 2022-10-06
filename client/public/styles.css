@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: #e7ecef;
+    background-color: #274c77;
 }
 
 /* the title at the top of the page */
@@ -10,7 +10,7 @@ body {
     font-size: 30px;
     text-align: center;
     padding: 30px;
-    color: #274c77;
+    color: white;
 }
 
 /* The main content of the page, consisting of the three main panes (users/groups list, current chat, and task list) */
@@ -41,40 +41,49 @@ Includes user list, group list, current chat, and task list */
 .widget-title {
     font-size: 20px;
     padding: 20px;
-    background-color: #a3cef1;
-    color: white;
     text-align: center;
+    background-color:#a3cef1;
+    color:#e7ecef;
+    border-radius: 0.5rem;
+    margin-bottom: 10px;
 }
 
 #user-list {
     margin-bottom: 25px;
-    height: 400px;
+    height: 360px;
+    border-radius: 0.5rem;
 }
 
 #group-list {
-    height: 400px;
+    height: 360px;
+    border-radius: 0.5rem;
 }
 
 #current-chat {
     width: 47%;
-    height: 825px;
+    height: 750px;
+    background-color: #274c77;
 }
 
 #task-list {
     width: 30%;
-    height: 825px;
+    height: 750px;
+    border-radius: 0.5rem;
 }
 
 /* all individual list items */
 .task-list-task, .user-list-user, .group-list-group, .current-chat-message-other, .current-chat-message-self {
-    padding: 15px;
+    padding: 5px;
     font-size: 15px;
 }
 
 /* on hover over any item, change the colors to denote that it is being hovered over */
-#page-title:hover, .button:hover, .task-list-task:hover, .user-list-user:hover, .group-list-group:hover, .current-chat-message-other:hover, .current-chat-message-self:hover {
+#page-title:hover, .task-list-task:hover, .user-list-user:hover, .group-list-group:hover, .current-chat-message-other:hover, .current-chat-message-self:hover {
     background-color: #274c77;
     color: white;
+}
+.button:hover, .task-list-task:hover, .user-list-user:hover, .group-list-group:hover, button:hover {
+    cursor: pointer;
 }
 
 /* currently-selected user or group in user list or group list (only one at a time) */
@@ -84,7 +93,9 @@ Includes user list, group list, current chat, and task list */
     border: 1px solid transparent;
 
 }
-
+.button:hover {
+    background-color: #8b8c89;
+}
 /* all buttons, using custom button class */
 .button, button {
     border: none;
@@ -93,35 +104,27 @@ Includes user list, group list, current chat, and task list */
     color: white;
     text-align: center;
     margin-top: auto;
+    border-radius: 0.5rem;
 }
 
 button {
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 5px;
+    height: 25px;
+    width: 25px;
     /* display: none; */
 }
 
-.current-chat-message-self {
-}
-
-.current-chat-message-self:hover button {
-    display: inline-block;
-    top: 100px;
-    left: 0;
-}
-
-.current-chat-message-other button {
-    margin-right: 20px;
-}
-
 .current-chat-message-self button {
-    margin-left: 20px;
+    margin-left: 5px;
 }
 
 /* container element for the draft input text box (container needed to allow padding without expanding input beyond 100% width) */
 #current-chat-draft-container {
-    border-top: 1px solid #e7ecef;
-    margin-top: auto;
+    display: flex;
+    margin-top: 5px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 0.3rem;
 }
 
 /* draft input text box */
@@ -132,7 +135,7 @@ button {
     display: block;
     resize: none;
     margin-top: auto;
-    padding: 20px;
+    border-radius: 0.3rem;
 }
 
 textarea {
@@ -144,46 +147,42 @@ textarea {
     display: flex;
     flex-direction: row;
     justify-content: left;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 2px;
 }
 
 /* container for messages sent by self */
 .current-chat-message-self-container {
     display: flex;
     flex-direction: row;
-    justify-content: right;
+    justify-content: left;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 2px;
 }
 
 /* message bubbles */
 .current-chat-message-other, .current-chat-message-self {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    /* margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px; */
 }
 
 /* message bubble from someone else */
 .current-chat-message-other {
     text-align: left;
-    background-color: #274c77;
-    color: white;
-    margin-left: 20px;
-    border: 1px solid transparent;
-
+    background-color: #e7ecef;
+    flex-grow: 1;
+    border-radius: 0.3rem;
 }
 
 /* message bubble from self */
 .current-chat-message-self {
-    text-align: right;
-    margin-right: 20px;
-    background-color: #8b8c89;
-    color: white;
-}
-
-/* reverse colors when a colorful element is hovered over */
-.current-chat-message-other:hover, #selected:hover {
     text-align: left;
-    background-color: white;
-    color: black;
-    border: 1px solid #274c77;
-    box-sizing: border-box;
+    background-color: #cbcfd0;
+    flex-grow: 1;
+    border-radius: 0.3rem;
 }
 
 /* the ... that displays when the other party is typing */
@@ -221,33 +220,17 @@ button:focus {
 }
 
 /* make panes that can have numerous rows scrollable so they don't overflow but still have all content accessible (via scrolling) */
-#user-list-users, #group-list-groups, #current-chat-message-container, #task-list-tasks, ul {
-    overflow: scroll;
+#user-list-users, #group-list-groups, #current-chat-message-container, #task-list {
+    overflow-y: scroll;
+}
+::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
 }
 
-.user-profile-container {
-    position: absolute;
-    top: 25px;
-    left: 25px;
-    display: inline-block;
-}
-
-
-.user-profile-container-image:hover {
-    opacity: 0.4;
-    -webkit-filter: grayscale(100%);
-    -moz-filter: grayscale(100%);
-      -o-filter: grayscale(100%);
-     -ms-filter: grayscale(100%);
-         filter: grayscale(100%);
-}
-
-input[type="submit"] {
-    border: none;
-    background-color: #6096ba;
-    color: white;
-    text-align: center;
-    margin-top: auto;
+#current-chat-message-container {
+    height: 100%;
+    border-radius: 0.5rem;
 }
 
 /* all lists and list items */
@@ -262,15 +245,128 @@ li {
 }
 
 /* enables multi-line text entry to be properly formatted and sent */
-#message-box {
-    white-space: pre-line
+.message-box {
+    white-space: pre-line;
+    margin-left: 2.5rem;
 }
 
 /* all text inputs */
 input[type=text] {
     border: none;
+    background-color:#a3cef1;
+    color:#e7ecef;
+    border-radius: 0.3rem;
+    margin-bottom: 10px;
+}
+.user-profile-container {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    display: inline-block;
+    color: aliceblue;
 }
 
-.button {
-    margin: 20px;
+.user-profile-container-image {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.user-profile-container-image:hover {
+    opacity: 0.4;
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+      -o-filter: grayscale(100%);
+     -ms-filter: grayscale(100%);
+         filter: grayscale(100%);
+         cursor: pointer;
+}
+
+.current-chat-message-self-img, .current-chat-message-other-img, .user-list-user-img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+input[type="submit"] {
+    border: none;
+    background-color: #6096ba;
+    color: white;
+    text-align: center;
+    margin-top: auto;
+}
+
+.current-chat-button-container {
+    position: relative;
+    top: -50px;
+    float: right;
+}
+
+.current-chat-button-hide {
+    position: relative;
+    top: -50px;
+    float: right;
+    visibility: hidden;
+}
+
+.current-chat-delete-button {
+    position: relative;
+    top: -1px;
+    border-radius: 0.5rem;
+}
+
+.current-chat-add-task-button {
+    position: relative;
+    top: -1px;
+    border-radius: 0.5rem;
+}
+
+.current-chat-edit-button {
+    position: relative;
+    border-radius: 0.5rem;
+}
+
+#editText {
+    resize: none;
+    width: 95%;
+}
+
+#current-chat-send-button {
+    flex-basis: 10%;
+    align-self: center;
+    margin: auto;
+    border-radius: 0.3rem;
+}
+
+.typing {
+    align-self: right;
+}
+
+.current-chat-username {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.current-chat-date {
+    font-size: 0.75rem;
+    align-self: center;
+    margin-left: 2.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.current-chat-message-header {
+    display: flex;
+    align-items: center;
+}
+
+.current-chat-message-self-container,
+.current-chat-message-other-container {
+    padding: 0.2rem;
+}
+
+.current-chat-message-self,
+.current-chat-message-other {
+    padding: 0.5rem;
 }

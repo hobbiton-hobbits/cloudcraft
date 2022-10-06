@@ -3,7 +3,6 @@ import axios from 'axios';
 import { userIdState, recipientListState, groupIdState, recipientIdState } from '../userAtoms.js';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-// This component renders a list of all users stored in the database, any of whom can be chatted with
 const UserList = (props) => {
   const { socket } = props;
   const userId = useRecoilValue(userIdState);
@@ -16,6 +15,7 @@ const UserList = (props) => {
       socket.emit('leave-room', groupId);
     }
     setRecipientId(recipientList[i].id);
+    console.log('switched recipient to: ', recipientList[i].id);
     setGroupId(null);
   }
 
@@ -25,22 +25,28 @@ const UserList = (props) => {
     }
     if (userId) {
       axios.get('/users', data)
-        .then(res => {
-          setRecipientList(res.data)
+      .then(res => {
+        setRecipientList(res.data)
       });
     }
-  }, [userId])
+  }, [userId]);
 
   return (
     <div id='user-list' className='widget'>
       <div className='widget-title'>Users</div>
         <div id='user-list-users'>
-          {recipientList?.map((user, i) => (
+          {recipientList?.map((user, i) => {
+            if (user.id === userId) {
+              return null;
+            }
+            return (
             <div className='user-list-user' key={i} onClick={() => handleUserClick(i)} id={user.id === recipientId ? 'selected' : null}>
-              <div className='user-list-user-fullname'>{`${user.firstname} ${user.lastname}`}</div>
-              <div className='user-list-user-username'>{user.username}</div>
+              <div className='user-list-user-fullname'>
+                <img className='user-list-user-img' src={user.img} />
+                {`${user.firstname} ${user.lastname}  (${user.username})`}
+              </div>
             </div>
-          ))}
+          )})}
         </div>
     </div>
   )

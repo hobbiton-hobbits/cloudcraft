@@ -70,14 +70,26 @@ const testUser2 = {
   img: 'null',
 }
 
+const testUser3 = {
+  username: 'bv',
+  firstName: 'Brian',
+  lastName: 'Vose',
+  img: 'null',
+}
 
   // Remove test buttons in production
-  const testButton2 = () => {
+  const testButton1 = () => {
     if (user.username === 'yt') {
-      setRecipientId(userId);
       setUser(testUser2);
     } else {
-      setRecipientId(43);
+      setUser(testUser1);
+    }
+  }
+
+  const testButton2 = () => {
+    if (user.username === 'yt') {
+      setUser(testUser3);
+    } else {
       setUser(testUser1);
     }
   }

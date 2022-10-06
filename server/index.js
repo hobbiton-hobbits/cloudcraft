@@ -14,7 +14,6 @@ const {
   deleteMessage,
   addMessage,
   addUser,
-  addUserToGroup,
   addGroup,
   getSingleUser,
 } = require('./db/dbLogic.js');
@@ -116,14 +115,24 @@ io.on('connection', (socket) => {
   // socket for sending messages to other users or groups
   socket.on('send-message', (message) => {
     console.log('message sent to server:', message);
+    const {
+      userId,
+      recipientId,
+      groupId,
+      senderMsg,
+      ellipsis,
+      deleteDraft,
+    } = message;
 
-    const { userId, recipientId, groupId, senderMsg } = message;
+
     // Delete in production
     const emittedMessage = {
       message_text: senderMsg,
       created: '10-2-1221',
       sender_id: userId,
       deleted: false,
+      ellipsis,
+      deleteDraft,
     }
 
     if (!groupId) {
@@ -131,18 +140,23 @@ io.on('connection', (socket) => {
       console.log('message emitted to single user in room:', currentRoom);
       io.to(currentRoom).to(socket.id).emit('receive-msg', [emittedMessage]);
       console.log(userId);
-      addMessage(userId, recipientId, null, senderMsg);
+      if (!ellipsis) {
+        addMessage(userId, recipientId, null, senderMsg);
+      }
     } else {
       currentRoom = groupId;
       console.log('message emitted to group in room:', currentRoom);
       io.in(currentRoom).to(socket.id).emit('receive-msg', [emittedMessage]);
-      addMessage(userId, null, groupId, senderMsg);
+      if (!ellipsis) {
+        addMessage(userId, null, groupId, senderMsg);
+      }
     }
   });
 
   // socket for disconnecting
   socket.on('disconnect', () => {
-    console.log('User disconnected: ', socket.id);
+    console.log('Socket disconnected: ', socket.id);
+    console.log('User disconnected (debug): ', userId)
     delete userSocketIds[userId];
   });
 });
