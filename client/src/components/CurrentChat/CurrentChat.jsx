@@ -34,7 +34,7 @@ const CurrentChat = (props) => {
     // console.log('sender type', typeof sender);
     // console.log(recipientId === sender);
     // console.log(sender === userId);
-    if ((sender === recipientId) || (sender === userId)) {
+    // if ((sender === recipientId) || (sender === userId)) {
     if (sender === recipientId || sender === userId) {
       if (messages[0].ellipsis === true) {
         if (pendingMsg[sender]) {
