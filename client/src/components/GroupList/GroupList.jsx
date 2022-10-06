@@ -69,6 +69,7 @@ const GroupList = (props) => {
   }
 
   const getGroupList = () => {
+    console.log('GET GROUP LIST BEING CALLED')
     var data = {
       params: { userId }
     };

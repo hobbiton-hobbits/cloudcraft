@@ -3,7 +3,7 @@ import {
   useRecoilState,
   useRecoilValue,
 } from 'recoil';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import UserList from "./UserList/UserList.jsx";
 import GroupList from "./GroupList/GroupList.jsx";
@@ -26,25 +26,45 @@ let socket = undefined;
 const App = () => {
   // Change if using Recoil state manager
   // Change loggedIn to false when in production
-  const [loggedIn, setLoggedIn] = useState(false);
+  // const [loggedIn, setLoggedIn] = useState(false);
+  // localStorage.setItem('loggedIn', false);
+  console.log('IS LOGGED IN: ', localStorage.getItem('loggedIn'));
   const [user, setUser] = useRecoilState(userState);
   const [userId, setUserId] = useRecoilState(userIdState);
   const [recipientId, setRecipientId] = useRecoilState(recipientIdState);
   const [groupId, setGroupId] = useRecoilState(groupIdState);
   const [msgHistory, setMsgHistory] = useRecoilState(messageState);
   const [socketId, setSocketId] = useRecoilState(socketState);
-  const [count, setCount] = useState(0);
-  const [tokenGood, setTokenGood] = useState(false);
+  // const [count, setCount] = useState(0);
+  // const [tokenGood, setTokenGood] = useState(false);
+
+  useEffect(() => {
+    console.log('useEffect triggering');
+    if (localStorage.getItem('loggedIn')) {
+      console.log('TRIGGERS AFTER IF STATEMENT')
+      socket = io({
+        auth: {
+          token: localStorage.getItem('accessToken')
+        }
+      });
+    }
+  }, []);
 
   useEffect(() => {
   // Once login is implemented, uncomment out if statement
   // Set temp socket id for testing multiple users interacting
   let socketIDtemp = socketId;
-    if (loggedIn && user.username) {
+    if (localStorage.getItem('loggedIn') && localStorage.getItem('username')) {
+      let localUser = {
+        username: localStorage.getItem('username'),
+        firstname: localStorage.getItem('firstname'),
+        lastname: localStorage.getItem('lastname'),
+        img: null
+      }
       socket.on('welcome-back', (socketID) => {
         console.log(`Welcome back: ${socketID}`);
         socketIDtemp = socketID;
-        socket.emit('store-username', [user, socketIDtemp]);
+        socket.emit('store-username', [localUser, socketIDtemp]);
         setSocketId(socketIDtemp);
       });
       socket.emit('store-username', [user, socketIDtemp]);
@@ -102,51 +122,65 @@ const testUser3 = {
         localStorage.setItem('accessToken', '');
         axios.defaults.headers.common['Authorization'] = '';
         socket.disconnect();
-        setCount(0);
-        setTokenGood(false);
-        setLoggedIn(false);
+        localStorage.removeItem('count');
+        localStorage.removeItem('tokenGood');
+        localStorage.removeItem('loggedIn');
+        localStorage.removeItem('username');
+        localStorage.removeItem('firstname');
+        localStorage.removeItem('lastname');
+        window.location.reload(false);
+        // setLoggedIn(false);
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-  if (!loggedIn) {
+
+  if (!localStorage.getItem('loggedIn')) {
     return (
       <div>
-        <Login setTokenGood={setTokenGood} setCount={setCount} setLoggedIn={setLoggedIn}/>
+        <Login/>
       </div>
     );
   } else {
-    if (!tokenGood) {
-      setLoggedIn(false);
+    if (!localStorage.getItem('tokenGood')) {
+      console.log('I AM BEING INVOKED');
+      localStorage.removeItem('loggedIn');
+      // setLoggedIn(false);
     }
-    if (count === 1) {
-      socket = io({
-        auth: {
-          token: localStorage.getItem('accessToken')
-        }
-      });
-      setCount(2);
-    }
-    return (
-      <div>
-         <div style={{padding: '5px', float:'right'}}><button onClick ={logOut}>Log Out</button></div>
-         <div id='page-title'>cloudcraft</div>
-         <UserProfile />
-         <div id="main-content">
-           <div id="user-and-group-list">
-             <UserList />
-             <GroupList socket={socket}/>
-           </div>
-           <CurrentChat socket={socket}/>
-          <TaskList />
+    // if (localStorage.getItem('count') === '1') {
+      // socket = io({
+      //   auth: {
+      //     token: localStorage.getItem('accessToken')
+      //   }
+      // });
+      // localStorage.setItem('count', '2');
+    // }
+    if (userId) {
+      return (
+        <div>
+          <div style={{padding: '5px', float:'right'}}><button class='button' onClick ={logOut}>Log Out</button></div>
+          <div id='page-title'>cloudcraft</div>
+          <UserProfile />
+          <div id="main-content">
+            <div id="user-and-group-list">
+              <UserList socket={socket}/>
+              <GroupList socket={socket}/>
+            </div>
+            <CurrentChat socket={socket}/>
+            <TaskList />
+          </div>
+          {/* Remove test buttons during production */}
+          {/* <button onClick={testButton2}>Toggle user. You are currently user ${username}</button>
+          <button onClick={testButton1}>Set group to 3</button> */}
         </div>
-        {/* Remove test buttons during production */}
-        {/* <button onClick={testButton2}>Toggle user. You are currently user ${username}</button>
-        <button onClick={testButton1}>Set group to 3</button> */}
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div>Loading</div>
+      )
+    }
   }
 }
 

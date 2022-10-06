@@ -62,7 +62,7 @@ Includes user list, group list, current chat, and task list */
 #current-chat {
     width: 47%;
     height: 750px;
-    background-color: #1d3857;
+    background-color: #274c77;
 }
 
 #task-list {
@@ -157,9 +157,7 @@ textarea {
 
 /* message bubbles */
 .current-chat-message-other, .current-chat-message-self {
-    /* margin-bottom: 5px;
-    margin-left: 5px;
-    margin-right: 5px; */
+    background-color: #193350;
 }
 
 /* message bubble from someone else */
