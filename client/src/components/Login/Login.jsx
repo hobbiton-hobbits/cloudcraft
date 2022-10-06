@@ -64,7 +64,7 @@ const headerDiv ={
   fontSize: '150%'
 }
 
-const Login = ({setLoggedIn, setCount, setTokenGood}) => {
+const Login = () => {
   const [submitted, setSubmitted] = useState(false);
   const [user, setUser] = useRecoilState(userState);
   const [valid, setValid] = useState(false);
@@ -107,23 +107,32 @@ const Login = ({setLoggedIn, setCount, setTokenGood}) => {
       axios.defaults.headers.common['Authorization'] = `BEARER ${data.data.accessToken}`;
       localStorage.setItem('token', data.data.refreshToken);
       localStorage.setItem('accessToken', data.data.accessToken);
-      setUser({
-        username: data.data.username,
-        firstName: data.data.firstName,
-        lastName: data.data.lastName,
-        img: null
-      });
+      console.log(data.data);
+      localStorage.setItem('username', data.data.username);
+      localStorage.setItem('firstname', data.data.firstName);
+      localStorage.setItem('lastname', data.data.lastName);
+      // setUser({
+      //   username: data.data.username,
+      //   firstname: data.data.firstName,
+      //   lastname: data.data.lastName,
+      //   img: null
+      // });
       return;
     })
     .then((val) => {
       return axios.post('/auth')
     })
     .then((data) => {
-      return setTokenGood(data.data.check);
+      if (data.data.check) {
+        localStorage.setItem('tokenGood', true);
+      }
+      return;
     })
     .then((val) => {
-      setLoggedIn(true);
-      setCount(1);
+      localStorage.setItem('loggedIn', true);
+      // setLoggedIn(true);
+      localStorage.setItem('count', '1');
+      window.location.reload(false);
       return;
     })
     .catch((err) => {
