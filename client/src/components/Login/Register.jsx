@@ -7,17 +7,25 @@ const divStyle = {
   alignItems: 'center',
   width: 'fit-content',
   margin: '1em auto',
-  position:'relative'
+
+  position:'relative',
+  marginTop: '10%',
+
 }
 
 const formStyle = {
   margin: 'auto',
-  padding: '1em'
+
+  padding: '1em',
+  fontSize: '150%'
+
 }
 
 const inputErrStyle ={
   color: 'red',
-  fontSize: '12px',
+
+  fontSize: '20px',
+
   float:'right'
 }
 
@@ -25,7 +33,9 @@ const inputStyle = {
   border: 'solid',
   borderWidth: 'thin',
   float: 'right',
-  borderColor: 'grey'
+
+  borderColor: 'grey',
+  fontSize: '100%'
 }
 const labelStyle = {
   margin: '3px'
@@ -35,7 +45,16 @@ const Btn = {
   marginRight: '5px',
   marginLeft: '5px',
   paddingTop: '1px',
-  paddingBottom:'1px'
+  paddingBottom:'1px',
+  fontSize: '100%'
+}
+
+const Btn2 = {
+  marginRight: '5px',
+  marginLeft: '5px',
+  paddingTop: '1px',
+  paddingBottom:'1px',
+  fontSize: '100%'
 }
 
 const headerDiv ={
@@ -43,7 +62,9 @@ const headerDiv ={
   color: 'white',
   postion: 'absolute',
   width: '100%',
-  textAlign: 'center'
+  textAlign: 'center',
+  fontSize: '150%'
+
 }
 
 const Register = ({setIsRegistering}) => {
@@ -137,19 +158,25 @@ const Register = ({setIsRegistering}) => {
 
       <form  onSubmit={handleSubmit} style={formStyle} >
 
-      <label style = {labelStyle} htmlFor="firstname">first name </label>
+
+      <label style = {labelStyle} htmlFor="firstname">First Name </label>
+
       <input style={inputStyle} type="text" className="firstname" className="form-field" name="firstname" value={values.firstName} onChange={handleFirstNameInputChange}/>
       <br/>
       {submitted && !values.firstName && <span style={inputErrStyle} id='first-name-error'>Please enter a first name</span>}
       <br/>
 
-      <label style = {labelStyle} htmlFor="lastname">last name </label>
+
+      <label style = {labelStyle} htmlFor="lastname">Last Name </label>
+
       <input style={inputStyle} type="text" id="lastname" className="form-field" name="lastname" value={values.lastName} onChange={handleLastNameInputChange}/>
       <br/>
      { submitted && !values.lastName && <span style={inputErrStyle} id="last-name-error">Please enter a last name</span>}
       <br/>
 
-      <label style = {labelStyle} htmlFor="username">username </label>
+
+      <label style = {labelStyle} htmlFor="username">Username </label>
+
       <input style={inputStyle} type="text" id="username" className="form-field" name="username" value={values.userName} onChange={handleUserNameInputChange} />
       <br/>
       { submitted && !values.username && <span style={inputErrStyle} id="user-name-error">
@@ -160,21 +187,24 @@ const Register = ({setIsRegistering}) => {
          </span>}
      <br/>
 
-      <label style = {labelStyle} htmlFor="password">password </label>
+
+      <label style = {labelStyle} htmlFor="password">Password </label>
       <input style={inputStyle} type="password" className="password" className="form-field" name="password" value={values.password} onChange={handlePassWordInputChange}/>
       <br/>
      { submitted && !values.password && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
      <br/>
 
-     <label style = {labelStyle} htmlFor="confirm" > confirm </label>
+     <label style = {labelStyle} htmlFor="confirm" > Confirm </label>
+
       <input style={inputStyle} type="password" className="confirm" className="form-field" name="confirm" value={values.confirm} onChange={handleConfirmInputChange}/>
       <br/>
      { submitted && !values.confirm && <span style={inputErrStyle} id="confirm-error">Please confirm password</span>}
      { submitted && values.confirm && (values.confirm !== values.password) && <span style={inputErrStyle} id="confirm-error">does not match password</span>}
      <br/>
 
-      <input type="submit" value="Submit"/>
-      <button style={Btn} onClick={handleBackToLog}>back to login</button>
+
+      <input style={Btn2} type="submit" value="Submit"/>
+      <button style={Btn} onClick={handleBackToLog}>Back to Login</button>
 
       </form>
     </div>

@@ -93,19 +93,19 @@ const CurrentChat = (props) => {
         ))}
         </div>
         <div id='current-chat-draft-container'>
-          <textarea
-            ref={ref}
-            id='current-chat-draft'
-            placeholder='Type your message...'
-            value={senderMsg}
-            onChange={handleMessage}
-            onKeyDown={handleReturn}/>
-          <div
-            className="button"
-            id='current-chat-send-button'
-            onClick={sendMessage}>
-            Send
-          </div>
+            <textarea
+              ref={ref}
+              id='current-chat-draft'
+              placeholder='Type your message...'
+              value={senderMsg}
+              onChange={handleMessage}
+              onKeyDown={handleReturn}/>
+            <div
+              className="button"
+              id='current-chat-send-button'
+              onClick={sendMessage}>
+              send
+            </div>
         </div>
     </div>
   )

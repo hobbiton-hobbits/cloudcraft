@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Tasks from "./Tasks.jsx";
+import { useRecoilState } from "recoil";
 
-const TaskList = (props) => {
+const TaskList = () => {
   const [createTask, setCreateTasks] = useState(false);
   const [newTask, setNewTask] = useState("");
   const [allTasks, setTasks] = useState([]);
@@ -56,6 +57,7 @@ const TaskList = (props) => {
   };
 
   useEffect(() => {
+    // axios request will go here for tasks
     setTasks(data.row);
     setSearchedTasks(data.row);
   }, []);
@@ -69,6 +71,7 @@ const TaskList = (props) => {
           id: "10",
           text: newTaskText,
           date: new Date(),
+          completed: false,
         };
         setTasks((prevState) => [...prevState, taskObject]);
         setSearchedTasks((prevState) => [...prevState, taskObject]);
@@ -84,8 +87,17 @@ const TaskList = (props) => {
     setNewTask(e.target.value);
   };
 
-  const onComplete = () => {
-    console.log("complete");
+  const onComplete = (e) => {
+    // axios request to update flag
+
+    const newTasks = allTasks.map((task) => {
+      if (task.id === e.target.id) {
+        task.completed = !task.completed;
+      }
+      return task;
+    });
+    setTasks(newTasks);
+    setSearchedTasks(newTasks);
   };
 
   const handleSearch = (searchText) => {
@@ -107,11 +119,13 @@ const TaskList = (props) => {
         placeholder="Search..."
         onChange={(e) => handleSearch(e.target.value)}
       />
+      <div id='task-list-tasks'>
       <Tasks
         searchedTasks={searchedTasks}
         setSearchedTasks={setSearchedTasks}
         onComplete={onComplete}
       />
+      </div>
       {createTask ? (
         <>
           <input type="text" onChange={(e) => onChange(e)} value={newTask} />
