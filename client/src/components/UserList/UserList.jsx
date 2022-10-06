@@ -21,15 +21,15 @@ const UserList = (props) => {
 
   useEffect(() => {
     var data = {
-      params: {
-        userId
-      }
+      params: { userId }
     }
-    axios.get('/users', data)
-      .then(res => {
-        setRecipientList(res.data)
-      })
-  }, [])
+    if (userId) {
+      axios.get('/users', data)
+        .then(res => {
+          setRecipientList(res.data)
+      });
+    }
+  }, [userId])
 
   return (
     <div id='user-list' className='widget'>
