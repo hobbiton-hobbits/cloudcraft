@@ -3,9 +3,7 @@ const { getUsers, updatePhoto, getGroups, addGroup, getMessages, editMessage, de
 
 router.get('/users', async (req, res) => {
   const { userId } = req.query;
-  console.log('user id: ', userId)
   const result = await getUsers(userId);
-  console.log('result: ', result)
   res.send(result.rows);
 });
 

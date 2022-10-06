@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import axios from 'axios';
-import { userState, recipientListState, userIdState } from '../userAtoms.js';
+import { userState, recipientListState, userIdState, taskListUpdate } from '../userAtoms.js';
 
 const ChatMessage = ({ message, pend }) => {
   const [editModal, setEditModal] = useState(false);
-  const userInfo = useRecoilState(userState);
+  const userInfo = useRecoilValue(userState);
   const userId = useRecoilValue(userIdState);
   const allUsers = useRecoilValue(recipientListState);
   const [msg, setMsg] = useState({});
   const [showButtons, setShowButtons] = useState(false);
   const [date, setDate] = useState(new Date());
+  const [taskCount, setTaskCount] = useRecoilState(taskListUpdate);
 
   var img;
   var name;
@@ -26,7 +27,8 @@ const ChatMessage = ({ message, pend }) => {
     img = '/assets/Craft.png';
   }
 
-  // console.log('From inside ChatMessage: ', message)
+  var userImg = userInfo.img || img;
+
   if (msg.deleted) {
      msg.message_text = 'This message was deleted'
   }
@@ -69,6 +71,7 @@ const ChatMessage = ({ message, pend }) => {
     }
     console.log('data in adding to task: ', data)
     axios.post('/tasks', data)
+    setTaskCount(taskCount += 1)
   }
 
   useEffect(() => {
@@ -81,7 +84,7 @@ const ChatMessage = ({ message, pend }) => {
       <div className='current-chat-message-self-container' onMouseEnter={() => setShowButtons(true)} onMouseLeave={() => setShowButtons(false)}>
         <div className='current-chat-message-self'>
         <div className='current-chat-message-header'>
-          <img src={img} className='current-chat-message-self-img' />
+          <img src={userImg} className='current-chat-message-self-img' />
           <span className='current-chat-username'>{`${userInfo.firstname} ${userInfo.lastname}`}</span>
         </div>
           <div className='current-chat-date'>Posted: {new Date(msg.created).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})}</div>
@@ -109,7 +112,7 @@ const ChatMessage = ({ message, pend }) => {
             <img src={img} className='current-chat-message-other-img' />
               <span className='current-chat-username'>{name}</span>
               {pend
-              ? <span className='typing'> is typing...</span>
+              ? <span className='typing'>	&nbsp;is typing...</span>
               : null
               }
           </div>

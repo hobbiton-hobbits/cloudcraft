@@ -98,7 +98,7 @@ const getGroups = async (id) => {
 
 const getSingleUser = async (username) => {
   return await pool.query(
-    `SELECT id
+    `SELECT *
     FROM users
     WHERE username = $1`, [username]
   );

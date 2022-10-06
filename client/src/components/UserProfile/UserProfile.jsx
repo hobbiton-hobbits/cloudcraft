@@ -11,9 +11,9 @@ const UserProfile = () => {
   const [userInfo, setUserinfo] = useRecoilState(userState);
   const id = useRecoilValue(userIdState)
   const hiddenFileInput = React.useRef(null);
-  const [img, setImg] = useState(null);
-
-  var showImg = userInfo.img || '/assets/Craft.png'
+  const [img, setImg] = useState(userInfo.img);
+  console.log('User image: ', img)
+  var showImg = userInfo.img || img || '/assets/Craft.png'
 
   const handleFileChange = (e) => {
     let file = e.target.files[0];
@@ -61,8 +61,9 @@ const UserProfile = () => {
     <div className='user-profile-container'>
       <input type='file' accept=".jpg, .jpeg, .png" ref={hiddenFileInput} style={{display: 'none'}} onChange={handleFileChange}/>
       <div>
-      <img className='user-profile-container-image' src={img} onClick={() => {hiddenFileInput.current.click()}} style={{height: '50px', width: '50px', borderRadius: '50%'}}></img>
-        {`${userInfo.firstname} ${userInfo.lastname}  (${userInfo.username})`}</div>
+      <img className='user-profile-container-image' src={showImg} onClick={() => {hiddenFileInput.current.click()}} style={{height: '50px', width: '50px', borderRadius: '50%'}}></img>
+        {/* {`${userInfo.firstname} ${userInfo.lastname}  (${userInfo.username})`} */}
+        </div>
     </div>
   )
 }

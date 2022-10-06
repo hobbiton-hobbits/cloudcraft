@@ -42,10 +42,11 @@ const GroupList = (props) => {
       return;
     }
     axios.post('/groups', { ids, names })
-      .then(res => {
-        getGroupList();
-      })
-  }
+      .then((res) => {
+        // getGroupList();
+        socket.emit('create-group', ids);
+      });
+  };
 
   const handleGroupClick = (i) => {
     if (groupId) {
@@ -54,15 +55,13 @@ const GroupList = (props) => {
     setRecipientId(null);
     setGroupId(groupList[i].group_id);
     socket.emit('join-room', groupList[i].group_id);
-  }
+  };
 
   const listUsernames = (namesArr) => {
     var result = '';
     namesArr?.forEach(name => {
       if (name !== `${user.firstName} ${user.lastName}`) {
         result += `${name}, `;
-      } else {
-        result = 'Me, ' + result;
       }
     })
     result = result.slice(0, -2);
@@ -97,6 +96,12 @@ const GroupList = (props) => {
     })
     setOptions(tempOptions);
   }, [recipientList]);
+
+  useEffect(() => {
+    socket.on('refresh-group', () => {
+      getGroupList();
+    })
+  }, [socket])
 
   return (
     <div id='group-list' className='widget'>
