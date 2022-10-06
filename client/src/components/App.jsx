@@ -67,7 +67,7 @@ const App = () => {
         socket.emit('store-username', [localUser, socketIDtemp]);
         setSocketId(socketIDtemp);
       });
-      socket.emit('store-username', [user, socketIDtemp]);
+      socket.emit('store-username', [localUser, socketIDtemp]);
       socket.on('user-id', (userInfo) => {
         const { id, username, firstname, lastname, img } = userInfo;
         console.log('Your user id is:', userId);
@@ -160,9 +160,11 @@ const testUser3 = {
     if (userId) {
       return (
         <div>
-          <div style={{padding: '5px', float:'right'}}><button class='button' onClick ={logOut}>Log Out</button></div>
-          <div id='page-title'>cloudcraft</div>
-          <UserProfile />
+          <div className='main-header'>
+            <div id='page-title'>Cloudcraft</div>
+            <UserProfile />
+            <div><button class='button' onClick ={logOut}>Log Out</button></div>
+          </div>
           <div id="main-content">
             <div id="user-and-group-list">
               <UserList socket={socket}/>
@@ -178,7 +180,7 @@ const testUser3 = {
       );
     } else {
       return (
-        <div>Loading</div>
+        <div className='loading-screen'>Loading...</div>
       )
     }
   }

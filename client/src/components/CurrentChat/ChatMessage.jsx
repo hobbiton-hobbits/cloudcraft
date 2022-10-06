@@ -112,7 +112,7 @@ const ChatMessage = ({ message, pend }) => {
             <img src={img} className='current-chat-message-other-img' />
               <span className='current-chat-username'>{name}</span>
               {pend
-              ? <span className='typing'> is typing...</span>
+              ? <span className='typing'>	&nbsp;is typing...</span>
               : null
               }
           </div>

@@ -43,7 +43,7 @@ const GroupList = (props) => {
     }
     axios.post('/groups', { ids, names })
       .then((res) => {
-        getGroupList();
+        // getGroupList();
         socket.emit('create-group', ids);
       });
   };
@@ -69,7 +69,6 @@ const GroupList = (props) => {
   }
 
   const getGroupList = () => {
-    console.log('GET GROUP LIST BEING CALLED')
     var data = {
       params: { userId }
     };
@@ -101,7 +100,6 @@ const GroupList = (props) => {
   useEffect(() => {
     socket.on('refresh-group', () => {
       getGroupList();
-      console.log('PLEASE REFRESH GROUPLIST');
     })
   }, [socket])
 

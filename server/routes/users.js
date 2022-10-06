@@ -26,7 +26,6 @@ router.post('/groups', async (req, res) => {
   const { ids, names } = req.body;
   const result = await addGroup(ids, names);
   res.send(result);
-  // res.send('post group received');
 })
 
 router.get('/messages', async (req, res) => {
