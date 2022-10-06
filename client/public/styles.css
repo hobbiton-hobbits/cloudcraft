@@ -134,7 +134,6 @@ button {
     font-size: 20px;
     display: block;
     resize: none;
-    width: 100%;
     margin-top: auto;
     border-radius: 0.3rem;
 }
@@ -184,6 +183,21 @@ textarea {
     background-color: #cbcfd0;
     flex-grow: 1;
     border-radius: 0.3rem;
+}
+
+/* the ... that displays when the other party is typing */
+#current-chat-ellipsis {
+    animation: wave 1s infinite alternate;
+}
+
+/* keyframes for the pulsating in and out ellipsis */
+@keyframes wave {
+    0% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1.0;
+    }
 }
 
 /* the interactive checkbox for each task */

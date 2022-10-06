@@ -6,40 +6,70 @@ import {
   useRecoilValue,
 } from 'recoil';
 import {
-  usernameState,
+  userState,
 } from '../userAtoms.js';
 
 const divStyle = {
   justifyContent:'center',
   alignItems: 'center',
-  padding: '1em',
   width: 'fit-content',
   margin: '1em auto',
+  position:'relative',
+  marginTop: '10%',
 }
 
 const formStyle = {
-  margin: 'auto'
+  margin: 'auto',
+  padding: '1em',
+  fontSize: '200%'
 }
 
 const inputErrStyle ={
-  color: 'red'
+  color: 'red',
+  fontSize: '20px',
+  float:'right',
+
 }
 
 const inputStyle = {
   border: 'solid',
-  borderWidth: 'thin'
-
+  borderWidth: 'thin',
+  borderColor: 'grey',
+  fontSize: '100%'
 }
 
 const regBtn = {
-  margin: '5px'
+  marginRight: '5px',
+  marginLeft: '5px',
+  paddingTop: '1px',
+  paddingBottom:'1px',
+  fontSize: '80%'
 }
 
-const Login = ({setLoggedIn}) => {
+const subBtn = {
+  marginRight: '5px',
+  marginLeft: '5px',
+  paddingTop: '1px',
+  paddingBottom:'1px',
+  fontSize: '80%'
+}
+
+const headerDiv ={
+  backgroundColor: 'rgb(163, 206, 241)',
+  color: 'white',
+  postion: 'absolute',
+  width: '100%',
+  textAlign: 'center',
+  fontSize: '150%'
+}
+
+const Login = ({setLoggedIn, setCount, setTokenGood}) => {
   const [submitted, setSubmitted] = useState(false);
-  const [user, setUser] = useRecoilState(usernameState);
+  const [user, setUser] = useRecoilState(userState);
   const [valid, setValid] = useState(false);
-  const [isRegistering, setIsRegistering] = useState(false)
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [incorrectPassword, setIncorrectPassword] = useState(null);
+  const[invalidUser, setInvalidUser] =useState(null);
   const [values, setValues] = useState({
     username: '',
     password: ''
@@ -67,11 +97,12 @@ const Login = ({setLoggedIn}) => {
       setValid(true);
   }
     setSubmitted(true);
-    console.log('LOGIN VALUES:', values);
     axios.post('http://ec2-3-128-156-90.us-east-2.compute.amazonaws.com:8087/login', values)
     .then((data) => {
       console.log(data.data);
       axios.defaults.headers.common['Authorization'] = `BEARER ${data.data.accessToken}`;
+      localStorage.setItem('token', data.data.refreshToken);
+      localStorage.setItem('accessToken', data.data.accessToken);
       setUser({
         username: data.data.username,
         firstName: data.data.firstName,
@@ -81,17 +112,28 @@ const Login = ({setLoggedIn}) => {
       return;
     })
     .then((val) => {
+      return axios.post('/auth')
+    })
+    .then((data) => {
+      return setTokenGood(data.data.check);
+    })
+    .then((val) => {
       setLoggedIn(true);
+      setCount(1);
       return;
     })
     .catch((err) => {
       console.log(err);
-    });
+      if(err.response.data ===
+        'Incorrect Password'){
+        setIncorrectPassword(true);
+      }
 
-    // if valid and submitted send form data to be authenticated
-    // get response with jwt if in database
-    // show error if error
-    // show chat if no error
+      if(err.response.data ===
+        'Username Not Found'){
+        setInvalidUser(true);
+      }
+    });
   };
 
   const handleRegister = (e) => {
@@ -109,21 +151,30 @@ const Login = ({setLoggedIn}) => {
 
     return (
       <div style={divStyle} id="login" className="widget">
-      <h1>LOGIN</h1>
+        <div style={headerDiv}>
+          <h1 >LOGIN</h1>
+        </div>
+        <br/>
       <form  style={formStyle} onSubmit={handleSubmit}>
-      <label htmlFor="username">username </label>
+      <label htmlFor="username">Username </label>
       <input style={inputStyle} type="text" className="username" className="form-field" name="username"
-      value={values.userName} onChange={handleUserNameInputChange} />
+      value={values.userName} onChange={handleUserNameInputChange} required/>
        <br/>
-     { submitted && !values.userName && <span style={inputErrStyle} id="user-name-error">Please enter a username</span>}
+     { submitted && !values.username && <span style={inputErrStyle} id="user-name-error">Please enter a username</span>}
+     { submitted && values.username && invalidUser && <span style={inputErrStyle} id="user-name-error">
+      invalid user
+         </span>}
      <br/>
-      <label htmlFor="password">password </label>
+      <label htmlFor="password">Password </label>
       <input style={inputStyle} type="password" className="password" className="form-field" name="password"
-      value={values.passWord} onChange={handlePassWordInputChange} />
+      value={values.passWord} onChange={handlePassWordInputChange} required/>
        <br/>
-     { submitted && !values.passWord && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
+     { submitted && !values.password && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
+     { submitted && values.username && incorrectPassword && <span style={inputErrStyle} id="user-name-error">
+      unrecognized password
+         </span>}
      <br/>
-     <input type="submit" value="Submit"/>
+     <input style={subBtn} type="submit" value="Submit"/>
      <button style={regBtn} onClick={(e) => {handleRegister(e)}}>Need to Register?</button>
       </form>
     </div>

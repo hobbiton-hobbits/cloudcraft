@@ -30,6 +30,7 @@ const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
+            
             <ul {...provided.droppableProps} ref={provided.innerRef}>
               {searchedTasks &&
                 searchedTasks.map((task, index) => {
@@ -61,9 +62,11 @@ const Tasks = ({ searchedTasks, setSearchedTasks, onComplete }) => {
                   );
                 })}
             </ul>
+            
           )}
         </Droppable>
       </DragDropContext>
+      
     </>
   );
 };
