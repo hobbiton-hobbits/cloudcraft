@@ -40,7 +40,7 @@ const App = () => {
   // Once login is implemented, uncomment out if statement
   // Set temp socket id for testing multiple users interacting
   let socketIDtemp = socketId;
-    if (loggedIn) {
+    if (loggedIn && user) {
       socket.on('welcome-back', (socketID) => {
         console.log(`Welcome back: ${socketID}`);
         socketIDtemp = socketID;

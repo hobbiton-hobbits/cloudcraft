@@ -3,12 +3,13 @@ import { atom } from 'recoil';
 export const userState = atom({
   key: 'userState',
   // Change default when done testing
-  default: {
-    username: 'yt',
-    firstName: 'Yong',
-    lastName: 'Tang',
-    img: null,
-  },
+  // default: {
+  //   username: 'yt',
+  //   firstName: 'Yong',
+  //   lastName: 'Tang',
+  //   img: null,
+  // },
+  default: null
 });
 
 export const userIdState = atom({
