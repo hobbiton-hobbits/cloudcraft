@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import axios from 'axios';
-import { userState, recipientIdState } from '../userAtoms.js';
+import { userState, recipientListState, userIdState } from '../userAtoms.js';
 
-const ChatMessage = ({ message }) => {
+const ChatMessage = ({ message, pend }) => {
   const [editModal, setEditModal] = useState(false);
   const { username } = useRecoilValue(userState);
-  const allUsers = useRecoilValue(recipientIdState);
-  var message = {...message}
+  const userId = useRecoilValue(userIdState);
+  const allUsers = useRecoilValue(recipientListState);
+  const [msg, setMsg] = useState({});
+  const [showButtons, setShowButtons] = useState(false);
+  const [date, setDate] = useState(new Date());
 
   var img;
   var name;
   for (var i = 0; i < allUsers.length; i++) {
-    if (message.sender_id === allUsers[i].id) {
+    if (msg.sender_id === allUsers[i].id) {
       img = allUsers[i].img;
       name = allUsers[i].username;
       break;
@@ -20,70 +23,103 @@ const ChatMessage = ({ message }) => {
   }
 
   if (img === undefined) {
-    img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyQ-vUcpEFSjRXQrpRorT44Xx_gZW5iB2hBg&usqp=CAU";
+    img = '/assets/Craft.png';
   }
 
   // console.log('From inside ChatMessage: ', message)
-  if (message.deleted) {
-     message.message_text = 'This message was deleted'
+  if (msg.deleted) {
+     msg.message_text = 'This message was deleted'
   }
   const editMessage = (e) => {
     e.preventDefault();
-    console.log('Attempted to edit message')
     setEditModal(true);
   }
   const submitEditMessage = (e) => {
     e.preventDefault();
-    //this will make an axios call to update the text when message logic to the DB is working
-    message.message_text = e.target.editText.value;
+    var data = {
+      messageId: message.message_id,
+      text: e.target.editText.value
+    }
+    axios.put('/messages', data)
+      .then(res => {
+        setMsg({...msg, message_text: e.target.editText.value});
+      })
     setEditModal(false);
   }
   const deleteMessage = (e) => {
     e.preventDefault();
     if (confirm('Are you sure you want to delete this message?')) {
-      console.log('Attempted to delete message')
-      message.message_text = 'This message was deleted'
-    }
+      var data = {
+        data: {
+          messageId: msg.message_id
+        }
+      }
+      axios.delete('/messages', data)
+        .then(res => {
+          setMsg({...msg, deleted: true});
+        })
+      }
   }
   const addMessageToTask = (e) => {
     e.preventDefault();
-    console.log('Attempted to add message to task')
+    var data = {
+      userId,
+      text: msg.message_text,
+      messageId: msg.message_id
+    }
+    console.log('data in adding to task: ', data)
+    axios.post('/tasks', data)
   }
+
+  useEffect(() => {
+    setMsg(message);
+  }, [message])
+
   //update this if statement when we have acess to the current users id
-  if (message.sender_id === username.id) {
+  if (msg.sender_id === userId) {
     return (
-      <div className='current-chat-message-self-container'>
+      <div className='current-chat-message-self-container' onMouseEnter={() => setShowButtons(true)} onMouseLeave={() => setShowButtons(false)}>
         <div className='current-chat-message-self'>
-        <div>{name}</div>
-        <img src={img} className='current-chat-message-self-img' />
+        <div className='current-chat-message-header'>
+          <img src={img} className='current-chat-message-self-img' />
+          <span className='current-chat-username'>{username}</span>
+        </div>
+          <div className='current-chat-date'>Posted: {new Date(msg.created).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})}</div>
+          {msg.deleted ? null :
+          <div className={showButtons ? 'current-chat-button-container' : 'current-chat-button-hide'}>
+            <button className='current-chat-edit-button' title='Edit message' onClick={editMessage}>✎</button>
+            <button className='current-chat-delete-button' title='Delete message' onClick={deleteMessage}>x</button>
+            <button className='current-chat-add-task-button' title='Add task' onClick={addMessageToTask}>+</button>
+          </div>
+          }
           {editModal ?
           <form id='edit-Message-Form' onSubmit={submitEditMessage}>
-            <textarea id='editText' defaultValue={message.message_text} />
+            <textarea id='editText' defaultValue={msg.message_text} />
             <br/>
             <input type='submit' value='Edit message'/>
-          </form> : <p id='message-box'>{message.message_text}</p>}
-          {message.deleted ? null :
-          <>
-            <button className='current-chat-edit-button' title='Edit message' onClick={editMessage}>✎</button>
-            <button className='current-chat-delete-button' title='Delete message' onClick={deleteMessage}>␡</button>
-            <button className='current-chat-add-task-button' title='Add task' onClick={addMessageToTask}>+</button>
-          </>
-          }
-          <div>Posted: {message.created}</div>
+          </form> : <div className='message-box'>{msg.message_text}</div>}
         </div>
       </div>
     )
   } else {
     return (
-      <div className='current-chat-message-other-container' >
+      <div className='current-chat-message-other-container' onMouseEnter={() => setShowButtons(true)} onMouseLeave={() => setShowButtons(false)}>
         <div className='current-chat-message-other'>
-        <img src={img} className='current-chat-message-other-img' />
-        <div>{name}</div>
-          <p>{message.message_text}</p>
-          {message.deleted ? null :
-          <button className='current-chat-add-task-button' title='Add task' onClick={addMessageToTask}>+</button>
-          }
-          <div>Posted: {message.created}</div>
+          <div className='current-chat-message-header'>
+            <img src={img} className='current-chat-message-other-img' />
+              <span className='current-chat-username'>{name}</span>
+              {pend
+              ? <span className='typing'> is typing...</span>
+              : null
+              }
+          </div>
+            <div className='current-chat-date'>Posted: {new Date(msg.created).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})}</div>
+            {msg.deleted ? null :
+            <div className={showButtons ? 'current-chat-button-container' : 'current-chat-button-hide'}>
+              <button className='current-chat-add-task-button' title='Add task' onClick={addMessageToTask}>+</button>
+            </div>
+            }
+            <div className='message-box'>{msg.message_text}</div>
         </div>
       </div>
     )

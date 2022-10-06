@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { userState } from '../userAtoms.js';
+import { userState, userIdState } from '../userAtoms.js';
 import axios from 'axios';
 import io from 'socket.io-client';
 
@@ -8,20 +8,29 @@ import io from 'socket.io-client';
 const socket = io();
 
 const UserProfile = () => {
-  const userInfo = useRecoilState(userState);
-  const [showImgModal, setShowImgModal] = useState(false);
-
+  const [userInfo, setUserinfo] = useRecoilState(userState);
+  const id = useRecoilValue(userIdState)
   const hiddenFileInput = React.useRef(null);
+  const [img, setImg] = useState(null);
 
-  var img = userInfo[0].img || 'https://www.freevector.com/uploads/vector/preview/2353/FreeVector-Boat-Logo-Graphics.jpg'
+  var showImg = userInfo.img || '/assets/Craft.png'
 
-  const updateImage = (e) => {
-    let file = document.querySelector('input[type=file]').files[0];
-    let url = URL.createObjectURL(file);
-    var temp = Object.assign({}, userInfo);
-    temp.img = url;
-    setUserinfo(temp)
-    setShowImgModal(false);
+  const handleFileChange = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    let fileSize = file.size / 1024;
+    if (fileSize > 64) {
+    alert('File size exceeds 64 KB');
+    return;
+    }
+    // $(file).val(''); //for clearing with Jquery
+    reader.onloadend = function() {
+      setImg(reader.result)
+      axios.put('/updatePhoto', { img: reader.result, userId: id }).catch(() => {
+        alert('Picture was not updated correctly, please try again');
+      })
+    }
+    reader.readAsDataURL(file);
   }
 
   //refresh Token function to get new access token every 10 minutes
@@ -50,10 +59,10 @@ const UserProfile = () => {
 
   return (
     <div className='user-profile-container'>
-      <input type='file' accept=".jpg, .jpeg, .png" ref={hiddenFileInput} style={{display: 'none'}} onChange={updateImage}/>
+      <input type='file' accept=".jpg, .jpeg, .png" ref={hiddenFileInput} style={{display: 'none'}} onChange={handleFileChange}/>
       <div>
       <img className='user-profile-container-image' src={img} onClick={() => {hiddenFileInput.current.click()}} style={{height: '50px', width: '50px', borderRadius: '50%'}}></img>
-        {userInfo[0].username}</div>
+        {userInfo.username}</div>
     </div>
   )
 }

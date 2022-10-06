@@ -18,6 +18,7 @@ import Select from 'react-select';
 const GroupList = (props) => {
   const { socket } = props;
   const userId = useRecoilValue(userIdState);
+  const user = useRecoilValue(userState);
   const recipientList = useRecoilValue(recipientListState);
   const [groupList, setGroupList] = useRecoilState(groupListState);
   const [groupId, setGroupId] = useRecoilState(groupIdState);
@@ -32,11 +33,17 @@ const GroupList = (props) => {
       item.id
     ))
     ids.push(userId)
-    console.log(selected)
-    // axios.post('/groups', { ids, names })
-    axios.post('/groups', { ids })
+    const names = selected.map(item => (
+      item.value
+    ));
+    names.push(`${user.firstName} ${user.lastName}`)
+    if (ids.length < 3) {
+      alert('You need more than 3 members for a group!')
+      return;
+    }
+    axios.post('/groups', { ids, names })
       .then(res => {
-        console.log('result from creating group: ', res.data)
+        getGroupList();
       })
   }
 
@@ -49,27 +56,35 @@ const GroupList = (props) => {
     socket.emit('join-room', groupList[i].group_id);
   }
 
-  const listUsernames = (arr) => {
+  const listUsernames = (namesArr) => {
     var result = '';
-    arr.forEach(id => {
-      result += `${id},`;
+    namesArr?.forEach(name => {
+      if (name !== `${user.firstName} ${user.lastName}`) {
+        result += `${name}, `;
+      } else {
+        result = 'Me, ' + result;
+      }
     })
-    result = result.slice(0, -1);
+    result = result.slice(0, -2);
     return result;
   }
 
-  useEffect(() => {
+  const getGroupList = () => {
     var data = {
-      params: {
-        userId
-      }
-    }
-    axios.get('/groups', data)
+      params: { userId }
+    };
+    if (userId) {
+      axios.get('/groups', data)
       .then(res => {
         console.log('groups: ', res.data)
         setGroupList(res.data)
-      })
-  }, [])
+      });
+    }
+  };
+
+  useEffect(() => {
+    getGroupList();
+  }, [userId]);
 
   useEffect(() => {
     var tempOptions = [];
@@ -81,27 +96,15 @@ const GroupList = (props) => {
       })
     })
     setOptions(tempOptions);
-  }, [recipientList])
+  }, [recipientList]);
 
   return (
     <div id='group-list' className='widget'>
       <div className='widget-title'>Groups</div>
         <div id='group-list-groups'>
           {groupList?.map((group, i) => (
-            <div className='group-list-group' key={i} onClick={() => handleGroupClick(i)} id={group.group_id === groupId ? 'selected' : null}>{listUsernames(group.user_ids)}</div>
+            <div className='group-list-group' key={i} onClick={() => handleGroupClick(i)} id={group.group_id === groupId ? 'selected' : null}>{listUsernames(group.user_names)}</div>
           ))}
-          {/* <div className='group-list-group'>Group 1</div>
-          <div className='group-list-group'>Group 2</div>
-          <div className='group-list-group'>Group 3</div>
-          <div className='group-list-group'>Group 4</div>
-          <div className='group-list-group'>Group 4</div>
-          <div className='group-list-group'>Group 4</div>
-          <div className='group-list-group'>Group 4</div>
-          <div className='group-list-group'>Group 4</div>
-          <div className='group-list-group'>Group 4</div>
-          <div className='group-list-group'>Group 4</div>
-          <div className='group-list-group'>Group 4</div>
-          <div className='group-list-group'>Group 4</div> */}
         </div>
       <Select options={options} onChange={(selectedOption) => setSelected(selectedOption)} isMulti />
       <div className='button' id='group-list-create-button' onClick={createGroup}>create a group</div>

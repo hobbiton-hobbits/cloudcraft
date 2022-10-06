@@ -9,48 +9,119 @@ import {
   sendMsgState,
   recipientIdState,
   userIdState,
+  isTypingState,
+  pendingMsgState,
 } from '../userAtoms.js';
 
 const CurrentChat = (props) => {
   const { socket } = props;
   const ref = useRef(null);
+  const messagesEndRef = useRef(null)
   const groupId = useRecoilValue(groupIdState);
   const { username } = useRecoilValue(userState);
   const userId = useRecoilValue(userIdState);
   const recipientId = useRecoilValue(recipientIdState);
-  const [msgHistory, setMsgHistory] = useRecoilState(messageState);
+  const [msgHistory, setMsgHistory] = useState([]);
   const [senderMsg, setSenderMsg] = useRecoilState(sendMsgState);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isTyping, setIsTyping] = useRecoilState(isTypingState);
+  const [pendingMsg, setPendingMsg] = useRecoilState(pendingMsgState);
 
   socket.on('receive-msg', (messages) => {
-    setMsgHistory([...msgHistory, ...messages]);
-    console.log('Messages received:', messages);
-    console.log(msgHistory);
+    const sender = messages[0].sender_id;
+
+    if (messages[0].ellipsis === true) {
+      if (pendingMsg[sender]) {
+        console.log('pending sender msg history', pendingMsg[sender]);
+      }
+      setPendingMsg((prevState) => {
+        const updatedPending = { ...prevState, [messages[0].sender_id]: messages[0] };
+        return updatedPending;
+      });
+      if (messages[0].deleteDraft === true) {
+        setPendingMsg((pendingMsg) => {
+          const updatedPending = { ...pendingMsg };
+          delete updatedPending[messages[0].sender_id];
+          console.log('pending updated after deleting draft', updatedPending);
+          return updatedPending;
+        });
+      }
+    }
+    else {
+      console.log('pending', pendingMsg);
+      if (pendingMsg[sender]) {
+        console.log('pendingMsg from sender still present:', pendingMsg[sender])
+        setPendingMsg((prevState) => {
+          const updatedPending = { ...prevState };
+          delete updatedPending[messages[0].sender_id];
+          console.log('pending updated', updatedPending);
+          return updatedPending;
+        });
+      }
+      setMsgHistory([...msgHistory, ...messages]);
+      console.log('Messages received:', messages);
+    }
+    console.log('pending Messages', pendingMsg)
   });
 
   const handleMessage = (e) => {
-    setSenderMsg(ref.current.value);
-    localStorage.setItem('draft-message', ref.current.value);
-  };
+      setSenderMsg(ref.current.value);
+      localStorage.setItem('draft-message', ref.current.value);
+  }
+
+  useEffect(() => {
+    console.log('senderMsg should be updated: ', senderMsg);
+    if (recipientId || groupId) {
+      if (!senderMsg.length) {
+        if (isTyping) {
+          socket.emit('send-message', {
+            userId,
+            recipientId,
+            groupId,
+            ellipsis: true,
+            deleteDraft: true,
+          });
+          setIsTyping(false);
+        }
+      } else {
+        if (!isTyping) {
+          setIsTyping(true);
+        }
+        const ellipsis = {
+          userId,
+          recipientId,
+          groupId,
+          senderMsg,
+          ellipsis: true,
+        }
+        socket.emit('send-message', ellipsis);
+      }
+    }
+  }, [senderMsg])
 
   const sendMessage = (e) => {
     e.preventDefault();
-    // console.log(ref.current.value);
     const msg = {
       userId,
       recipientId,
       groupId,
       senderMsg,
+      ellipsis: false,
     }
-    socket.emit('send-message', msg);
-    localStorage.removeItem('draft-message');
-    setSenderMsg('');
+    if (senderMsg.length) {
+      socket.emit('send-message', msg);
+      localStorage.removeItem('draft-message');
+      setSenderMsg('');
+      setIsTyping(false);
+    }
   };
 
   const handleReturn = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      sendMessage(e);
+      if (senderMsg.length > 0) {
+        sendMessage(e);
+      }
       return;
     }
     if (e.key === 'Enter' && e.shiftKey) {
@@ -76,6 +147,10 @@ const CurrentChat = (props) => {
     return array;
   };
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
   useEffect(() => {
     const draftMsg = localStorage.getItem('draft-message');
     if (draftMsg) {
@@ -83,32 +158,59 @@ const CurrentChat = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    var data = {
+      params: {
+        userId,
+        recipientId,
+        groupId
+      }
+    }
+    if (recipientId || groupId) {
+      axios.get('/messages', data)
+      .then(res => {
+        console.log('messages received: ', res.data);
+        setMsgHistory(res.data);
+      });
+    }
+  }, [recipientId, groupId]);
+
+  useEffect(() => {
+    const chatbox = document.getElementById('current-chat-message-container');
+    chatbox.scrollTop = chatbox.scrollHeight - chatbox.clientHeight;
+  }, [pendingMsg, msgHistory]);
+
   return (
     <div id='current-chat' className='widget'>
-      <div className='widget-title'>Chat with {groupId}</div>
-      <input type='text' className='current-chat-search' onChange={searchChat}/>
+      <input type='text' className='widget-title search-chat' placeholder="Search Chat..." onChange={searchChat}/>
         <div id='current-chat-message-container'>
         {!msgHistory ? <p>Start a chat with this user</p> : filterMessages(msgHistory).map((message, key) => (
           <ChatMessage key={key} message={message}/>
         ))}
+        {Object.keys(pendingMsg).length
+          ? filterMessages(Object.values(pendingMsg)).map((pending, key) => (
+            <ChatMessage id='current-chat-ellipsis' key={key} message={pending} pend={true}/>
+          )) : null
+        }
+        <div ref={messagesEndRef} />
         </div>
         <div id='current-chat-draft-container'>
-            <textarea
-              ref={ref}
-              id='current-chat-draft'
-              placeholder='Type your message...'
-              value={senderMsg}
-              onChange={handleMessage}
-              onKeyDown={handleReturn}/>
-            <div
-              className="button"
-              id='current-chat-send-button'
-              onClick={sendMessage}>
-              send
-            </div>
+          <textarea
+            ref={ref}
+            id='current-chat-draft'
+            placeholder='Type your message...'
+            value={senderMsg}
+            onChange={handleMessage}
+            onKeyDown={handleReturn}/>
+          <div
+            className="button"
+            id='current-chat-send-button'
+            onClick={handleReturn}>
+            Send
+          </div>
         </div>
     </div>
   )
-  }
+}
 
-  export default CurrentChat;
+export default CurrentChat;
