@@ -381,3 +381,7 @@ input[type="submit"] {
     width: fit-content;
     height: fit-content;
 }
+
+.group-list-select {
+    margin-top: auto;
+}
