@@ -129,7 +129,7 @@ const testUser3 = {
     }
     return (
       <div>
-         <div style={{padding: '5px', float:'right'}}><button class='button' onClick ={logOut}>Log Out</button></div>
+         <div style={{padding: '5px', float:'right'}}><button onClick ={logOut}>Log Out</button></div>
          <div id='page-title'>cloudcraft</div>
          <UserProfile />
          <div id="main-content">

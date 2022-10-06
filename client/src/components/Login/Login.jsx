@@ -105,8 +105,8 @@ const Login = ({setLoggedIn, setCount, setTokenGood}) => {
       localStorage.setItem('accessToken', data.data.accessToken);
       setUser({
         username: data.data.username,
-        firstName: data.data.firstName,
-        lastName: data.data.lastName,
+        firstname: data.data.firstName,
+        lastname: data.data.lastName,
         img: null
       });
       return;

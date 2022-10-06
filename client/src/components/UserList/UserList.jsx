@@ -36,13 +36,14 @@ const UserList = (props) => {
       <div className='widget-title'>Users</div>
         <div id='user-list-users'>
           {recipientList?.map((user, i) => {
+            var img = user.img || '/assets/Craft.png'
             if (user.id === userId) {
               return null;
             }
             return (
             <div className='user-list-user' key={i} onClick={() => handleUserClick(i)} id={user.id === recipientId ? 'selected' : null}>
               <div className='user-list-user-fullname'>
-                <img className='user-list-user-img' src={user.img} />
+                <img className='user-list-user-img' src={img} />
                 {`${user.firstname} ${user.lastname}  (${user.username})`}
               </div>
             </div>

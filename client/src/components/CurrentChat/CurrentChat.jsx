@@ -120,7 +120,7 @@ const CurrentChat = (props) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       if (senderMsg.length > 0) {
-        sendMessage(e);
+        sendMessage(senderMsg);
       }
       return;
     }
@@ -129,6 +129,13 @@ const CurrentChat = (props) => {
       return;
     }
   };
+
+  const handleSend = (e) => {
+    console.log('handleSend');
+    if (senderMsg.length > 0) {
+      sendMessage(senderMsg);
+    }
+  }
 
   const searchChat = (e) => {
     if (e.target.value.length < 3) {
@@ -202,12 +209,12 @@ const CurrentChat = (props) => {
             value={senderMsg}
             onChange={handleMessage}
             onKeyDown={handleReturn}/>
-          <div
+          <button
             className="button"
             id='current-chat-send-button'
-            onClick={handleReturn}>
+            onClick={handleSend}>
             Send
-          </div>
+          </button>
         </div>
     </div>
   )

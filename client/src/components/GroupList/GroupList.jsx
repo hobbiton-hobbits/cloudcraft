@@ -43,7 +43,9 @@ const GroupList = (props) => {
     }
     axios.post('/groups', { ids, names })
       .then(res => {
+        console.log('ids: ', ids)
         getGroupList();
+        socket.emit('create-group', ids);
       })
   }
 
@@ -61,8 +63,6 @@ const GroupList = (props) => {
     namesArr?.forEach(name => {
       if (name !== `${user.firstName} ${user.lastName}`) {
         result += `${name}, `;
-      } else {
-        result = 'Me, ' + result;
       }
     })
     result = result.slice(0, -2);

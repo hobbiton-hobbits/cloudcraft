@@ -153,6 +153,14 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('create-group', (ids) => {
+    console.log('ids: ', ids);
+    const socketIds = ids.map(id => (
+      userSocketIds[id]
+    ))
+    console.log('socket ids: ', socketIds);
+  })
+
   // socket for disconnecting
   socket.on('disconnect', () => {
     console.log('Socket disconnected: ', socket.id);

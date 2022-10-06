@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import axios from 'axios';
-import { userState, recipientListState, userIdState } from '../userAtoms.js';
+import { userState, recipientListState, userIdState, taskListUpdate } from '../userAtoms.js';
 
 const ChatMessage = ({ message, pend }) => {
   const [editModal, setEditModal] = useState(false);
-  const userInfo = useRecoilState(userState);
+  const userInfo = useRecoilValue(userState);
   const userId = useRecoilValue(userIdState);
   const allUsers = useRecoilValue(recipientListState);
   const [msg, setMsg] = useState({});
   const [showButtons, setShowButtons] = useState(false);
   const [date, setDate] = useState(new Date());
+  const [taskCount, setTaskCount] = useRecoilState(taskListUpdate);
 
   var img;
   var name;
@@ -26,7 +27,6 @@ const ChatMessage = ({ message, pend }) => {
     img = '/assets/Craft.png';
   }
 
-  // console.log('From inside ChatMessage: ', message)
   if (msg.deleted) {
      msg.message_text = 'This message was deleted'
   }
@@ -69,6 +69,7 @@ const ChatMessage = ({ message, pend }) => {
     }
     console.log('data in adding to task: ', data)
     axios.post('/tasks', data)
+    setTaskCount(taskCount += 1)
   }
 
   useEffect(() => {
@@ -107,7 +108,7 @@ const ChatMessage = ({ message, pend }) => {
         <div className='current-chat-message-other'>
           <div className='current-chat-message-header'>
             <img src={img} className='current-chat-message-other-img' />
-              <span className='current-chat-username'>{name}</span>
+              <span className='current-chat-username'>{`${userInfo.firstname} ${userInfo.lastname}`}</span>
               {pend
               ? <span className='typing'> is typing...</span>
               : null

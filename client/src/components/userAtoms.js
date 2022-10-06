@@ -72,3 +72,8 @@ export const pendingMsgState = atom({
   key: 'pendingMsgState',
   default: {},
 });
+
+export const taskListUpdate = atom({
+  key: 'taskListUpdate',
+  default: 0,
+})
