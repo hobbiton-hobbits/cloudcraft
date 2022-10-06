@@ -18,7 +18,8 @@ import {
   socketState,
   userIdState,
 } from './userAtoms.js';
-import Login from "./Login/Login.jsx"
+import Login from "./Login/Login.jsx";
+import axios from 'axios'
 
 let socket = undefined;
 
@@ -81,6 +82,21 @@ const testUser2 = {
     }
   }
 
+  const logOut = ()=>{
+    axios.delete('http://ec2-3-128-156-90.us-east-2.compute.amazonaws.com:8087/logout', { data: { token: localStorage.getItem('token') } })
+      .then((data) => {
+        localStorage.setItem('accessToken', '');
+        axios.defaults.headers.common['Authorization'] = '';
+        socket.disconnect();
+        setCount(0);
+        setTokenGood(false);
+        setLoggedIn(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   if (!loggedIn) {
     return (
       <div>
@@ -101,6 +117,7 @@ const testUser2 = {
     }
     return (
       <div>
+         <div style={{padding: '5px', float:'right'}}><button class='button' onClick ={logOut}>Log Out</button></div>
          <div id='page-title'>cloudcraft</div>
          <UserProfile />
          <div id="main-content">

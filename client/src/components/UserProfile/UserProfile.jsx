@@ -30,6 +30,7 @@ const UserProfile = () => {
       .then((data) => {
         console.log(data.data);
         axios.defaults.headers.common['Authorization'] = `BEARER ${data.data.accessToken}`;
+        localStorage.setItem('accessToken', data.data.accessToken);
         setTimeout(() => {
           refreshToken();
         }, 598000);
