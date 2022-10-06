@@ -158,7 +158,7 @@ const Login = ({setLoggedIn, setCount, setTokenGood}) => {
       <form  style={formStyle} onSubmit={handleSubmit}>
       <label htmlFor="username">Username </label>
       <input style={inputStyle} type="text" className="username" className="form-field" name="username"
-      value={values.userName} onChange={handleUserNameInputChange} />
+      value={values.userName} onChange={handleUserNameInputChange} required/>
        <br/>
      { submitted && !values.username && <span style={inputErrStyle} id="user-name-error">Please enter a username</span>}
      { submitted && values.username && invalidUser && <span style={inputErrStyle} id="user-name-error">
@@ -167,7 +167,7 @@ const Login = ({setLoggedIn, setCount, setTokenGood}) => {
      <br/>
       <label htmlFor="password">Password </label>
       <input style={inputStyle} type="password" className="password" className="form-field" name="password"
-      value={values.passWord} onChange={handlePassWordInputChange} />
+      value={values.passWord} onChange={handlePassWordInputChange} required/>
        <br/>
      { submitted && !values.password && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
      { submitted && values.username && incorrectPassword && <span style={inputErrStyle} id="user-name-error">
