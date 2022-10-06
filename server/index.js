@@ -115,7 +115,6 @@ io.on('connection', (socket) => {
   // socket for sending messages to other users or groups
   socket.on('send-message', (message) => {
     console.log('message sent to server:', message);
-<<<<<<< HEAD
     const {
       userId,
       recipientId,
@@ -126,10 +125,6 @@ io.on('connection', (socket) => {
     } = message;
 
 
-=======
-
-    const { userId, recipientId, groupId, senderMsg } = message;
->>>>>>> 0d6b44acea3f49562fb42f82f77066d7cab764d7
     // Delete in production
     const emittedMessage = {
       message_text: senderMsg,
