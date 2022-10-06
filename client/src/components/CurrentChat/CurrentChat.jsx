@@ -29,20 +29,26 @@ const CurrentChat = (props) => {
 
   socket.on('receive-msg', (messages) => {
     const sender = messages[0].sender_id;
-
-    if (messages[0].ellipsis === true) {
-      if (pendingMsg[sender]) {
-        console.log('pending sender msg history', pendingMsg[sender]);
-      }
-      setPendingMsg((prevState) => {
-        const updatedPending = { ...prevState, [messages[0].sender_id]: messages[0] };
-        return updatedPending;
-      });
-      if (messages[0].deleteDraft === true) {
-        setPendingMsg((pendingMsg) => {
-          const updatedPending = { ...pendingMsg };
-          delete updatedPending[messages[0].sender_id];
-          console.log('pending updated after deleting draft', updatedPending);
+    // console.log('recipient id', recipientId);
+    // console.log('recipient type', typeof recipientId);
+    // console.log('sender type', typeof sender);
+    // console.log(recipientId === sender);
+    // console.log(sender === userId);
+    if ((sender === recipientId) || (sender === userId)) {
+    if (sender === recipientId || sender === userId) {
+      if (messages[0].ellipsis === true) {
+        if (pendingMsg[sender]) {
+          console.log('pending sender msg history', pendingMsg[sender]);
+        }
+        setPendingMsg((prevState) => {
+          const updatedPending = { ...prevState, [messages[0].sender_id]: messages[0] };
+          return updatedPending;
+        });
+        if (messages[0].deleteDraft === true) {
+          setPendingMsg((pendingMsg) => {
+            const updatedPending = { ...pendingMsg };
+            delete updatedPending[messages[0].sender_id];
+            console.log('pending updated after deleting draft', updatedPending);
           return updatedPending;
         });
       }
@@ -62,11 +68,12 @@ const CurrentChat = (props) => {
       console.log('Messages received:', messages);
     }
     console.log('pending Messages', pendingMsg)
+  }
   });
 
   const handleMessage = (e) => {
-      setSenderMsg(ref.current.value);
-      localStorage.setItem('draft-message', ref.current.value);
+    setSenderMsg(ref.current.value);
+    localStorage.setItem('draft-message', ref.current.value);
   }
 
   useEffect(() => {
@@ -194,9 +201,12 @@ const CurrentChat = (props) => {
           <ChatMessage key={key} message={message}/>
         ))}
         {Object.keys(pendingMsg).length
-          ? filterMessages(Object.values(pendingMsg)).map((pending, key) => (
-            <ChatMessage id='current-chat-ellipsis' key={key} message={pending} pend={true}/>
-          )) : null
+          ? filterMessages(Object.values(pendingMsg)).map((pending, key) => {
+            if (pending.sender_id === recipientId || pending.sender_id === userId || groupId) {
+              return (
+              <ChatMessage id='current-chat-ellipsis' key={key} message={pending} pend={true}/>
+            )}
+        }) : null
         }
         <div ref={messagesEndRef} />
         </div>
