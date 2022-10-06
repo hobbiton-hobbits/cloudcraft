@@ -30,6 +30,19 @@ const inputStyle = {
   borderColor: 'grey',
   fontSize: '100%'
 }
+
+const passInput = {
+  border: 'solid',
+  borderWidth: 'thin',
+  float: 'right',
+  borderColor: 'grey',
+  fontSize: '100%',
+  backgroundColor:'#a3cef1',
+  color:'#e7ecef',
+  bordeRadius: '0.3rem',
+  marginBottom: '10px',
+}
+
 const labelStyle = {
   margin: '3px'
 }
@@ -176,20 +189,20 @@ const Register = ({setIsRegistering}) => {
      <br/>
 
       <label style = {labelStyle} htmlFor="password">Password </label>
-      <input style={inputStyle} type="password" className="password" className="form-field" name="password" value={values.password} onChange={handlePassWordInputChange}/>
+      <input style={passInput} type="password" className="password" className="form-field" name="password" value={values.password} onChange={handlePassWordInputChange}/>
       <br/>
      { submitted && !values.password && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
      <br/>
 
      <label style = {labelStyle} htmlFor="confirm" > Confirm </label>
-      <input style={inputStyle} type="password" className="confirm" className="form-field" name="confirm" value={values.confirm} onChange={handleConfirmInputChange}/>
+      <input style={passInput} type="password" className="confirm" className="form-field" name="confirm" value={values.confirm} onChange={handleConfirmInputChange}/>
       <br/>
      { submitted && !values.confirm && <span style={inputErrStyle} id="confirm-error">Please confirm password</span>}
      { submitted && values.confirm && (values.confirm !== values.password) && <span style={inputErrStyle} id="confirm-error">does not match password</span>}
      <br/>
 
-      <input style={Btn2} type="submit" value="Submit"/>
-      <button style={Btn} onClick={handleBackToLog}>Back to Login</button>
+      <input style={Btn} className= 'button' type="submit" value="Submit"/>
+      <div style={Btn} className= 'button' onClick={handleBackToLog}>Back to Login</div>
 
       </form>
     </div>
