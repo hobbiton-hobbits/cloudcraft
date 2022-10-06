@@ -28,23 +28,34 @@ const inputStyle = {
   borderWidth: 'thin',
   float: 'right',
   borderColor: 'grey',
-  fontSize: '100%'
+  fontSize: '100%',
+  position: 'absolute'
 }
 
 const passInput = {
   border: 'solid',
   borderWidth: 'thin',
-  float: 'right',
+  // float: 'right',
   borderColor: 'grey',
   fontSize: '100%',
   backgroundColor:'#a3cef1',
   color:'#e7ecef',
   bordeRadius: '0.3rem',
   marginBottom: '10px',
+  // position: 'absolute'
 }
 
 const labelStyle = {
-  margin: '3px'
+  margin: '3px',
+  positon: 'relative',
+  display: 'inline-block',
+  width: '120px',
+}
+const confirmLabel = {
+  margin: '3px',
+  width: '120px',
+  positon: 'absolute',
+  display: 'inline-block'
 }
 
 const Btn = {
@@ -195,7 +206,7 @@ const Register = ({setIsRegistering}) => {
      { submitted && !values.password && <span style={inputErrStyle} id="pass-word-error">Please enter a password</span>}
      <br/>
 
-     <label style = {labelStyle} htmlFor="confirm" > Confirm </label>
+     <label style = {confirmLabel} htmlFor="confirm" > Confirm </label>
       <input style={passInput} type="password" className="confirm" className="form-field" name="confirm" value={values.confirm} onChange={handleConfirmInputChange}/>
       <br/>
      { submitted && !values.confirm && <span style={inputErrStyle} id="confirm-error">Please confirm password</span>}
