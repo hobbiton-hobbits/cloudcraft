@@ -43,7 +43,8 @@ const regBtn = {
   marginLeft: '5px',
   paddingTop: '1px',
   paddingBottom:'1px',
-  fontSize: '80%'
+  fontSize: '80%',
+  display: 'inline-block'
 }
 
 const subBtn = {
@@ -177,8 +178,8 @@ const Login = ({setLoggedIn, setCount, setTokenGood}) => {
       unrecognized password
          </span>}
      <br/>
-     <input style={subBtn} type="submit" value="Submit"/>
-     <button style={regBtn} onClick={(e) => {handleRegister(e)}}>Need to Register?</button>
+     <input style={subBtn} className= 'button' type="submit" value="Submit"/>
+     <div style={regBtn} className= 'button' onClick={handleRegister}>Need to Register?</div>
       </form>
     </div>
 

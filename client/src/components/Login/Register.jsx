@@ -46,7 +46,8 @@ const Btn = {
   marginLeft: '5px',
   paddingTop: '1px',
   paddingBottom:'1px',
-  fontSize: '100%'
+  fontSize: '100%',
+  display: 'inline-block'
 }
 
 const Btn2 = {
@@ -203,8 +204,8 @@ const Register = ({setIsRegistering}) => {
      <br/>
 
 
-      <input style={Btn2} type="submit" value="Submit"/>
-      <button style={Btn} onClick={handleBackToLog}>Back to Login</button>
+      <input style={Btn2} className= 'button' type="submit" value="Submit"/>
+      <div style={Btn} className= 'button' onClick={handleBackToLog}>Back to Login</div>
 
       </form>
     </div>
