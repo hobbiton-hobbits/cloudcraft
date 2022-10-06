@@ -54,7 +54,8 @@ const Btn = {
   paddingBottom:'1px',
   fontSize: '100%',
   width: 'fit-content',
-  height: 'fit-content'
+  height: 'fit-content',
+  display: 'inline-block'
 }
 
 const Btn2 = {
