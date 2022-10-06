@@ -175,7 +175,7 @@ const Login = ({setLoggedIn, setCount, setTokenGood}) => {
          </span>}
      <br/>
      <input style={subBtn} type="submit" value="Submit"/>
-     <button style={regBtn} className='regBtn' onClick={(e) => {handleRegister(e)}}>Need to Register?</button>
+     <button style={regBtn} onClick={(e) => {handleRegister(e)}}>Need to Register?</button>
       </form>
     </div>
     );
