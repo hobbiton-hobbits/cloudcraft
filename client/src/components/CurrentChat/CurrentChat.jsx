@@ -21,7 +21,7 @@ const CurrentChat = (props) => {
   const { username } = useRecoilValue(userState);
   const userId = useRecoilValue(userIdState);
   const recipientId = useRecoilValue(recipientIdState);
-  const [msgHistory, setMsgHistory] = useState([]);
+  const [msgHistory, setMsgHistory] = useRecoilState(messageState);
   const [senderMsg, setSenderMsg] = useRecoilState(sendMsgState);
   const [searchQuery, setSearchQuery] = useState('');
   const [isTyping, setIsTyping] = useRecoilState(isTypingState);
