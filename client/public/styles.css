@@ -405,10 +405,10 @@ textarea {
     width: 95%;
 }
 
-/* the ... that displays when the other party is typing */
+/* the ... that displays when the other party is typing
 #current-chat-ellipsis {
     animation: wave 1s infinite alternate;
-}
+} */
 
 .typing {
     align-self: right;
