@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Register from "./register.jsx";
+import Register from "./Register.jsx";
 import axios from 'axios';
 import {
   useRecoilState,
