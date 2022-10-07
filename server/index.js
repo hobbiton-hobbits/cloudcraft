@@ -73,10 +73,7 @@ app.post('/auth', (req, res) => {
 const userSocketIds = {};
 
 io.on('connection', (socket) => {
-  let currentRoom;
   let userId;
-
-
 
   // Placeholder emitted to client to confirm connection established
   socket.emit('welcome-back', socket.id);
@@ -101,7 +98,6 @@ io.on('connection', (socket) => {
   // Executes if a user previously joined a room
   socket.on('leave-room', (group) => {
     socket.leave(group);
-    currentRoom = undefined;
   });
 
   // Socket listener for entering a group room
@@ -136,17 +132,15 @@ io.on('connection', (socket) => {
     }
 
     if (!groupId) {
-      currentRoom = userSocketIds[recipientId];
-      console.log('message emitted to single user in room:', currentRoom);
-      io.to(currentRoom).to(socket.id).emit('receive-msg', [emittedMessage]);
+      console.log('message emitted to single user in room:', userSocketIds[recipientId]);
+      io.to(userSocketIds[recipientId]).to(socket.id).emit('receive-msg', [emittedMessage]);
       console.log(userId);
       if (!ellipsis) {
         addMessage(userId, recipientId, null, senderMsg);
       }
     } else {
-      currentRoom = groupId;
-      console.log('message emitted to group in room:', currentRoom);
-      io.in(currentRoom).to(socket.id).emit('receive-msg', [emittedMessage]);
+      console.log('message emitted to group in room:', groupId);
+      io.in(groupId).to(socket.id).emit('receive-msg', [emittedMessage]);
       if (!ellipsis) {
         addMessage(userId, null, groupId, senderMsg);
       }
