@@ -49,12 +49,18 @@ const GroupList = (props) => {
   };
 
   const handleGroupClick = (i) => {
-    if (groupId) {
+    if (groupId !== groupList[i].group_id) {
       socket.emit('leave-room', groupId);
+      socket.emit('join-room', groupList[i].group_id);
+      setGroupId(groupList[i].group_id);
+      return;
     }
-    setRecipientId(null);
-    setGroupId(groupList[i].group_id);
-    socket.emit('join-room', groupList[i].group_id);
+    if (!groupId && recipientId) {
+      setRecipientId(null);
+      socket.emit('join-room', groupList[i].group_id);
+      setGroupId(groupList[i].group_id);
+      return;
+    }
   };
 
   const listUsernames = (namesArr) => {
