@@ -21,7 +21,7 @@ const CurrentChat = (props) => {
   const { username } = useRecoilValue(userState);
   const userId = useRecoilValue(userIdState);
   const recipientId = useRecoilValue(recipientIdState);
-  const [msgHistory, setMsgHistory] = useState([]);
+  const [msgHistory, setMsgHistory] = useRecoilState(messageState);
   const [senderMsg, setSenderMsg] = useRecoilState(sendMsgState);
   const [searchQuery, setSearchQuery] = useState('');
   const [isTyping, setIsTyping] = useRecoilState(isTypingState);
@@ -29,26 +29,28 @@ const CurrentChat = (props) => {
 
   socket.on('receive-msg', (messages) => {
     const sender = messages[0].sender_id;
-    // console.log('recipient id', recipientId);
-    // console.log('recipient type', typeof recipientId);
-    // console.log('sender type', typeof sender);
-    // console.log(recipientId === sender);
-    // console.log(sender === userId);
-    // if ((sender === recipientId) || (sender === userId)) {
+    console.log('recipient id', recipientId);
+    console.log('sender id', sender);
+    console.log('user id', userId);
+    console.log('recipient type', typeof recipientId);
+    console.log('sender type', typeof sender);
+    console.log('truthy sender is recipient', recipientId === sender);
+    console.log('truthy sender is user', sender === userId);
     if (sender === recipientId || sender === userId) {
       if (messages[0].ellipsis === true) {
         if (pendingMsg[sender]) {
-          console.log('pending sender msg history', pendingMsg[sender]);
-        }
+          // console.log('pending sender msg history', pendingMsg[sender]);
+          if (messages[0].deleteDraft === true) {
+            setPendingMsg((pendingMsg) => {
+              const updatedPending = { ...pendingMsg };
+              delete updatedPending[messages[0].sender_id];
+              // console.log('pending updated after deleting draft', updatedPending);
+              return updatedPending;
+            });
+          }
+      } else {
         setPendingMsg((prevState) => {
           const updatedPending = { ...prevState, [messages[0].sender_id]: messages[0] };
-          return updatedPending;
-        });
-        if (messages[0].deleteDraft === true) {
-          setPendingMsg((pendingMsg) => {
-            const updatedPending = { ...pendingMsg };
-            delete updatedPending[messages[0].sender_id];
-            console.log('pending updated after deleting draft', updatedPending);
           return updatedPending;
         });
       }
@@ -60,14 +62,14 @@ const CurrentChat = (props) => {
         setPendingMsg((prevState) => {
           const updatedPending = { ...prevState };
           delete updatedPending[messages[0].sender_id];
-          console.log('pending updated', updatedPending);
+          // console.log('pending updated', updatedPending);
           return updatedPending;
         });
       }
       setMsgHistory([...msgHistory, ...messages]);
       console.log('Messages received:', messages);
     }
-    console.log('pending Messages', pendingMsg)
+    // console.log('pending Messages', pendingMsg)
   }
   });
 
@@ -172,6 +174,7 @@ const CurrentChat = (props) => {
   }, []);
 
   useEffect(() => {
+    console.log('testing if swtiching recipient id from User List component causes useEffect messages request in CurrentChat');
     var data = {
       params: {
         userId,

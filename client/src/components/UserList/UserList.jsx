@@ -1,6 +1,12 @@
 import React, { useEffect } from "react";
 import axios from 'axios';
-import { userIdState, recipientListState, groupIdState, recipientIdState } from '../userAtoms.js';
+import {
+  userIdState,
+  recipientListState,
+  groupIdState,
+  recipientIdState,
+  messageState,
+} from '../userAtoms.js';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 const UserList = (props) => {
