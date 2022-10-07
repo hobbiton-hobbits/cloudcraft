@@ -1,21 +1,25 @@
 import React, { useEffect } from "react";
 import axios from 'axios';
+import { useRecoilState, useRecoilValue } from 'recoil';
+// atoms to hold global state using Recoil
 import {
   userIdState,
   recipientListState,
   groupIdState,
-  recipientIdState,
-  messageState,
+  recipientIdState
 } from '../userAtoms.js';
-import { useRecoilState, useRecoilValue } from 'recoil';
 
+// This component displays all the users in the database
+// each of the users can be chatted with by clicking on their name
 const UserList = (props) => {
   const { socket } = props;
+  // import Recoil state from atoms
   const userId = useRecoilValue(userIdState);
   const [recipientList, setRecipientList] = useRecoilState(recipientListState);
   const [groupId, setGroupId] = useRecoilState(groupIdState);
   const [recipientId, setRecipientId] = useRecoilState(recipientIdState);
 
+  // click handler for when clicking on a given user
   const handleUserClick = (i) => {
     if (groupId) {
       socket.emit('leave-room', groupId);
@@ -25,6 +29,7 @@ const UserList = (props) => {
     setGroupId(null);
   }
 
+  // set the initial state of the recipient list
   useEffect(() => {
     var data = {
       params: { userId }
