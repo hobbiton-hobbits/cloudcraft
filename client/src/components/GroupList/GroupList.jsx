@@ -36,7 +36,7 @@ const GroupList = (props) => {
     const names = selected.map(item => (
       item.value
     ));
-    names.push(`${user.firstName} ${user.lastName}`)
+    names.push(`${user.firstname} ${user.lastname}`)
     if (ids.length < 3) {
       alert('You need more than 3 members for a group!')
       return;
@@ -49,18 +49,24 @@ const GroupList = (props) => {
   };
 
   const handleGroupClick = (i) => {
-    if (groupId) {
+    if (groupId !== groupList[i].group_id) {
       socket.emit('leave-room', groupId);
+      socket.emit('join-room', groupList[i].group_id);
+      setGroupId(groupList[i].group_id);
+      return;
     }
-    setRecipientId(null);
-    setGroupId(groupList[i].group_id);
-    socket.emit('join-room', groupList[i].group_id);
+    if (!groupId && recipientId) {
+      setRecipientId(null);
+      socket.emit('join-room', groupList[i].group_id);
+      setGroupId(groupList[i].group_id);
+      return;
+    }
   };
 
   const listUsernames = (namesArr) => {
     var result = '';
     namesArr?.forEach(name => {
-      if (name !== `${user.firstName} ${user.lastName}`) {
+      if (name !== `${user.firstname} ${user.lastname}`) {
         result += `${name}, `;
       }
     })

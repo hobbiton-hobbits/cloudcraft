@@ -19,10 +19,10 @@ const UserList = (props) => {
   const handleUserClick = (i) => {
     if (groupId) {
       socket.emit('leave-room', groupId);
+      setGroupId(null);
     }
     setRecipientId(recipientList[i].id);
     console.log('switched recipient to: ', recipientList[i].id);
-    setGroupId(null);
   }
 
   useEffect(() => {
