@@ -103,20 +103,13 @@ const Login = () => {
     setSubmitted(true);
     axios.post('http://ec2-3-128-156-90.us-east-2.compute.amazonaws.com:8087/login', values)
     .then((data) => {
-      console.log(data.data);
       axios.defaults.headers.common['Authorization'] = `BEARER ${data.data.accessToken}`;
       localStorage.setItem('token', data.data.refreshToken);
       localStorage.setItem('accessToken', data.data.accessToken);
-      console.log(data.data);
       localStorage.setItem('username', data.data.username);
       localStorage.setItem('firstname', data.data.firstName);
       localStorage.setItem('lastname', data.data.lastName);
-      // setUser({
-      //   username: data.data.username,
-      //   firstname: data.data.firstName,
-      //   lastname: data.data.lastName,
-      //   img: null
-      // });
+
       return;
     })
     .then((val) => {
@@ -130,7 +123,7 @@ const Login = () => {
     })
     .then((val) => {
       localStorage.setItem('loggedIn', true);
-      // setLoggedIn(true);
+
       localStorage.setItem('count', '1');
       window.location.reload(false);
       return;
