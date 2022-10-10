@@ -14,3 +14,15 @@ The chat with the currently-selected user is displayed in the main pane. It disp
 
 ## Task list
 The task list displays all the tasks for the current user. Tasks can be associated with a message, or not. Tasks can be checked off to indicate completion.
+
+
+## Tech Used
+![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=white&style=flat-square)
+![Styled Components](https://img.shields.io/badge/-Styled_Components-DB7093?logo=styled-components&logoColor=white&style=flat-square)
+![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-336791?logo=postgresql&logoColor=white&style=flat-square)
+![Node](https://img.shields.io/badge/-Node-9ACD32?logo=node.js&logoColor=white&style=flat-square)
+![Express](https://img.shields.io/badge/-Express-DCDCDC?logo=express&logoColor=black&style=flat-square)
+![Axios](https://img.shields.io/badge/-Axios-373747?logo=axios&logoColor=white&style=flat-square)
+![AWS](https://img.shields.io/badge/-AWS-000000?logo=amazon-aws&logoColor=white&style=flat-square)
+![Socket.io](https://img.shields.io/badge/-Socket.io-000000?logo=socket.io&logoColor=white&style=flat-square)
+![Recoil](https://img.shields.io/badge/-Recoil-HexColor?logo=Recoil&logoColor=HexColor&style=flat-square)
