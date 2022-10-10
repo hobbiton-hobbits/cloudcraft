@@ -17,7 +17,7 @@ The task list displays all the tasks for the current user. Tasks can be associat
 
 
 ## Tech Used
-![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=white&style=flat-square)
+![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=white&style=plastic&logo=appveyor)
 ![Styled Components](https://img.shields.io/badge/-Styled_Components-DB7093?logo=styled-components&logoColor=white&style=plastic&logo=appveyor)
 ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-336791?logo=postgresql&logoColor=white&style=plastic&logo=appveyor)
 ![Node](https://img.shields.io/badge/-Node-9ACD32?logo=node.js&logoColor=white&style=plastic&logo=appveyor)
@@ -25,4 +25,4 @@ The task list displays all the tasks for the current user. Tasks can be associat
 ![Axios](https://img.shields.io/badge/-Axios-373747?logo=axios&logoColor=white&style=plastic&logo=appveyor)
 ![AWS](https://img.shields.io/badge/-AWS-000000?logo=amazon-aws&logoColor=white&style=plastic&logo=appveyor)
 ![Socket.io](https://img.shields.io/badge/-Socket.io-000000?logo=socket.io&logoColor=white&style=plastic&logo=appveyor)
-![Recoil](https://img.shields.io/badge/-Recoil-HexColor?logo=Recoil&logoColor=critical&?style=plastic&logo=appveyor)
+![Recoil](https://img.shields.io/badge/-Recoil-HexColor?logo=Recoil&logoColor=yellow&?style=plastic&logo=appveyor)
