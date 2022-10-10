@@ -18,7 +18,6 @@ The task list displays all the tasks for the current user. Tasks can be associat
 
 ## Tech Used
 ![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=white&style=plastic&logo=appveyor)
-![Styled Components](https://img.shields.io/badge/-Styled_Components-DB7093?logo=styled-components&logoColor=white&style=plastic&logo=appveyor)
 ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-336791?logo=postgresql&logoColor=white&style=plastic&logo=appveyor)
 ![Node](https://img.shields.io/badge/-Node-9ACD32?logo=node.js&logoColor=white&style=plastic&logo=appveyor)
 ![Express](https://img.shields.io/badge/-Express-DCDCDC?logo=express&logoColor=black&style=plastic&logo=appveyor)
