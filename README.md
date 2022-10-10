@@ -25,4 +25,4 @@ The task list displays all the tasks for the current user. Tasks can be associat
 ![Axios](https://img.shields.io/badge/-Axios-373747?logo=axios&logoColor=white&style=flat-square)
 ![AWS](https://img.shields.io/badge/-AWS-000000?logo=amazon-aws&logoColor=white&style=flat-square)
 ![Socket.io](https://img.shields.io/badge/-Socket.io-000000?logo=socket.io&logoColor=white&style=flat-square)
-![Recoil](https://img.shields.io/badge/-Recoil-HexColor?logo=Recoil&logoColor=HexColor&style=flat-square)
+![Recoil](https://img.shields.io/badge/-Recoil-HexColor?logo=Recoil&logoColor=HexColor&?style=plastic&logo=appveyor)
