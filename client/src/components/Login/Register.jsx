@@ -142,7 +142,6 @@ const Register = ({setIsRegistering}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('VALUES:', values);
 
     if(values.firstName && values.lastName && values.username && values.password && values.confirm) {
       setValid(true);
@@ -152,11 +151,9 @@ const Register = ({setIsRegistering}) => {
     if(values.confirm === values.password){
       axios.post('http://ec2-3-128-156-90.us-east-2.compute.amazonaws.com:8087/register', values)
       .then((data) => {
-        console.log(data.data);
         setIsRegistering(false);
       })
       .catch((err) => {
-        console.log(err);
         if(err.response.data === 'Username Already Taken'){
           setTaken(true);
         }
