@@ -25,3 +25,5 @@ The task list displays all the tasks for the current user. Tasks can be associat
 ![AWS](https://img.shields.io/badge/-AWS-000000?logo=amazon-aws&logoColor=white&style=plastic&logo=appveyor)
 ![Socket.io](https://img.shields.io/badge/-Socket.io-blueviolet?logo=socket.io&logoColor=blueviolet&style=plastic&logo=appveyor)
 ![Recoil](https://img.shields.io/badge/-Recoil-yellow?logo=Recoil&logoColor=yellow&?style=plastic&logo=appveyor)
+![Bcrypt](https://img.shields.io/badge/-Bcrypt-blue?logo=Bcrypt&logoColor=blue&?style=plastic&logo=appveyor)
+![JWT](https://img.shields.io/badge/-JWT-red?logo=JWT&logoColor=red&?style=plastic&logo=appveyor)
