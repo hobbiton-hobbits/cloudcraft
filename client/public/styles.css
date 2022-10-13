@@ -38,14 +38,44 @@ body {
     justify-content: end;
 }
 
-/* The left pane, containing both the user list and the group list */
-#user-and-group-list {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 20%;
+/* all individual list items */
+.task-list-task, .user-list-user, .group-list-group, .current-chat-message-other, .current-chat-message-self {
+    padding: 5px;
+    font-size: 15px;
 }
 
+/* make panes that can have numerous rows scrollable so they don't overflow but still have all content accessible (via scrolling) */
+#user-list-users, #group-list-groups, #current-chat-message-container, #task-list {
+    overflow-y: scroll;
+}
+
+/* on hover over any item, change the colors to denote that it is being hovered over */
+#page-title:hover, .task-list-task:hover, .user-list-user:hover, .group-list-group:hover, .current-chat-message-other:hover, .current-chat-message-self:hover {
+    background-color: #1e3c5f;
+    color: white;
+}
+
+::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+
+/* currently-selected user or group in user list or group list (only one at a time) */
+#selected {
+    background-color: #274c77;
+    color: white;
+    border: 1px solid transparent;
+}
+
+/* hides the focus border around the input */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+/* WIDGETS */
 /* Each top-level widget (denoted by a white background)
 Includes user list, group list, current chat, and task list */
 .widget {
@@ -89,31 +119,56 @@ Includes user list, group list, current chat, and task list */
     border-radius: 0.5rem;
 }
 
-/* all individual list items */
-.task-list-task, .user-list-user, .group-list-group, .current-chat-message-other, .current-chat-message-self {
-    padding: 5px;
-    font-size: 15px;
+/* LIST ELEMENTS */
+/* all lists and list items */
+ul, li {
+    margin: 0;
+    padding: 0;
 }
 
-/* on hover over any item, change the colors to denote that it is being hovered over */
-#page-title:hover, .task-list-task:hover, .user-list-user:hover, .group-list-group:hover, .current-chat-message-other:hover, .current-chat-message-self:hover {
-    background-color: #1e3c5f;
-    color: white;
+/* all bulleted list items */
+li {
+    list-style: none;
 }
+
+/* INPUT ELEMENTS */
+/* text inputs */
+input[type=text], input[type=password] {
+    border: none;
+    background-color:#a3cef1;
+    color:#e7ecef;
+    border-radius: 0.3rem;
+    margin-bottom: 10px;
+    padding: 20px;
+}
+
+/* submit buttons */
+input[type="submit"] {
+    border: none;
+    background-color: #6096ba;
+    color: white;
+    text-align: center;
+    margin-top: auto;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+/* checkboxes (used in task list) */
+input[type=checkbox] {
+    padding: 20px;
+    outline: none;
+    border: 1px solid #274c77;
+}
+
+/* BUTTONS */
 .button:hover, .task-list-task:hover, .user-list-user:hover, .group-list-group:hover, button:hover {
     cursor: pointer;
 }
 
-/* currently-selected user or group in user list or group list (only one at a time) */
-#selected {
-    background-color: #274c77;
-    color: white;
-    border: 1px solid transparent;
-
-}
 .button:hover {
     background-color: #8b8c89;
 }
+
 /* all buttons, using custom button class */
 .button, button {
     border: none;
@@ -125,10 +180,114 @@ Includes user list, group list, current chat, and task list */
     border-radius: 0.5rem;
 }
 
+.loading-screen {
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    color: #a3cef1;
+    font-size: xx-large;
+}
 
+/* AUTHENTICATION */
+/* buttons part of the registration process */
+.regBtn, .backBtn {
+    width: fit-content;
+    height: fit-content;
+}
 
+/* USER PROFILE */
+.user-profile-container {
+    /* position: absolute; */
+    top: 25px;
+    left: 25px;
+    display: inline-block;
+    align-items: center;
+    color: aliceblue;
+    font-size: 1.5rem;
+}
+
+.user-profile-container-image {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.user-profile-container-image:hover {
+    opacity: 0.4;
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+      -o-filter: grayscale(100%);
+     -ms-filter: grayscale(100%);
+         filter: grayscale(100%);
+         cursor: pointer;
+}
+
+/* profile pictures */
+.current-chat-message-self-img, .current-chat-message-other-img, .user-list-user-img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* USER LIST AND GROUP LIST */
+/* The left pane, containing both the user list and the group list */
+#user-and-group-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 20%;
+}
+
+/* the full first and last name of the user (preferred way to display name, for readability) */
+.user-list-user-fullname {
+    display: flex;
+    align-items: center;
+    font-weight: bolder;
+}
+
+.group-list-select {
+    margin-top: auto;
+}
+
+/* CURRENT CHAT */
+/* container for chat messages */
+#current-chat-message-container {
+    height: 100%;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* messages sent by self and sent by others */
+.current-chat-message-self,
+.current-chat-message-other {
+    padding: 0.5rem;
+}
+
+/* the edit, delete, and add to task buttons inside oneself's messages */
 .current-chat-message-self button {
     margin-left: 5px;
+}
+
+/* the username of the sender */
+.current-chat-username {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+/* the date the chat was sent */
+.current-chat-date {
+    font-size: 0.75rem;
+    align-self: center;
+    margin-left: 3rem;
+    padding-bottom: 0.5rem;
+}
+
+/* metadata about the chat */
+.current-chat-message-header {
+    display: flex;
+    align-items: center;
 }
 
 /* container element for the draft input text box (container needed to allow padding without expanding input beyond 100% width) */
@@ -151,6 +310,7 @@ Includes user list, group list, current chat, and task list */
     border-radius: 0.3rem;
 }
 
+/* area where the user types text */
 textarea {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -181,11 +341,6 @@ textarea {
     flex-grow: 1;
 }
 
-/* the ... that displays when the other party is typing */
-#current-chat-ellipsis {
-    animation: wave 1s infinite alternate;
-}
-
 /* keyframes for the pulsating in and out ellipsis */
 @keyframes wave {
     0% {
@@ -196,122 +351,13 @@ textarea {
     }
 }
 
-/* the interactive checkbox for each task */
-.task-list-task-checkbox {
-    width: 25px;
-    height: 25px;
-}
-
-/* hides the focus border around the input */
-input:focus,
-select:focus,
-textarea:focus,
-button:focus {
-    outline: none;
-}
-
-/* the username portion of the user's card */
-.user-list-user-username {
-    font-size: 12px;
-}
-
-/* make panes that can have numerous rows scrollable so they don't overflow but still have all content accessible (via scrolling) */
-#user-list-users, #group-list-groups, #current-chat-message-container, #task-list {
-    overflow-y: scroll;
-}
-::-webkit-scrollbar {
-    width: 0;  /* Remove scrollbar space */
-    background: transparent;  /* Optional: just make scrollbar invisible */
-}
-
-#current-chat-message-container {
-    height: 100%;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-/* all lists and list items */
-ul, li {
-    margin: 0;
-    padding: 0;
-}
-
-/* all bulleted list items */
-li {
-    list-style: none;
-}
-
 /* enables multi-line text entry to be properly formatted and sent */
 .message-box {
     white-space: pre-line;
     margin-left: 3rem;
 }
 
-/* all text inputs */
-input[type=text] {
-    border: none;
-    background-color:#a3cef1;
-    color:#e7ecef;
-    border-radius: 0.3rem;
-    margin-bottom: 10px;
-}
-input[type=password] {
-    border: none;
-    background-color:#a3cef1;
-    color:#e7ecef;
-    border-radius: 0.3rem;
-    margin-bottom: 10px;
-}
-.user-profile-container {
-    /* position: absolute; */
-    top: 25px;
-    left: 25px;
-    display: inline-block;
-    align-items: center;
-    color: aliceblue;
-    font-size: 1.5rem;
-}
-
-.user-profile-container-image {
-    height: 50px;
-    width: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.user-profile-container-image:hover {
-    opacity: 0.4;
-    -webkit-filter: grayscale(100%);
-    -moz-filter: grayscale(100%);
-      -o-filter: grayscale(100%);
-     -ms-filter: grayscale(100%);
-         filter: grayscale(100%);
-         cursor: pointer;
-}
-
-.user-list-user-fullname {
-    display: flex;
-    align-items: center;
-    font-weight: bolder;
-}
-
-.current-chat-message-self-img, .current-chat-message-other-img, .user-list-user-img {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-input[type="submit"] {
-    border: none;
-    background-color: #6096ba;
-    color: white;
-    text-align: center;
-    margin-top: auto;
-    border-radius: 0.5rem;
-    cursor: pointer;
-}
-
+/* container element for all the buttons related to the current message */
 .current-chat-button-container {
     position: relative;
     top: -50px;
@@ -325,6 +371,7 @@ input[type="submit"] {
     visibility: hidden;
 }
 
+/* button to delete the current message */
 .current-chat-delete-button {
     position: relative;
     top: -1px;
@@ -334,6 +381,7 @@ input[type="submit"] {
     width: 25px;
 }
 
+/* button to add a task based on the current message */
 .current-chat-add-task-button {
     position: relative;
     top: -1px;
@@ -343,6 +391,7 @@ input[type="submit"] {
     width: 25px;
 }
 
+/* button to edit the current message */
 .current-chat-edit-button {
     position: relative;
     border-radius: 0.5rem;
@@ -356,6 +405,17 @@ input[type="submit"] {
     width: 95%;
 }
 
+/* the ... that displays when the other party is typing
+#current-chat-ellipsis {
+    animation: wave 1s infinite alternate;
+} */
+
+.typing {
+    align-self: right;
+    font-size: 1.1rem;
+}
+
+/* send button for the current draft */
 #current-chat-send-button {
     flex-basis: 10%;
     align-items: center;
@@ -363,50 +423,14 @@ input[type="submit"] {
     border-radius: 0.3rem;
 }
 
-.typing {
-    align-self: right;
-    font-size: 1.1rem;
+/* TASK LIST */
+/* the interactive checkbox for each task */
+.task-list-task-checkbox {
+    width: 25px;
+    height: 25px;
 }
 
-.current-chat-username {
-    font-size: 1.1rem;
-    font-weight: bold;
-}
-
-.current-chat-date {
-    font-size: 0.75rem;
-    align-self: center;
-    margin-left: 3rem;
-    padding-bottom: 0.5rem;
-}
-
-.current-chat-message-header {
-    display: flex;
-    align-items: center;
-}
-
-.current-chat-message-self-container,
-.current-chat-message-other-container {
-}
-
-.current-chat-message-self,
-.current-chat-message-other {
-    padding: 0.5rem;
-}
-
-.regBtn, .backBtn {
-    width: fit-content;
-    height: fit-content;
-}
-
-.group-list-select {
-    margin-top: auto;
-}
-
-.loading-screen {
-    position: absolute;
-    top: 45%;
-    left: 45%;
-    color: #a3cef1;
-    font-size: xx-large;
+/* the username portion of the user's card */
+.user-list-user-username {
+    font-size: 12px;
 }

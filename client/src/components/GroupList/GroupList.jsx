@@ -1,33 +1,31 @@
 import React, { useState, useEffect } from "react";
+// react-select to enable multi-user select
+import Select from 'react-select';
 import axios from 'axios';
+import { useRecoilState, useRecoilValue } from 'recoil';
+// atoms to hold global state using Recoil
 import {
   userIdState,
   groupListState,
   groupIdState,
-  recipientIdState,
   recipientListState,
-  userState,
-  groupState
+  userState
 } from '../userAtoms.js';
-import { useRecoilState, useRecoilValue } from 'recoil';
-
-import Select from 'react-select';
 
 // This component renders a list of all groups stored in the database that the user is a part of, any of which can be chatted with
 // Groups can be denoted either by their member names, or optionally by a custom group name
 const GroupList = (props) => {
   const { socket } = props;
+  const [options, setOptions] = useState([]);
+  const [selected, setSelected] = useState([]);
+  // import Recoil state from atoms
   const userId = useRecoilValue(userIdState);
   const user = useRecoilValue(userState);
   const recipientList = useRecoilValue(recipientListState);
   const [groupList, setGroupList] = useRecoilState(groupListState);
   const [groupId, setGroupId] = useRecoilState(groupIdState);
-  const [group, setGroup] = useRecoilState(groupState);
-  const [recipientId, setRecipientId] = useRecoilState(recipientIdState);
 
-  const [options, setOptions] = useState([]);
-  const [selected, setSelected] = useState([]);
-
+  // group creation method
   const createGroup = () => {
     var ids = selected.map(item => (
       item.id
@@ -48,6 +46,8 @@ const GroupList = (props) => {
       });
   };
 
+  // click handler for when the group is clicked on
+  // when clicked, the group clicked on will become the active group in the current chat pane
   const handleGroupClick = (i) => {
     if (groupId !== groupList[i].group_id) {
       socket.emit('leave-room', groupId);
@@ -63,6 +63,7 @@ const GroupList = (props) => {
     }
   };
 
+  // display usernames when full names are duplicates
   const listUsernames = (namesArr) => {
     var result = '';
     namesArr?.forEach(name => {
@@ -74,6 +75,7 @@ const GroupList = (props) => {
     return result;
   }
 
+  // get the list of groups from the server
   const getGroupList = () => {
     var data = {
       params: { userId }
@@ -87,6 +89,7 @@ const GroupList = (props) => {
     }
   };
 
+  // when the component is loaded
   useEffect(() => {
     getGroupList();
     console.log('user state: ', user);
